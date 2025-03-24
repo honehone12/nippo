@@ -20,10 +20,9 @@ func Open(tiUri string) (TiDb, error) {
 	return TiDb{orm}, nil
 }
 
-func (ti *TiDb) AutoMigrate() {
-	ti.orm.AutoMigrate(
+func (ti *TiDb) AutoMigrate() error {
+	return ti.orm.AutoMigrate(
 		&schema.Org{},
-		&schema.Admin{},
 		&schema.User{},
 		&schema.Call{},
 		&schema.Report{},

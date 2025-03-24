@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"nippo/db/tidb"
 	"nippo/log"
 	"os"
@@ -8,22 +9,34 @@ import (
 	"github.com/joho/godotenv"
 )
 
-func init() {
-	godotenv.Load()
-	log.FmtDefault()
-}
-
-func main() {
+func migrate() error {
 	tiUri := os.Getenv("TIDB_URI")
 	if len(tiUri) == 0 {
-		panic("env TIDB_URI is not set")
+		return errors.New("env TIDB_URI is not set")
 	}
 
 	ti, err := tidb.Open(tiUri)
 	if err != nil {
-		panic(err)
+		return err
 	}
 
-	ti.AutoMigrate()
+	if err := ti.AutoMigrate(); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func init() {
+	godotenv.Load()
+	log.FmtPlain()
+}
+
+func main() {
+	if err := migrate(); err != nil {
+		log.L.Error(err)
+		return
+	}
+
 	log.L.Info("done")
 }
