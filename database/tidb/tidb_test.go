@@ -67,9 +67,12 @@ func TestMorningCall(t *testing.T) {
 	}
 
 	today := time.Now().Local()
-	if err := db.CreateMorningCall(today, "U8189cf6745fc0d808977bdb0b9f22885"); err != nil {
+	call, err := db.CreateMorningCall(today, "U8189cf6745fc0d808977bdb0b9f22885")
+	if err != nil {
 		t.Fatal(err)
 	}
+
+	fmt.Printf("%v\n", call)
 }
 
 func TestEveningCall(t *testing.T) {
@@ -79,9 +82,12 @@ func TestEveningCall(t *testing.T) {
 	}
 
 	today := time.Now().Local()
-	if err := db.CreateEveningCall(today, "U8189cf6745fc0d808977bdb0b9f22885"); err != nil {
+	call, err := db.CreateEveningCall(today, "U8189cf6745fc0d808977bdb0b9f22885")
+	if err != nil {
 		t.Fatal(err)
 	}
+
+	fmt.Printf("%v\n", call)
 }
 
 func TestDailyReport(t *testing.T) {
@@ -91,7 +97,10 @@ func TestDailyReport(t *testing.T) {
 	}
 
 	today := time.Now().Local()
-	if err := db.CreateDailyReport(today, "U8189cf6745fc0d808977bdb0b9f22885"); err != nil {
+	report, err := db.CreateDailyReport(today, "U8189cf6745fc0d808977bdb0b9f22885")
+	if err != nil {
 		t.Fatal(err)
 	}
+
+	fmt.Printf("%v\n", report)
 }

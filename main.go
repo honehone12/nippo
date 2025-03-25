@@ -1,11 +1,17 @@
 package main
 
-import "nippo/log"
+import (
+	"nippo/log"
+
+	"github.com/google/uuid"
+)
 
 func init() {
 	log.FmtDefault()
 }
 
 func main() {
-	log.L.Info("hello")
+	uuid.NewString()
+
+	log.L.Info(len(uuid.NewString()))
 }

@@ -16,7 +16,16 @@ type Database interface {
 		lineId string,
 		orgLineId string,
 	) (*schema.User, error)
-	CreateMorningCall(date time.Time, userLineId string) error
-	CreateEveningCall(date time.Time, userLineId string) error
-	CreateDailyReport(date time.Time, userLineId string) error
+	CreateMorningCall(
+		date time.Time,
+		userLineId string,
+	) (*schema.MorningCall, error)
+	CreateEveningCall(
+		date time.Time,
+		userLineId string,
+	) (*schema.EveningCall, error)
+	CreateDailyReport(
+		date time.Time,
+		userLineId string,
+	) (*schema.DailyReport, error)
 }
