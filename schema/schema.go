@@ -1,55 +1,66 @@
 package schema
 
 import (
+	"nippo/operation"
 	"time"
 
 	"gorm.io/gorm"
 )
 
-type Org struct {
-	Id        []uint8 `gorm:"primaryKey;type:binary(16)"`
-	CreatedAt time.Time
-	DeletedAt gorm.DeletedAt
+const (
+	ID_LEN       int = 16
+	MAX_NAME_LEN int = 50
+	LINE_ID_LEN  int = 33
+)
 
-	Name  string `gorm:"not null;size:25"`
-	Admin User
-	Users []User
+type Org struct {
+	Id        []uint8        `gorm:"primaryKey;type:binary(16)"`
+	CreatedAt time.Time      `gorm:"not null"`
+	DeletedAt gorm.DeletedAt `gorm:"index"`
+
+	Name          string `gorm:"not null;size:50"`
+	LineId        string `gorm:"unique;not null;type:char(33);index"`
+	AdminLineId   string `gorm:"unique;not null;type:char(33)"`
+	LastOperation *operation.OrgOperation
+	Users         []User
 }
 
 type User struct {
-	Id        []uint8   `gorm:"primaryKey;type:binary(16)"`
-	CreatedAt time.Time `gorm:"not null"`
-	DeletedAt gorm.DeletedAt
+	Id        []uint8        `gorm:"primaryKey;type:binary(16)"`
+	CreatedAt time.Time      `gorm:"not null"`
+	DeletedAt gorm.DeletedAt `gorm:"index"`
 
-	Name         string `gorm:"not null; size:50"`
-	OrgId        []uint8
-	MoringCalls  []MorningCall
-	EveningCalls []EveningCall
-	DailyReports []DailyReport
+	Name          string `gorm:"not null; size:50"`
+	LineId        string `gorm:"unique;not null;type:char(33);index"`
+	LastOperation *operation.UserOperation
+	OrgId         []uint8
+	MoringCalls   []MorningCall
+	EveningCalls  []EveningCall
+	DailyReports  []DailyReport
 }
 
 type MorningCall struct {
-	Id        []uint8   `gorm:"primaryKey;type:binary(16)"`
-	CreatedAt time.Time `gorm:"not null"`
-	DeletedAt gorm.DeletedAt
+	Id        []uint8        `gorm:"primaryKey;type:binary(16)"`
+	CreatedAt time.Time      `gorm:"not null"`
+	DeletedAt gorm.DeletedAt `gorm:"index"`
 
 	UserId []uint8
 	Date   time.Time `gorm:"not null;type:date;index"`
 }
 
 type EveningCall struct {
-	Id        []uint8   `gorm:"primaryKey;type:binary(16)"`
-	CreatedAt time.Time `gorm:"not null"`
-	DeletedAt gorm.DeletedAt
+	Id        []uint8        `gorm:"primaryKey;type:binary(16)"`
+	CreatedAt time.Time      `gorm:"not null"`
+	DeletedAt gorm.DeletedAt `gorm:"index"`
 
 	UserId []uint8
 	Date   time.Time `gorm:"not null;type:date;index"`
 }
 
 type DailyReport struct {
-	Id        []uint8   `gorm:"primaryKey;type:binary(16)"`
-	CreatedAt time.Time `gorm:"not null"`
-	DeletedAt gorm.DeletedAt
+	Id        []uint8        `gorm:"primaryKey;type:binary(16)"`
+	CreatedAt time.Time      `gorm:"not null"`
+	DeletedAt gorm.DeletedAt `gorm:"index"`
 
 	UserId []uint8
 	Date   time.Time `gorm:"not null;type:date;index"`

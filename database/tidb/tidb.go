@@ -1,6 +1,7 @@
 package tidb
 
 import (
+	"errors"
 	"nippo/schema"
 	"time"
 
@@ -32,31 +33,73 @@ func (ti *TiDb) AutoMigrate() error {
 	)
 }
 
-func (ti *TiDb) CreateOrg(name string) error {
-	id, err := uuid.NewRandom()
-	if err != nil {
-		return err
+func (ti *TiDb) CreateOrg(
+	name string,
+	lineId string,
+	adminLineId string,
+) (*schema.Org, error) {
+	if len(name) > schema.MAX_NAME_LEN {
+		return nil, errors.New("unexpected name length")
+	}
+	if len(lineId) != schema.LINE_ID_LEN || len(adminLineId) != schema.LINE_ID_LEN {
+		return nil, errors.New("unexpected line id length")
 	}
 
-	return ti.orm.Create(&schema.Org{
-		Id:   id[:],
-		Name: name,
-	}).Error
-}
-
-func (ti *TiDb) CreateUser(name string) error {
 	id, err := uuid.NewRandom()
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return ti.orm.Create(&schema.User{
-		Id:   id[:],
-		Name: name,
-	}).Error
+	org := schema.Org{
+		Id:          id[:],
+		Name:        name,
+		LineId:      lineId,
+		AdminLineId: adminLineId,
+	}
+
+	err = ti.orm.Create(&org).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return &org, nil
 }
 
-func (ti *TiDb) CreateMorningCall(date time.Time) error {
+func (ti *TiDb) CreateUser(
+	name string,
+	lineId string,
+	orgLineId string,
+) (*schema.User, error) {
+	if len(name) > schema.MAX_NAME_LEN {
+		return nil, errors.New("unexpected name length")
+	}
+	if len(lineId) != schema.LINE_ID_LEN || len(orgLineId) != schema.LINE_ID_LEN {
+		return nil, errors.New("unexpected line id length")
+	}
+
+	id, err := uuid.NewRandom()
+	if err != nil {
+		return nil, err
+	}
+
+	user := schema.User{
+		Id:     id[:],
+		Name:   name,
+		LineId: lineId,
+	}
+
+	err = ti.orm.
+		Model(&schema.Org{LineId: orgLineId}).
+		Association("Users").
+		Append(&user)
+	if err != nil {
+		return nil, err
+	}
+
+	return &user, nil
+}
+
+func (ti *TiDb) CreateMorningCall(date time.Time, userLineId string) error {
 	id, err := uuid.NewRandom()
 	if err != nil {
 		return err
@@ -68,7 +111,7 @@ func (ti *TiDb) CreateMorningCall(date time.Time) error {
 	}).Error
 }
 
-func (ti *TiDb) CreateEveningCall(date time.Time) error {
+func (ti *TiDb) CreateEveningCall(date time.Time, userLineId string) error {
 	id, err := uuid.NewRandom()
 	if err != nil {
 		return err
@@ -80,7 +123,7 @@ func (ti *TiDb) CreateEveningCall(date time.Time) error {
 	}).Error
 }
 
-func (ti *TiDb) CreateDailyReport(date time.Time) error {
+func (ti *TiDb) CreateDailyReport(date time.Time, userLineId string) error {
 	id, err := uuid.NewRandom()
 	if err != nil {
 		return err

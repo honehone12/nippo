@@ -2,6 +2,7 @@ package tidb
 
 import (
 	"errors"
+	"fmt"
 	"nippo/database"
 	"os"
 	"testing"
@@ -29,9 +30,16 @@ func TestOrg(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if err := db.CreateOrg("test org"); err != nil {
+	org, err := db.CreateOrg(
+		"テスト　オーガニゼーション会社",
+		"U8189cf6745fc0d808977bdb0b9f22995",
+		"U8189cf6745fc0d808977bdb0b9f22885",
+	)
+	if err != nil {
 		t.Fatal(err)
 	}
+
+	fmt.Printf("%v\n", org)
 }
 
 func TestUser(t *testing.T) {
@@ -40,9 +48,16 @@ func TestUser(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if err := db.CreateUser("test user"); err != nil {
+	user, err := db.CreateUser(
+		"テスト　ユーザー太郎",
+		"U8189cf6745fc0d808977bdb0b9f22885",
+		"U8189cf6745fc0d808977bdb0b9f22995",
+	)
+	if err != nil {
 		t.Fatal(err)
 	}
+
+	fmt.Printf("%v\n", user)
 }
 
 func TestMorningCall(t *testing.T) {
@@ -52,7 +67,7 @@ func TestMorningCall(t *testing.T) {
 	}
 
 	today := time.Now().Local()
-	if err := db.CreateMorningCall(today); err != nil {
+	if err := db.CreateMorningCall(today, "U8189cf6745fc0d808977bdb0b9f22885"); err != nil {
 		t.Fatal(err)
 	}
 }
@@ -64,7 +79,7 @@ func TestEveningCall(t *testing.T) {
 	}
 
 	today := time.Now().Local()
-	if err := db.CreateEveningCall(today); err != nil {
+	if err := db.CreateEveningCall(today, "U8189cf6745fc0d808977bdb0b9f22885"); err != nil {
 		t.Fatal(err)
 	}
 }
@@ -76,7 +91,7 @@ func TestDailyReport(t *testing.T) {
 	}
 
 	today := time.Now().Local()
-	if err := db.CreateDailyReport(today); err != nil {
+	if err := db.CreateDailyReport(today, "U8189cf6745fc0d808977bdb0b9f22885"); err != nil {
 		t.Fatal(err)
 	}
 }
