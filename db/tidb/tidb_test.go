@@ -1,38 +1,82 @@
 package tidb
 
 import (
-	"nippo/schema"
+	"errors"
+	"nippo/db"
 	"os"
 	"testing"
+	"time"
 
-	"github.com/google/uuid"
 	"github.com/joho/godotenv"
 )
 
-func TestTiDb(t *testing.T) {
+var _ db.Db = &TiDb{}
+
+func initTest() (db.Db, error) {
 	godotenv.Load("migration/.env")
 
 	tiUri := os.Getenv("TIDB_URI")
 	if len(tiUri) == 0 {
-		t.Fatal("env TIDB_URI is not set")
+		return nil, errors.New("env TIDB_URI is not set")
 	}
 
-	ti, err := Open(tiUri)
+	return Open(tiUri)
+}
+
+func TestOrg(t *testing.T) {
+	db, err := initTest()
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	id, err := uuid.NewRandom()
+	if err := db.CreateOrg("test org"); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestUser(t *testing.T) {
+	db, err := initTest()
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	org := schema.Org{
-		Id:   id[:],
-		Name: "test org",
+	if err := db.CreateUser("test user"); err != nil {
+		t.Fatal(err)
 	}
-	res := ti.orm.Create(&org)
-	if res.Error != nil {
-		t.Fatal(res.Error)
+}
+
+func TestMorningCall(t *testing.T) {
+	db, err := initTest()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	today := time.Now().Local()
+	if err := db.CreateMorningCall(today); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestEveningCall(t *testing.T) {
+	db, err := initTest()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	today := time.Now().Local()
+	if err := db.CreateEveningCall(today); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestDailyReport(t *testing.T) {
+	db, err := initTest()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	today := time.Now().Local()
+	if err := db.CreateDailyReport(today); err != nil {
+		t.Fatal(err)
 	}
 }

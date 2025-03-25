@@ -22,7 +22,7 @@ type User struct {
 	DeletedAt gorm.DeletedAt
 
 	Name         string `gorm:"not null; size:50"`
-	OrgId        uint64
+	OrgId        []uint8
 	MoringCalls  []MorningCall
 	EveningCalls []EveningCall
 	DailyReports []DailyReport
@@ -33,7 +33,7 @@ type MorningCall struct {
 	CreatedAt time.Time `gorm:"not null"`
 	DeletedAt gorm.DeletedAt
 
-	UserId uint64
+	UserId []uint8
 	Date   time.Time `gorm:"not null;type:date;index"`
 }
 
@@ -42,7 +42,7 @@ type EveningCall struct {
 	CreatedAt time.Time `gorm:"not null"`
 	DeletedAt gorm.DeletedAt
 
-	UserId uint64
+	UserId []uint8
 	Date   time.Time `gorm:"not null;type:date;index"`
 }
 
@@ -51,6 +51,6 @@ type DailyReport struct {
 	CreatedAt time.Time `gorm:"not null"`
 	DeletedAt gorm.DeletedAt
 
-	UserId uint64
+	UserId []uint8
 	Date   time.Time `gorm:"not null;type:date;index"`
 }
