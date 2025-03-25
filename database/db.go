@@ -1,8 +1,8 @@
-package db
+package database
 
 import "time"
 
-type Db interface {
+type Database interface {
 	CreateOrg(name string) error
 	CreateUser(name string) error
 	CreateMorningCall(date time.Time) error

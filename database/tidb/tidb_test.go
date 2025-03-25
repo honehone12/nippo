@@ -2,7 +2,7 @@ package tidb
 
 import (
 	"errors"
-	"nippo/db"
+	"nippo/database"
 	"os"
 	"testing"
 	"time"
@@ -10,9 +10,9 @@ import (
 	"github.com/joho/godotenv"
 )
 
-var _ db.Db = &TiDb{}
+var _ database.Database = &TiDb{}
 
-func initTest() (db.Db, error) {
+func initTest() (database.Database, error) {
 	godotenv.Load("migration/.env")
 
 	tiUri := os.Getenv("TIDB_URI")
