@@ -39,7 +39,7 @@ func TestOrg(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	fmt.Printf("%v\n", org)
+	fmt.Printf("%#v\n", org)
 }
 
 func TestUser(t *testing.T) {
@@ -57,7 +57,7 @@ func TestUser(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	fmt.Printf("%v\n", user)
+	fmt.Printf("%#v\n", user)
 }
 
 func TestMorningCall(t *testing.T) {
@@ -72,7 +72,7 @@ func TestMorningCall(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	fmt.Printf("%v\n", call)
+	fmt.Printf("%#v\n", call)
 }
 
 func TestEveningCall(t *testing.T) {
@@ -87,7 +87,7 @@ func TestEveningCall(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	fmt.Printf("%v\n", call)
+	fmt.Printf("%#v\n", call)
 }
 
 func TestDailyReport(t *testing.T) {
@@ -102,5 +102,5 @@ func TestDailyReport(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	fmt.Printf("%v\n", report)
+	fmt.Printf("%#v\n", report)
 }
