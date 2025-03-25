@@ -33,7 +33,7 @@ type User struct {
 	Name          string `gorm:"not null;size:50"`
 	LineId        string `gorm:"unique;not null;type:char(33);index"`
 	LastOperation *operation.UserOperation
-	OrgId         []uint8 `gorm;"not null;type:binary(16)"`
+	OrgId         []uint8 `gorm:"not null;type:binary(16)"`
 	MoringCalls   []MorningCall
 	EveningCalls  []EveningCall
 	DailyReports  []DailyReport
@@ -44,7 +44,7 @@ type MorningCall struct {
 	CreatedAt time.Time      `gorm:"not null"`
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 
-	UserId []uint8   `gorm;"not null;type:binary(16)"`
+	UserId []uint8   `gorm:"not null;type:binary(16)"`
 	Date   time.Time `gorm:"not null;type:date;index"`
 }
 
@@ -53,7 +53,7 @@ type EveningCall struct {
 	CreatedAt time.Time      `gorm:"not null"`
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 
-	UserId []uint8   `gorm;"not null;type:binary(16)"`
+	UserId []uint8   `gorm:"not null;type:binary(16)"`
 	Date   time.Time `gorm:"not null;type:date;index"`
 }
 
