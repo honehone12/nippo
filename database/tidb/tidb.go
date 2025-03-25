@@ -51,7 +51,7 @@ func (ti *TiDb) CreateOrg(
 	}
 
 	org := schema.Org{
-		Id:          id.String(),
+		Id:          id[:],
 		Name:        name,
 		LineId:      lineId,
 		AdminLineId: adminLineId,
@@ -91,7 +91,7 @@ func (ti *TiDb) CreateUser(
 	}
 
 	user := schema.User{
-		Id:     id.String(),
+		Id:     id[:],
 		Name:   name,
 		LineId: lineId,
 	}
@@ -110,6 +110,10 @@ func (ti *TiDb) CreateMorningCall(
 	date time.Time,
 	userLineId string,
 ) (*schema.MorningCall, error) {
+	if len(userLineId) != schema.LINE_ID_LEN {
+		return nil, errors.New("unexpected line id length")
+	}
+
 	user := schema.User{}
 	err := ti.orm.
 		Where("line_id = ?", userLineId).
@@ -125,7 +129,7 @@ func (ti *TiDb) CreateMorningCall(
 	}
 
 	call := schema.MorningCall{
-		Id:   id.String(),
+		Id:   id[:],
 		Date: date,
 	}
 	err = ti.orm.
@@ -143,6 +147,10 @@ func (ti *TiDb) CreateEveningCall(
 	date time.Time,
 	userLineId string,
 ) (*schema.EveningCall, error) {
+	if len(userLineId) != schema.LINE_ID_LEN {
+		return nil, errors.New("unexpected line id length")
+	}
+
 	user := schema.User{}
 	err := ti.orm.
 		Where("line_id = ?", userLineId).
@@ -158,7 +166,7 @@ func (ti *TiDb) CreateEveningCall(
 	}
 
 	call := schema.EveningCall{
-		Id:   id.String(),
+		Id:   id[:],
 		Date: date,
 	}
 	err = ti.orm.
@@ -176,6 +184,10 @@ func (ti *TiDb) CreateDailyReport(
 	date time.Time,
 	userLineId string,
 ) (*schema.DailyReport, error) {
+	if len(userLineId) != schema.LINE_ID_LEN {
+		return nil, errors.New("unexpected line id length")
+	}
+
 	user := schema.User{}
 	err := ti.orm.
 		Where("line_id = ?", userLineId).
@@ -191,7 +203,7 @@ func (ti *TiDb) CreateDailyReport(
 	}
 
 	call := schema.DailyReport{
-		Id:   id.String(),
+		Id:   id[:],
 		Date: date,
 	}
 	err = ti.orm.

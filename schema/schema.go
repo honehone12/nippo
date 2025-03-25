@@ -8,13 +8,13 @@ import (
 )
 
 const (
-	ID_LEN       int = 36
+	ID_LEN       int = 16
 	MAX_NAME_LEN int = 50
 	LINE_ID_LEN  int = 33
 )
 
 type Org struct {
-	Id        string         `gorm:"primaryKey;type:varchar(36)"`
+	Id        []uint8        `gorm:"primaryKey;type:binary(16)"`
 	CreatedAt time.Time      `gorm:"not null"`
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 
@@ -26,42 +26,42 @@ type Org struct {
 }
 
 type User struct {
-	Id        string         `gorm:"primaryKey;type:varchar(36)"`
+	Id        []uint8        `gorm:"primaryKey;type:binary(16)"`
 	CreatedAt time.Time      `gorm:"not null"`
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 
 	Name          string `gorm:"not null;size:50"`
 	LineId        string `gorm:"unique;not null;type:char(33);index"`
 	LastOperation *operation.UserOperation
-	OrgId         string        `gorm:"not null;type:varchar(36)"`
+	OrgId         []uint8       `gorm:"not null;type:binary(16)"`
 	MorningCalls  []MorningCall `gorm:"foreignKey:UserId;references:Id"`
 	EveningCalls  []EveningCall `gorm:"foreignKey:UserId;references:Id"`
 	DailyReports  []DailyReport `gorm:"foreignKey:UserId;references:Id"`
 }
 
 type MorningCall struct {
-	Id        string         `gorm:"primaryKey;type:varchar(36)"`
+	Id        []uint8        `gorm:"primaryKey;type:binary(16)"`
 	CreatedAt time.Time      `gorm:"not null"`
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 
-	UserId string    `gorm:"not null;type:varchar(36)"`
+	UserId []uint8   `gorm:"not null;type:binary(16)"`
 	Date   time.Time `gorm:"not null;type:date;index"`
 }
 
 type EveningCall struct {
-	Id        string         `gorm:"primaryKey;type:varchar(36)"`
+	Id        []uint8        `gorm:"primaryKey;type:binary(16)"`
 	CreatedAt time.Time      `gorm:"not null"`
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 
-	UserId string    `gorm:"not null;type:varchar(36)"`
+	UserId []uint8   `gorm:"not null;type:binary(16)"`
 	Date   time.Time `gorm:"not null;type:date;index"`
 }
 
 type DailyReport struct {
-	Id        string         `gorm:"primaryKey;type:varchar(36)"`
+	Id        []uint8        `gorm:"primaryKey;type:binary(16)"`
 	CreatedAt time.Time      `gorm:"not null"`
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 
-	UserId string    `gorm:"not null;type:varchar(36)"`
+	UserId []uint8   `gorm:"not null;type:binary(16)"`
 	Date   time.Time `gorm:"not null;type:date;index"`
 }
