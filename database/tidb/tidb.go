@@ -84,6 +84,7 @@ func (ti *TiDb) CreateUser(
 
 	org := schema.Org{}
 	err = ti.orm.
+		Select("id").
 		Where("line_id = ?", orgLineId).
 		First(&org).Error
 	if err != nil {
@@ -116,6 +117,7 @@ func (ti *TiDb) CreateMorningCall(
 
 	user := schema.User{}
 	err := ti.orm.
+		Select("id").
 		Where("line_id = ?", userLineId).
 		First(&user).
 		Error
@@ -153,6 +155,7 @@ func (ti *TiDb) CreateEveningCall(
 
 	user := schema.User{}
 	err := ti.orm.
+		Select("id").
 		Where("line_id = ?", userLineId).
 		First(&user).
 		Error
@@ -190,6 +193,7 @@ func (ti *TiDb) CreateDailyReport(
 
 	user := schema.User{}
 	err := ti.orm.
+		Select("id").
 		Where("line_id = ?", userLineId).
 		First(&user).
 		Error
