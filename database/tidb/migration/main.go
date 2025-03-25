@@ -2,7 +2,7 @@ package main
 
 import (
 	"errors"
-	"nippo/db/tidb"
+	"nippo/database/tidb"
 	"nippo/log"
 	"os"
 
