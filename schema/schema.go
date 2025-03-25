@@ -7,41 +7,50 @@ import (
 )
 
 type Org struct {
-	ID        uint `gorm:"primaryKey;default:auto_random()"`
+	Id        []uint8 `gorm:"primaryKey;type:binary(16)"`
 	CreatedAt time.Time
 	DeletedAt gorm.DeletedAt
 
-	Name  string `gorm:"not null;size:50"`
+	Name  string `gorm:"not null;size:25"`
 	Admin User
 	Users []User
 }
 
 type User struct {
-	ID        uint `gorm:"primaryKey;default:auto_random()"`
-	CreatedAt time.Time
+	Id        []uint8   `gorm:"primaryKey;type:binary(16)"`
+	CreatedAt time.Time `gorm:"not null"`
 	DeletedAt gorm.DeletedAt
 
-	Name    string `gorm:"not null; size:50"`
-	OrgId   uint
-	Calls   []Call
-	Reports []Report
+	Name         string `gorm:"not null; size:50"`
+	OrgId        uint64
+	MoringCalls  []MorningCall
+	EveningCalls []EveningCall
+	DailyReports []DailyReport
 }
 
-type Call struct {
-	ID        uint `gorm:"primaryKey;default:auto_random()"`
-	CreatedAt time.Time
+type MorningCall struct {
+	Id        []uint8   `gorm:"primaryKey;type:binary(16)"`
+	CreatedAt time.Time `gorm:"not null"`
 	DeletedAt gorm.DeletedAt
 
-	UserId    uint
-	Date      time.Time `gorm:"type:date;index:date"`
-	IsMorning bool
+	UserId uint64
+	Date   time.Time `gorm:"not null;type:date;index"`
 }
 
-type Report struct {
-	ID        uint `gorm:"primaryKey;default:auto_random()"`
-	CreatedAt time.Time
+type EveningCall struct {
+	Id        []uint8   `gorm:"primaryKey;type:binary(16)"`
+	CreatedAt time.Time `gorm:"not null"`
 	DeletedAt gorm.DeletedAt
 
-	UserId uint
-	Date   time.Time `gorm:"type:date;index:date"`
+	UserId uint64
+	Date   time.Time `gorm:"not null;type:date;index"`
+}
+
+type DailyReport struct {
+	Id        []uint8   `gorm:"primaryKey;type:binary(16)"`
+	CreatedAt time.Time `gorm:"not null"`
+	DeletedAt gorm.DeletedAt
+
+	UserId uint64
+	Date   time.Time `gorm:"not null;type:date;index"`
 }

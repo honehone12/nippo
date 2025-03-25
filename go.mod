@@ -3,6 +3,7 @@ module nippo
 go 1.24.1
 
 require (
+	github.com/google/uuid v1.6.0
 	github.com/joho/godotenv v1.5.1
 	github.com/sirupsen/logrus v1.9.3
 	gorm.io/driver/mysql v1.5.7
