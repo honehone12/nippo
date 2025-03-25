@@ -2,8 +2,6 @@ package main
 
 import (
 	"nippo/log"
-
-	"github.com/google/uuid"
 )
 
 func init() {
@@ -11,7 +9,5 @@ func init() {
 }
 
 func main() {
-	uuid.NewString()
-
-	log.L.Info(len(uuid.NewString()))
+	log.L.Info("hello")
 }
