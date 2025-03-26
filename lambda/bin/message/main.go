@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	"nippo/lambda/function"
+	"nippo/lambda/message"
 	"nippo/lambda/request"
 	"nippo/log"
 
@@ -24,7 +24,7 @@ func handler(
 		return *res, nil
 	}
 
-	return *function.MessageMain(&msg), nil
+	return *message.MessageMain(&msg), nil
 }
 
 func init() {

@@ -1,7 +1,7 @@
 package schema
 
 import (
-	"nippo/operation"
+	"nippo/message/operation"
 	"time"
 
 	"gorm.io/gorm"

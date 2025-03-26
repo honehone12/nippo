@@ -1,4 +1,4 @@
-package function
+package message
 
 import (
 	"nippo/lambda/response"
