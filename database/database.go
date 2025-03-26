@@ -6,15 +6,11 @@ import (
 )
 
 type Database interface {
-	CreateOrg(
-		name string,
-		lineId string,
-		adminLineId string,
-	) (*schema.Org, error)
+	CreateOrg(id [16]uint8) (*schema.Org, error)
 	CreateUser(
 		name string,
 		lineId string,
-		orgLineId string,
+		orgIdStr string,
 	) (*schema.User, error)
 	CreateMorningCall(
 		date time.Time,

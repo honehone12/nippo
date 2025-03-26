@@ -33,31 +33,12 @@ func (ti *TiDb) AutoMigrate() error {
 	)
 }
 
-func (ti *TiDb) CreateOrg(
-	name string,
-	lineId string,
-	adminLineId string,
-) (*schema.Org, error) {
-	if len(name) > schema.MAX_NAME_LEN {
-		return nil, errors.New("unexpected name length")
-	}
-	if len(lineId) != schema.LINE_ID_LEN || len(adminLineId) != schema.LINE_ID_LEN {
-		return nil, errors.New("unexpected line id length")
-	}
-
-	id, err := uuid.NewRandom()
-	if err != nil {
-		return nil, err
-	}
-
+func (ti *TiDb) CreateOrg(id [16]uint8) (*schema.Org, error) {
 	org := schema.Org{
-		Id:          id[:],
-		Name:        name,
-		LineId:      lineId,
-		AdminLineId: adminLineId,
+		Id: id[:],
 	}
 
-	err = ti.orm.Create(&org).Error
+	err := ti.orm.Create(&org).Error
 	if err != nil {
 		return nil, err
 	}
@@ -68,25 +49,24 @@ func (ti *TiDb) CreateOrg(
 func (ti *TiDb) CreateUser(
 	name string,
 	lineId string,
-	orgLineId string,
+	orgIdStr string,
 ) (*schema.User, error) {
 	if len(name) > schema.MAX_NAME_LEN {
 		return nil, errors.New("unexpected name length")
 	}
-	if len(lineId) != schema.LINE_ID_LEN || len(orgLineId) != schema.LINE_ID_LEN {
+	if len(lineId) != schema.LINE_ID_LEN {
 		return nil, errors.New("unexpected line id length")
 	}
+	if len(orgIdStr) != schema.ID_STR_LEN {
+		return nil, errors.New("unexpected id length")
+	}
 
-	id, err := uuid.NewRandom()
+	orgId, err := uuid.Parse(orgIdStr)
 	if err != nil {
 		return nil, err
 	}
 
-	org := schema.Org{}
-	err = ti.orm.
-		Select("id").
-		Where("line_id = ?", orgLineId).
-		First(&org).Error
+	id, err := uuid.NewRandom()
 	if err != nil {
 		return nil, err
 	}
@@ -97,7 +77,9 @@ func (ti *TiDb) CreateUser(
 		LineId: lineId,
 	}
 	err = ti.orm.
-		Model(&org).
+		Model(&schema.Org{
+			Id: orgId[:],
+		}).
 		Association("Users").
 		Append(&user)
 	if err != nil {
@@ -119,7 +101,7 @@ func (ti *TiDb) CreateMorningCall(
 	err := ti.orm.
 		Select("id").
 		Where("line_id = ?", userLineId).
-		First(&user).
+		Take(&user).
 		Error
 	if err != nil {
 		return nil, err
@@ -157,7 +139,7 @@ func (ti *TiDb) CreateEveningCall(
 	err := ti.orm.
 		Select("id").
 		Where("line_id = ?", userLineId).
-		First(&user).
+		Take(&user).
 		Error
 	if err != nil {
 		return nil, err
@@ -195,7 +177,7 @@ func (ti *TiDb) CreateDailyReport(
 	err := ti.orm.
 		Select("id").
 		Where("line_id = ?", userLineId).
-		First(&user).
+		Take(&user).
 		Error
 	if err != nil {
 		return nil, err

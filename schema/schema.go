@@ -8,9 +8,10 @@ import (
 )
 
 const (
-	ID_LEN       int = 16
-	MAX_NAME_LEN int = 50
-	LINE_ID_LEN  int = 33
+	ID_LEN       = 16
+	ID_STR_LEN   = 36
+	MAX_NAME_LEN = 50
+	LINE_ID_LEN  = 33
 )
 
 type Org struct {
@@ -18,9 +19,9 @@ type Org struct {
 	CreatedAt time.Time      `gorm:"not null"`
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 
-	Name          string `gorm:"not null;size:50"`
-	LineId        string `gorm:"unique;not null;type:char(33);index"`
-	AdminLineId   string `gorm:"unique;not null;type:char(33)"`
+	Name          string `gorm:"size:50"`
+	LineId        string `gorm:"unique;type:char(33);index"`
+	AdminLineId   string `gorm:"unique;type:char(33)"`
 	LastOperation *operation.OrgOperation
 	Users         []User `gorm:"foreignKey:OrgId;references:Id"`
 }

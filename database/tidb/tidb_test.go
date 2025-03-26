@@ -8,6 +8,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/joho/godotenv"
 )
 
@@ -30,11 +31,9 @@ func TestOrg(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	org, err := db.CreateOrg(
-		"テスト　オーガニゼーション会社",
-		"U8189cf6745fc0d808977bdb0b9f22995",
-		"U8189cf6745fc0d808977bdb0b9f22885",
-	)
+	id := "b205621d-615f-41a7-9b5b-794d18737d3d"
+
+	org, err := db.CreateOrg(uuid.MustParse(id))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -51,7 +50,7 @@ func TestUser(t *testing.T) {
 	user, err := db.CreateUser(
 		"テスト　ユーザー太郎",
 		"U8189cf6745fc0d808977bdb0b9f22885",
-		"U8189cf6745fc0d808977bdb0b9f22995",
+		"b205621d-615f-41a7-9b5b-794d18737d3d",
 	)
 	if err != nil {
 		t.Fatal(err)
