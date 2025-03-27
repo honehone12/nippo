@@ -5,9 +5,9 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"errors"
-	"nippo/lambda/message"
 	"nippo/lambda/response"
 	"nippo/log"
+	"nippo/message"
 	"os"
 
 	"github.com/aws/aws-lambda-go/events"
