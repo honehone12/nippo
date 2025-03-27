@@ -34,7 +34,6 @@ func (ti *TiDb) AutoMigrate() error {
 }
 
 func (ti *TiDb) CreateOrg(
-	id [16]uint8,
 	name string,
 	lineId string,
 ) (*schema.Org, error) {
@@ -43,6 +42,11 @@ func (ti *TiDb) CreateOrg(
 	}
 	if len(lineId) != schema.LINE_ID_LEN {
 		return nil, errors.New("unexpected line id length")
+	}
+
+	id, err := uuid.NewRandom()
+	if err != nil {
+		return nil, err
 	}
 
 	org := schema.Org{

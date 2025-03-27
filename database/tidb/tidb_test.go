@@ -3,7 +3,6 @@ package tidb
 import (
 	"bytes"
 	"errors"
-	"fmt"
 	"nippo/database"
 	"os"
 	"testing"
@@ -26,14 +25,13 @@ func initTest() (database.Database, error) {
 	return Open(tiUri)
 }
 
-func TestOrg(t *testing.T) {
+func TestUserAndOrg(t *testing.T) {
 	db, err := initTest()
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	org, err := db.CreateOrg(
-		uuid.MustParse("b205621d-615f-41a7-9b5b-794d18737d3d"),
 		"テスト　企業",
 		"U9198cf6745fc0d808977bdb0b9f22995",
 	)
@@ -41,23 +39,13 @@ func TestOrg(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	read, err := db.ReadOrg("b205621d-615f-41a7-9b5b-794d18737d3d")
-	if err != nil {
-		t.Fatal(err)
-	}
-	if read.LineId != org.LineId || read.Name != org.Name {
-		t.Fatal("read wrong data")
-	}
-}
-
-func TestUser(t *testing.T) {
-	db, err := initTest()
+	orgId, err := uuid.ParseBytes(org.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	user, err := db.CreateUser(
-		"b205621d-615f-41a7-9b5b-794d18737d3d",
+		orgId.String(),
 		"テスト　ユーザー太郎",
 		"U8189cf6745fc0d808977bdb0b9f22885",
 	)
@@ -65,11 +53,19 @@ func TestUser(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	read, err := db.ReadUser("U8189cf6745fc0d808977bdb0b9f22885")
+	readOrg, err := db.ReadOrg(orgId.String())
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !bytes.Equal(read.Id, user.Id) || read.Name != user.Name {
+	if readOrg.LineId != org.LineId || readOrg.Name != org.Name {
+		t.Fatal("read wrong data")
+	}
+
+	readUser, err := db.ReadUser("U8189cf6745fc0d808977bdb0b9f22885")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !bytes.Equal(readUser.Id, user.Id) || readUser.Name != user.Name {
 		t.Fatal("read wrong user")
 	}
 }
@@ -81,12 +77,10 @@ func TestMorningCall(t *testing.T) {
 	}
 
 	today := time.Now().Local()
-	call, err := db.CreateMorningCall("U8189cf6745fc0d808977bdb0b9f22885", today)
+	_, err = db.CreateMorningCall("U8189cf6745fc0d808977bdb0b9f22885", today)
 	if err != nil {
 		t.Fatal(err)
 	}
-
-	fmt.Printf("%#v\n", call)
 }
 
 func TestEveningCall(t *testing.T) {
@@ -96,12 +90,10 @@ func TestEveningCall(t *testing.T) {
 	}
 
 	today := time.Now().Local()
-	call, err := db.CreateEveningCall("U8189cf6745fc0d808977bdb0b9f22885", today)
+	_, err = db.CreateEveningCall("U8189cf6745fc0d808977bdb0b9f22885", today)
 	if err != nil {
 		t.Fatal(err)
 	}
-
-	fmt.Printf("%#v\n", call)
 }
 
 func TestDailyReport(t *testing.T) {
@@ -111,10 +103,8 @@ func TestDailyReport(t *testing.T) {
 	}
 
 	today := time.Now().Local()
-	report, err := db.CreateDailyReport("U8189cf6745fc0d808977bdb0b9f22885", today)
+	_, err = db.CreateDailyReport("U8189cf6745fc0d808977bdb0b9f22885", today)
 	if err != nil {
 		t.Fatal(err)
 	}
-
-	fmt.Printf("%#v\n", report)
 }

@@ -7,7 +7,6 @@ import (
 
 type Database interface {
 	CreateOrg(
-		id [16]uint8,
 		name string,
 		lineId string,
 	) (*schema.Org, error)
