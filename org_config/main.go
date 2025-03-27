@@ -45,7 +45,7 @@ func main() {
 		return
 	}
 
-	id, err := uuid.ParseBytes(org.Id)
+	id, err := uuid.FromBytes(org.Id)
 	if err != nil {
 		fmt.Println(err)
 		return

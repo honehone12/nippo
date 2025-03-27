@@ -39,7 +39,7 @@ func TestUserAndOrg(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	orgId, err := uuid.ParseBytes(org.Id)
+	orgId, err := uuid.FromBytes(org.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
