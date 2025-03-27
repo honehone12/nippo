@@ -3,8 +3,8 @@ package main
 import (
 	"context"
 	"encoding/base64"
-	"encoding/json"
 	"errors"
+	"nippo/database"
 	"nippo/lambda/response"
 	"nippo/log"
 	"nippo/message"
@@ -15,21 +15,32 @@ import (
 	"github.com/line/line-bot-sdk-go/v8/linebot/webhook"
 )
 
-type variables struct {
-	lnChSec string
+type variable struct {
+	lnChSec  string
+	orgIdStr string
 }
 
 var (
-	env variables
+	env variable
+	db  database.Database
 )
 
 func collectEnv() error {
 	env.lnChSec = os.Getenv("LN_CH_SEC")
 	if len(env.lnChSec) == 0 {
-		return errors.New("env for lnchsec is not set")
+		return errors.New("env for lnChSec is not set")
+	}
+
+	env.orgIdStr = os.Getenv("ORG_ID")
+	if len(env.orgIdStr) == 0 {
+		return errors.New("env for orgIdStr is not set")
 	}
 
 	return nil
+}
+
+func connectDb() error {
+	panic("unimplemented")
 }
 
 func validateMsg(req *events.APIGatewayProxyRequest) error {
@@ -57,14 +68,14 @@ func parseMsg(
 		var err error
 		b, err = base64.StdEncoding.DecodeString(req.Body)
 		if err != nil {
-			return errors.New("failed to decode base64")
+			return err
 		}
 	} else {
 		b = []byte(req.Body)
 	}
 
-	if err := json.Unmarshal(b, msg); err != nil {
-		return errors.New("failed to unmarshal json body")
+	if err := msg.UnmarshalJSON(b); err != nil {
+		return err
 	}
 
 	return nil
@@ -85,7 +96,12 @@ func handler(
 		return *response.BadRequest(), nil
 	}
 
-	if err := message.MessageMain(&msg); err != nil {
+	log.L.Infof("%#v\n", msg)
+
+	if err := message.MessageMain(&message.MessageProps{
+		OrgIdStr: env.orgIdStr,
+		Db:       db,
+	}, &msg); err != nil {
 		log.L.Error(err)
 	}
 	return *response.Ok(), nil
@@ -95,7 +111,7 @@ func main() {
 	log.FmtDefault()
 
 	if err := collectEnv(); err != nil {
-		panic(err)
+		log.L.Fatal(err)
 	}
 
 	lambda.Start(handler)

@@ -40,6 +40,14 @@ func TestOrg(t *testing.T) {
 		t.Fatal(err)
 	}
 
+	read, err := db.ReadOrg("b205621d-615f-41a7-9b5b-794d18737d3d")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if read.LineId != "U9198cf6745fc0d808977bdb0b9f22995" || read.Name != "テスト　企業" {
+		t.Fatal("read wrong data")
+	}
+
 	fmt.Printf("%#v\n", org)
 }
 

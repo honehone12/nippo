@@ -46,12 +46,27 @@ func (ti *TiDb) CreateOrg(
 	}
 
 	org := schema.Org{
-		Id: id[:],
+		Id:     id[:],
+		Name:   name,
+		LineId: lineId,
 	}
 
-	err := ti.orm.Create(&org).Error
+	if res := ti.orm.Create(&org); res.Error != nil {
+		return nil, res.Error
+	}
+
+	return &org, nil
+}
+
+func (ti *TiDb) ReadOrg(idStr string) (*schema.Org, error) {
+	id, err := uuid.Parse(idStr)
 	if err != nil {
 		return nil, err
+	}
+
+	org := schema.Org{}
+	if res := ti.orm.Take(&org, "id = ?", id[:]); res.Error != nil {
+		return nil, res.Error
 	}
 
 	return &org, nil
@@ -87,13 +102,9 @@ func (ti *TiDb) CreateUser(
 		Name:   name,
 		LineId: lineId,
 	}
-	err = ti.orm.
-		Model(&schema.Org{
-			Id: orgId[:],
-		}).
-		Association("Users").
-		Append(&user)
-	if err != nil {
+	if err := ti.orm.Model(&schema.Org{
+		Id: orgId[:],
+	}).Association("Users").Append(&user); err != nil {
 		return nil, err
 	}
 
@@ -109,13 +120,8 @@ func (ti *TiDb) CreateMorningCall(
 	}
 
 	user := schema.User{}
-	err := ti.orm.
-		Select("id").
-		Where("line_id = ?", userLineId).
-		Take(&user).
-		Error
-	if err != nil {
-		return nil, err
+	if res := ti.orm.Select("id").Take(&user, "line_id = ?", userLineId); res.Error != nil {
+		return nil, res.Error
 	}
 
 	id, err := uuid.NewRandom()
@@ -127,11 +133,7 @@ func (ti *TiDb) CreateMorningCall(
 		Id:   id[:],
 		Date: date,
 	}
-	err = ti.orm.
-		Model(&user).
-		Association("MorningCalls").
-		Append(&call)
-	if err != nil {
+	if err := ti.orm.Model(&user).Association("MorningCalls").Append(&call); err != nil {
 		return nil, err
 	}
 
@@ -147,13 +149,8 @@ func (ti *TiDb) CreateEveningCall(
 	}
 
 	user := schema.User{}
-	err := ti.orm.
-		Select("id").
-		Where("line_id = ?", userLineId).
-		Take(&user).
-		Error
-	if err != nil {
-		return nil, err
+	if res := ti.orm.Select("id").Take(&user, "line_id = ?", userLineId); res.Error != nil {
+		return nil, res.Error
 	}
 
 	id, err := uuid.NewRandom()
@@ -165,11 +162,7 @@ func (ti *TiDb) CreateEveningCall(
 		Id:   id[:],
 		Date: date,
 	}
-	err = ti.orm.
-		Model(&user).
-		Association("EveningCalls").
-		Append(&call)
-	if err != nil {
+	if err := ti.orm.Model(&user).Association("EveningCalls").Append(&call); err != nil {
 		return nil, err
 	}
 
@@ -185,13 +178,8 @@ func (ti *TiDb) CreateDailyReport(
 	}
 
 	user := schema.User{}
-	err := ti.orm.
-		Select("id").
-		Where("line_id = ?", userLineId).
-		Take(&user).
-		Error
-	if err != nil {
-		return nil, err
+	if res := ti.orm.Select("id").Take(&user, "line_id = ?", userLineId); res.Error != nil {
+		return nil, res.Error
 	}
 
 	id, err := uuid.NewRandom()
@@ -203,11 +191,7 @@ func (ti *TiDb) CreateDailyReport(
 		Id:   id[:],
 		Date: date,
 	}
-	err = ti.orm.
-		Model(&user).
-		Association("DailyReports").
-		Append(&call)
-	if err != nil {
+	if err := ti.orm.Model(&user).Association("DailyReports").Append(&call); err != nil {
 		return nil, err
 	}
 

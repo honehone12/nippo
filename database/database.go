@@ -11,6 +11,7 @@ type Database interface {
 		name string,
 		lineId string,
 	) (*schema.Org, error)
+	ReadOrg(idStr string) (*schema.Org, error)
 	CreateUser(
 		orgIdStr string,
 		name string,
