@@ -6,9 +6,9 @@ import (
 	"errors"
 	"nippo/database"
 	"nippo/database/tidb"
-	"nippo/lambda/response"
 	"nippo/log"
 	"nippo/message"
+	"nippo/response"
 	"os"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -44,6 +44,7 @@ func collectEnv() error {
 }
 
 func connectDb() error {
+
 	var err error
 	db, err = tidb.Open(env.dbUri)
 	return err
@@ -108,6 +109,7 @@ func handler(
 	if err := message.MessageMain(props, &msg); err != nil {
 		log.L.Error(err)
 	}
+
 	return *response.Ok(), nil
 }
 
@@ -115,6 +117,10 @@ func main() {
 	log.FmtDefault()
 
 	if err := collectEnv(); err != nil {
+		log.L.Fatal(err)
+	}
+
+	if err := connectDb(); err != nil {
 		log.L.Fatal(err)
 	}
 

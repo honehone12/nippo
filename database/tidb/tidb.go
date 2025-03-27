@@ -2,12 +2,15 @@ package tidb
 
 import (
 	"errors"
+	"log"
 	"nippo/schema"
+	"os"
 	"time"
 
 	"github.com/google/uuid"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 type TiDb struct {
@@ -15,7 +18,17 @@ type TiDb struct {
 }
 
 func Open(tiUri string) (*TiDb, error) {
-	orm, err := gorm.Open(mysql.Open(tiUri))
+	gormLogger := logger.New(
+		log.New(os.Stdout, "\r\n", log.LstdFlags),
+		logger.Config{
+			SlowThreshold:             500 * time.Millisecond,
+			LogLevel:                  logger.Warn,
+			IgnoreRecordNotFoundError: true,
+			Colorful:                  false,
+		},
+	)
+
+	orm, err := gorm.Open(mysql.Open(tiUri), &gorm.Config{Logger: gormLogger})
 	if err != nil {
 		return nil, err
 	}
