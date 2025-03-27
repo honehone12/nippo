@@ -16,7 +16,7 @@ import (
 )
 
 type variables struct {
-	lineSec string
+	lnChSec string
 }
 
 var (
@@ -24,8 +24,8 @@ var (
 )
 
 func collectEnv() error {
-	env.lineSec = os.Getenv("LN_CH_SEC")
-	if len(env.lineSec) == 0 {
+	env.lnChSec = os.Getenv("LN_CH_SEC")
+	if len(env.lnChSec) == 0 {
 		return errors.New("env for lnchsec is not set")
 	}
 
@@ -41,7 +41,7 @@ func validateMsg(req *events.APIGatewayProxyRequest) error {
 		return errors.New("no signature")
 	}
 
-	if !webhook.ValidateSignature(env.lineSec, sig, []byte(req.Body)) {
+	if !webhook.ValidateSignature(env.lnChSec, sig, []byte(req.Body)) {
 		return errors.New("invalid signature")
 	}
 

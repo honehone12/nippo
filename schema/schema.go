@@ -1,7 +1,7 @@
 package schema
 
 import (
-	"nippo/message/state"
+	"nippo/state"
 	"time"
 
 	"gorm.io/gorm"
@@ -19,11 +19,11 @@ type Org struct {
 	CreatedAt time.Time      `gorm:"not null"`
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 
-	Name          string `gorm:"size:50"`
-	LineId        string `gorm:"unique;type:char(33);index"`
-	AdminLineId   string `gorm:"unique;type:char(33)"`
-	LastOperation *state.OrgOperation
-	Users         []User `gorm:"foreignKey:OrgId;references:Id"`
+	Name        string `gorm:"size:50"`
+	LineId      string `gorm:"unique;type:char(33);index"`
+	AdminLineId string `gorm:"unique;type:char(33)"`
+	NextState   *state.StateIdx
+	Users       []User `gorm:"foreignKey:OrgId;references:Id"`
 }
 
 type User struct {
@@ -31,13 +31,13 @@ type User struct {
 	CreatedAt time.Time      `gorm:"not null"`
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 
-	Name          string `gorm:"not null;size:50"`
-	LineId        string `gorm:"unique;not null;type:char(33);index"`
-	LastOperation *state.UserOperation
-	OrgId         []uint8       `gorm:"not null;type:binary(16)"`
-	MorningCalls  []MorningCall `gorm:"foreignKey:UserId;references:Id"`
-	EveningCalls  []EveningCall `gorm:"foreignKey:UserId;references:Id"`
-	DailyReports  []DailyReport `gorm:"foreignKey:UserId;references:Id"`
+	Name         string `gorm:"not null;size:50"`
+	LineId       string `gorm:"unique;not null;type:char(33);index"`
+	NextState    *state.StateIdx
+	OrgId        []uint8       `gorm:"not null;type:binary(16)"`
+	MorningCalls []MorningCall `gorm:"foreignKey:UserId;references:Id"`
+	EveningCalls []EveningCall `gorm:"foreignKey:UserId;references:Id"`
+	DailyReports []DailyReport `gorm:"foreignKey:UserId;references:Id"`
 }
 
 type MorningCall struct {
