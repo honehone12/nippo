@@ -1,7 +1,7 @@
 package schema
 
 import (
-	"nippo/message/operation"
+	"nippo/message/state"
 	"time"
 
 	"gorm.io/gorm"
@@ -22,7 +22,7 @@ type Org struct {
 	Name          string `gorm:"size:50"`
 	LineId        string `gorm:"unique;type:char(33);index"`
 	AdminLineId   string `gorm:"unique;type:char(33)"`
-	LastOperation *operation.OrgOperation
+	LastOperation *state.OrgOperation
 	Users         []User `gorm:"foreignKey:OrgId;references:Id"`
 }
 
@@ -33,7 +33,7 @@ type User struct {
 
 	Name          string `gorm:"not null;size:50"`
 	LineId        string `gorm:"unique;not null;type:char(33);index"`
-	LastOperation *operation.UserOperation
+	LastOperation *state.UserOperation
 	OrgId         []uint8       `gorm:"not null;type:binary(16)"`
 	MorningCalls  []MorningCall `gorm:"foreignKey:UserId;references:Id"`
 	EveningCalls  []EveningCall `gorm:"foreignKey:UserId;references:Id"`

@@ -1,4 +1,4 @@
-package operation
+package state
 
 type UserOperation uint32
 

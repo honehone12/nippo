@@ -1,13 +1,14 @@
 package message
 
 import (
-	"nippo/lambda/response"
+	"nippo/log"
 
-	"github.com/aws/aws-lambda-go/events"
 	"github.com/line/line-bot-sdk-go/v8/linebot/webhook"
 )
 
-func MessageMain(msg *webhook.CallbackRequest) *events.APIGatewayProxyResponse {
+func MessageMain(msg *webhook.CallbackRequest) error {
 
-	return response.Ok()
+	log.L.Infof("%#v\n", msg)
+
+	return nil
 }
