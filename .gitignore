@@ -27,3 +27,5 @@ go.work.sum
 #lambda
 *.zip
 bootstrap
+
+/bin
