@@ -5,9 +5,9 @@ import (
 	"encoding/base64"
 	"errors"
 	"nippo/database"
+	"nippo/database/tidb"
 	"nippo/lambda/response"
 	"nippo/log"
-	"nippo/message"
 	"os"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -18,6 +18,7 @@ import (
 type variable struct {
 	lnChSec  string
 	orgIdStr string
+	dbUri    string
 }
 
 var (
@@ -26,21 +27,25 @@ var (
 )
 
 func collectEnv() error {
-	env.lnChSec = os.Getenv("LN_CH_SEC")
-	if len(env.lnChSec) == 0 {
+	if env.lnChSec = os.Getenv("LN_CH_SEC"); len(env.lnChSec) == 0 {
 		return errors.New("env for lnChSec is not set")
 	}
 
-	env.orgIdStr = os.Getenv("ORG_ID")
-	if len(env.orgIdStr) == 0 {
+	if env.orgIdStr = os.Getenv("ORG_ID"); len(env.orgIdStr) == 0 {
 		return errors.New("env for orgIdStr is not set")
+	}
+
+	if env.dbUri = os.Getenv("DB_URI"); len(env.dbUri) == 0 {
+		return errors.New("env for dbUri is not set")
 	}
 
 	return nil
 }
 
 func connectDb() error {
-	panic("unimplemented")
+	var err error
+	db, err = tidb.Open(env.dbUri)
+	return err
 }
 
 func validateMsg(req *events.APIGatewayProxyRequest) error {
@@ -98,12 +103,12 @@ func handler(
 
 	log.L.Infof("%#v\n", msg)
 
-	if err := message.MessageMain(&message.MessageProps{
-		OrgIdStr: env.orgIdStr,
-		Db:       db,
-	}, &msg); err != nil {
-		log.L.Error(err)
-	}
+	// if err := message.MessageMain(&message.MessageProps{
+	// 	OrgIdStr: env.orgIdStr,
+	// 	Db:       db,
+	// }, &msg); err != nil {
+	// 	log.L.Error(err)
+	// }
 	return *response.Ok(), nil
 }
 
