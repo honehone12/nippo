@@ -33,7 +33,18 @@ func (ti *TiDb) AutoMigrate() error {
 	)
 }
 
-func (ti *TiDb) CreateOrg(id [16]uint8) (*schema.Org, error) {
+func (ti *TiDb) CreateOrg(
+	id [16]uint8,
+	name string,
+	lineId string,
+) (*schema.Org, error) {
+	if len(name) > schema.MAX_NAME_LEN {
+		return nil, errors.New("unexpected name length")
+	}
+	if len(lineId) != schema.LINE_ID_LEN {
+		return nil, errors.New("unexpected line id length")
+	}
+
 	org := schema.Org{
 		Id: id[:],
 	}
@@ -47,9 +58,9 @@ func (ti *TiDb) CreateOrg(id [16]uint8) (*schema.Org, error) {
 }
 
 func (ti *TiDb) CreateUser(
+	orgIdStr string,
 	name string,
 	lineId string,
-	orgIdStr string,
 ) (*schema.User, error) {
 	if len(name) > schema.MAX_NAME_LEN {
 		return nil, errors.New("unexpected name length")
@@ -90,8 +101,8 @@ func (ti *TiDb) CreateUser(
 }
 
 func (ti *TiDb) CreateMorningCall(
-	date time.Time,
 	userLineId string,
+	date time.Time,
 ) (*schema.MorningCall, error) {
 	if len(userLineId) != schema.LINE_ID_LEN {
 		return nil, errors.New("unexpected line id length")
@@ -128,8 +139,8 @@ func (ti *TiDb) CreateMorningCall(
 }
 
 func (ti *TiDb) CreateEveningCall(
-	date time.Time,
 	userLineId string,
+	date time.Time,
 ) (*schema.EveningCall, error) {
 	if len(userLineId) != schema.LINE_ID_LEN {
 		return nil, errors.New("unexpected line id length")
@@ -166,8 +177,8 @@ func (ti *TiDb) CreateEveningCall(
 }
 
 func (ti *TiDb) CreateDailyReport(
-	date time.Time,
 	userLineId string,
+	date time.Time,
 ) (*schema.DailyReport, error) {
 	if len(userLineId) != schema.LINE_ID_LEN {
 		return nil, errors.New("unexpected line id length")

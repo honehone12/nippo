@@ -6,22 +6,26 @@ import (
 )
 
 type Database interface {
-	CreateOrg(id [16]uint8) (*schema.Org, error)
-	CreateUser(
+	CreateOrg(
+		id [16]uint8,
 		name string,
 		lineId string,
+	) (*schema.Org, error)
+	CreateUser(
 		orgIdStr string,
+		name string,
+		lineId string,
 	) (*schema.User, error)
 	CreateMorningCall(
-		date time.Time,
 		userLineId string,
+		date time.Time,
 	) (*schema.MorningCall, error)
 	CreateEveningCall(
-		date time.Time,
 		userLineId string,
+		date time.Time,
 	) (*schema.EveningCall, error)
 	CreateDailyReport(
-		date time.Time,
 		userLineId string,
+		date time.Time,
 	) (*schema.DailyReport, error)
 }

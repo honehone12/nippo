@@ -31,9 +31,11 @@ func TestOrg(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	id := "b205621d-615f-41a7-9b5b-794d18737d3d"
-
-	org, err := db.CreateOrg(uuid.MustParse(id))
+	org, err := db.CreateOrg(
+		uuid.MustParse("b205621d-615f-41a7-9b5b-794d18737d3d"),
+		"テスト　企業",
+		"U9198cf6745fc0d808977bdb0b9f22995",
+	)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -48,9 +50,9 @@ func TestUser(t *testing.T) {
 	}
 
 	user, err := db.CreateUser(
+		"b205621d-615f-41a7-9b5b-794d18737d3d",
 		"テスト　ユーザー太郎",
 		"U8189cf6745fc0d808977bdb0b9f22885",
-		"b205621d-615f-41a7-9b5b-794d18737d3d",
 	)
 	if err != nil {
 		t.Fatal(err)
@@ -66,7 +68,7 @@ func TestMorningCall(t *testing.T) {
 	}
 
 	today := time.Now().Local()
-	call, err := db.CreateMorningCall(today, "U8189cf6745fc0d808977bdb0b9f22885")
+	call, err := db.CreateMorningCall("U8189cf6745fc0d808977bdb0b9f22885", today)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -81,7 +83,7 @@ func TestEveningCall(t *testing.T) {
 	}
 
 	today := time.Now().Local()
-	call, err := db.CreateEveningCall(today, "U8189cf6745fc0d808977bdb0b9f22885")
+	call, err := db.CreateEveningCall("U8189cf6745fc0d808977bdb0b9f22885", today)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -96,7 +98,7 @@ func TestDailyReport(t *testing.T) {
 	}
 
 	today := time.Now().Local()
-	report, err := db.CreateDailyReport(today, "U8189cf6745fc0d808977bdb0b9f22885")
+	report, err := db.CreateDailyReport("U8189cf6745fc0d808977bdb0b9f22885", today)
 	if err != nil {
 		t.Fatal(err)
 	}

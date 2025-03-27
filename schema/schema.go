@@ -19,11 +19,9 @@ type Org struct {
 	CreatedAt time.Time      `gorm:"not null"`
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 
-	Name        string `gorm:"size:50"`
-	LineId      string `gorm:"unique;type:char(33);index"`
-	AdminLineId string `gorm:"unique;type:char(33)"`
-	NextState   *state.StateIdx
-	Users       []User `gorm:"foreignKey:OrgId;references:Id"`
+	Name   string `gorm:"not null;size:50"`
+	LineId string `gorm:"not null;unique;type:char(33);index"`
+	Users  []User `gorm:"foreignKey:OrgId;references:Id"`
 }
 
 type User struct {
