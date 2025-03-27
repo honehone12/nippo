@@ -8,6 +8,7 @@ import (
 	"nippo/database/tidb"
 	"nippo/lambda/response"
 	"nippo/log"
+	"nippo/message"
 	"os"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -103,12 +104,10 @@ func handler(
 
 	log.L.Infof("%#v\n", msg)
 
-	// if err := message.MessageMain(&message.MessageProps{
-	// 	OrgIdStr: env.orgIdStr,
-	// 	Db:       db,
-	// }, &msg); err != nil {
-	// 	log.L.Error(err)
-	// }
+	props := message.NewMessageProps(env.orgIdStr, db)
+	if err := message.MessageMain(props, &msg); err != nil {
+		log.L.Error(err)
+	}
 	return *response.Ok(), nil
 }
 

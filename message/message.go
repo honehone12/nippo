@@ -11,12 +11,19 @@ import (
 )
 
 type MessageProps struct {
-	OrgIdStr string
-	Db       database.Database
+	orgIdStr string
+	db       database.Database
+}
+
+func NewMessageProps(orgIdStr string, db database.Database) *MessageProps {
+	return &MessageProps{
+		orgIdStr,
+		db,
+	}
 }
 
 func validateDst(props *MessageProps, dst string) error {
-	org, err := props.Db.ReadOrg(props.OrgIdStr)
+	org, err := props.db.ReadOrg(props.orgIdStr)
 	if err != nil {
 		return fmt.Errorf("org is not configured, %w", err)
 	}
@@ -37,11 +44,30 @@ func processEvent(props *MessageProps, event webhook.EventInterface) error {
 	}
 }
 
-func processContent(props *MessageProps, content *webhook.MessageEvent) error {
-	switch content.Source.(type) {
+func getSource(content *webhook.MessageEvent) (string, error) {
+	switch c := content.Source.(type) {
 	case webhook.UserSource:
+		if len(c.UserId) == 0 {
+
+			return "", errors.New("empty source")
+		}
+
+		return c.UserId, nil
 	default:
-		log.L.Warnf("unsupported source: %s\n", content.Source.GetType())
+		return "", fmt.Errorf("unsupported source: %s", content.Source.GetType())
+	}
+}
+
+func processContent(props *MessageProps, content *webhook.MessageEvent) error {
+	sourceId, err := getSource(content)
+	if err != nil {
+		log.L.Warn(err)
+		return nil
+	}
+
+	_, err = props.db.ReadUser(sourceId)
+	if err != nil {
+		log.L.Warnf("user not configured: %s", err)
 		return nil
 	}
 

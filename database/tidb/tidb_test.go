@@ -1,6 +1,7 @@
 package tidb
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
 	"nippo/database"
@@ -44,11 +45,9 @@ func TestOrg(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if read.LineId != "U9198cf6745fc0d808977bdb0b9f22995" || read.Name != "テスト　企業" {
+	if read.LineId != org.LineId || read.Name != org.Name {
 		t.Fatal("read wrong data")
 	}
-
-	fmt.Printf("%#v\n", org)
 }
 
 func TestUser(t *testing.T) {
@@ -66,7 +65,13 @@ func TestUser(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	fmt.Printf("%#v\n", user)
+	read, err := db.ReadUser("U8189cf6745fc0d808977bdb0b9f22885")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !bytes.Equal(read.Id, user.Id) || read.Name != user.Name {
+		t.Fatal("read wrong user")
+	}
 }
 
 func TestMorningCall(t *testing.T) {

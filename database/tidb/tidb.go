@@ -111,6 +111,19 @@ func (ti *TiDb) CreateUser(
 	return &user, nil
 }
 
+func (ti *TiDb) ReadUser(userLineId string) (*schema.User, error) {
+	if len(userLineId) != schema.LINE_ID_LEN {
+		return nil, errors.New("unexpected line id length")
+	}
+
+	user := schema.User{}
+	if res := ti.orm.Take(&user, "line_id = ?", userLineId); res.Error != nil {
+		return nil, res.Error
+	}
+
+	return &user, nil
+}
+
 func (ti *TiDb) CreateMorningCall(
 	userLineId string,
 	date time.Time,
