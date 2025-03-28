@@ -13,14 +13,10 @@ import (
 
 func main() {
 	name := flag.String("name", "", "name")
-	lineId := flag.String("line-id", "", "line id")
+
 	flag.Parse()
 	if len(*name) == 0 {
 		fmt.Println("name is empty")
-		return
-	}
-	if len(*lineId) == 0 {
-		fmt.Println("line-id is empty")
 		return
 	}
 
@@ -39,7 +35,7 @@ func main() {
 		return
 	}
 
-	org, err := db.CreateOrg(*name, *lineId)
+	org, err := db.CreateOrg(*name)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -53,5 +49,4 @@ func main() {
 
 	fmt.Printf("id: %s\n", id.String())
 	fmt.Printf("name: %s\n", org.Name)
-	fmt.Printf("line id: %s\n", org.LineId)
 }

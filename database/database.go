@@ -6,10 +6,8 @@ import (
 )
 
 type Database interface {
-	CreateOrg(
-		name string,
-		lineId string,
-	) (*schema.Org, error)
+	CreateOrg(name string) (*schema.Org, error)
+	UpdateOrgLineId(idStr string, newLineId string) (*schema.Org, error)
 	ReadOrg(idStr string) (*schema.Org, error)
 
 	CreateUser(

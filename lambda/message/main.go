@@ -10,6 +10,7 @@ import (
 	"nippo/message"
 	"nippo/response"
 	"os"
+	"strings"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -51,9 +52,25 @@ func connectDb() error {
 }
 
 func validateMsg(req *events.APIGatewayProxyRequest) error {
-	if h, ok := req.Headers["Content-Type"]; !ok || h != "application/json" {
+	userAgent, ok := req.Headers["User-Agent"]
+	if !ok {
+		userAgent, ok = req.Headers["user-agent"]
+	}
+	log.L.Infof("user agent: %s\n", userAgent)
+	if !ok || !strings.Contains(userAgent, "LineBotWebhook") {
+		return errors.New("invalid user agent")
+	} else if strings.Compare(userAgent, "LineBotWebhook/2.0") != 0 {
+		log.L.Warn("user agent was updated from version2.0")
+	}
+
+	contentType, ok := req.Headers["Content-Type"]
+	if !ok {
+		contentType, ok = req.Headers["content-type"]
+	}
+	if !ok || !strings.Contains(contentType, "application/json") {
 		return errors.New("invalid content type header")
 	}
+
 	sig, ok := req.Headers["x-line-signature"]
 	if !ok {
 		return errors.New("no signature")
@@ -89,28 +106,30 @@ func parseMsg(
 }
 
 func handler(
-	ctx context.Context,
+	_ context.Context,
 	req events.APIGatewayProxyRequest,
 ) (events.APIGatewayProxyResponse, error) {
+	log.L.Infof("%#v\n", req.Headers)
+
 	if err := validateMsg(&req); err != nil {
 		log.L.Warn(err)
-		return *response.BadRequest(), nil
+		return response.BadRequest(), nil
 	}
 
 	var msg webhook.CallbackRequest
 	if err := parseMsg(&req, &msg); err != nil {
 		log.L.Warn(err)
-		return *response.BadRequest(), nil
+		return response.BadRequest(), nil
 	}
-
-	log.L.Infof("%#v\n", msg)
 
 	props := message.NewMessageProps(env.orgIdStr, db)
 	if err := message.MessageMain(props, &msg); err != nil {
 		log.L.Error(err)
 	}
 
-	return *response.Ok(), nil
+	log.L.Info("ok")
+
+	return response.Ok(), nil
 }
 
 func main() {

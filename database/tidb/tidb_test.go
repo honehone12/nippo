@@ -31,15 +31,17 @@ func TestUserAndOrg(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	org, err := db.CreateOrg(
-		"テスト　企業",
-		"U9198cf6745fc0d808977bdb0b9f22995",
-	)
+	org, err := db.CreateOrg("テスト　企業")
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	orgId, err := uuid.FromBytes(org.Id)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	org, err = db.UpdateOrgLineId(orgId.String(), "U9198cf6745fc0d808977bdb0b9f22995")
 	if err != nil {
 		t.Fatal(err)
 	}

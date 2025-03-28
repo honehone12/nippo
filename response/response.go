@@ -6,8 +6,8 @@ import (
 	"github.com/aws/aws-lambda-go/events"
 )
 
-func BadRequest() *events.APIGatewayProxyResponse {
-	return &events.APIGatewayProxyResponse{
+func BadRequest() events.APIGatewayProxyResponse {
+	return events.APIGatewayProxyResponse{
 		StatusCode: http.StatusBadRequest,
 		Body:       "bad request",
 		Headers: map[string]string{
@@ -16,8 +16,8 @@ func BadRequest() *events.APIGatewayProxyResponse {
 	}
 }
 
-func Ok() *events.APIGatewayProxyResponse {
-	return &events.APIGatewayProxyResponse{
+func Ok() events.APIGatewayProxyResponse {
+	return events.APIGatewayProxyResponse{
 		StatusCode: http.StatusOK,
 		Body:       "ok",
 		Headers: map[string]string{

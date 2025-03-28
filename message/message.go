@@ -22,13 +22,22 @@ func NewMessageProps(orgIdStr string, db database.Database) *MessageProps {
 	}
 }
 
-func validateDst(props *MessageProps, dst string) error {
+func validateDst(props *MessageProps, msg *webhook.CallbackRequest) error {
 	org, err := props.db.ReadOrg(props.orgIdStr)
 	if err != nil {
 		return fmt.Errorf("org is not configured, %w", err)
 	}
-	if strings.Compare(org.LineId, dst) != 0 {
-		return errors.New("dst is not expected, must be misconfigured")
+
+	if len(org.LineId) == 0 {
+		log.L.Warnf("updating org line id to: %s\n", msg.Destination)
+		return nil
+	}
+
+	if strings.Compare(org.LineId, msg.Destination) != 0 {
+		return fmt.Errorf(
+			"dst has changed from: %s to %s. this is not expected",
+			org.LineId, msg.Destination,
+		)
 	}
 
 	return nil
@@ -65,13 +74,18 @@ func processContent(props *MessageProps, content *webhook.MessageEvent) error {
 		return nil
 	}
 
+	log.L.Info(sourceId)
+
 	_, err = props.db.ReadUser(sourceId)
 	if err != nil {
 		log.L.Warnf("user not configured: %s", err)
 		return nil
 	}
 
-	switch content.Message.(type) {
+	switch c := content.Message.(type) {
+	case webhook.TextMessageContent:
+		log.L.Info(c.Text)
+		return nil
 	default:
 		log.L.Warnf("unsupported user message event type: %s\n", content.Type)
 		return nil
@@ -79,7 +93,7 @@ func processContent(props *MessageProps, content *webhook.MessageEvent) error {
 }
 
 func MessageMain(props *MessageProps, msg *webhook.CallbackRequest) error {
-	if err := validateDst(props, msg.Destination); err != nil {
+	if err := validateDst(props, msg); err != nil {
 		return err
 	}
 

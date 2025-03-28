@@ -2,7 +2,7 @@ package tidb
 
 import (
 	"errors"
-	"log"
+	stdlog "log"
 	"nippo/schema"
 	"os"
 	"time"
@@ -19,7 +19,7 @@ type TiDb struct {
 
 func Open(tiUri string) (*TiDb, error) {
 	gormLogger := logger.New(
-		log.New(os.Stdout, "\r\n", log.LstdFlags),
+		stdlog.New(os.Stdout, "\r\n", stdlog.LstdFlags),
 		logger.Config{
 			SlowThreshold:             500 * time.Millisecond,
 			LogLevel:                  logger.Warn,
@@ -46,15 +46,9 @@ func (ti *TiDb) AutoMigrate() error {
 	)
 }
 
-func (ti *TiDb) CreateOrg(
-	name string,
-	lineId string,
-) (*schema.Org, error) {
+func (ti *TiDb) CreateOrg(name string) (*schema.Org, error) {
 	if len(name) > schema.MAX_NAME_LEN {
 		return nil, errors.New("unexpected name length")
-	}
-	if len(lineId) != schema.LINE_ID_LEN {
-		return nil, errors.New("unexpected line id length")
 	}
 
 	id, err := uuid.NewRandom()
@@ -63,12 +57,30 @@ func (ti *TiDb) CreateOrg(
 	}
 
 	org := schema.Org{
-		Id:     id[:],
-		Name:   name,
-		LineId: lineId,
+		Id:   id[:],
+		Name: name,
 	}
 
 	if res := ti.orm.Create(&org); res.Error != nil {
+		return nil, res.Error
+	}
+
+	return &org, nil
+}
+
+func (ti *TiDb) UpdateOrgLineId(idStr string, newLineId string) (*schema.Org, error) {
+	if len(newLineId) != schema.LINE_ID_LEN {
+		return nil, errors.New("unexpected line id length")
+	}
+
+	id, err := uuid.Parse(idStr)
+	if err != nil {
+		return nil, err
+	}
+
+	org := schema.Org{}
+	res := ti.orm.Model(&org).Where("id = ?", id[:]).Update("LineId", newLineId)
+	if res.Error != nil {
 		return nil, res.Error
 	}
 
