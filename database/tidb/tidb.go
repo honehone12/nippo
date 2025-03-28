@@ -68,23 +68,23 @@ func (ti *TiDb) CreateOrg(name string) (*schema.Org, error) {
 	return &org, nil
 }
 
-func (ti *TiDb) UpdateOrgLineId(idStr string, newLineId string) (*schema.Org, error) {
+func (ti *TiDb) UpdateOrgLineId(idStr string, newLineId string) error {
 	if len(newLineId) != schema.LINE_ID_LEN {
-		return nil, errors.New("unexpected line id length")
+		return errors.New("unexpected line id length")
 	}
 
 	id, err := uuid.Parse(idStr)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	org := schema.Org{}
 	res := ti.orm.Model(&org).Where("id = ?", id[:]).Update("LineId", newLineId)
 	if res.Error != nil {
-		return nil, res.Error
+		return res.Error
 	}
 
-	return &org, nil
+	return nil
 }
 
 func (ti *TiDb) ReadOrg(idStr string) (*schema.Org, error) {

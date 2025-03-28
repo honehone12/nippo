@@ -41,7 +41,7 @@ func TestUserAndOrg(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	org, err = db.UpdateOrgLineId(orgId.String(), "U9198cf6745fc0d808977bdb0b9f22995")
+	err = db.UpdateOrgLineId(orgId.String(), "U9198cf6745fc0d808977bdb0b9f22995")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -59,7 +59,7 @@ func TestUserAndOrg(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if readOrg.LineId != org.LineId || readOrg.Name != org.Name {
+	if readOrg.LineId != "U9198cf6745fc0d808977bdb0b9f22995" || readOrg.Name != org.Name {
 		t.Fatal("read wrong data")
 	}
 
