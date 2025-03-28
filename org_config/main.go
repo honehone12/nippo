@@ -35,18 +35,17 @@ func main() {
 		return
 	}
 
-	org, err := db.CreateOrg(*name)
+	bId, err := db.CreateOrg(*name)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
-	id, err := uuid.FromBytes(org.Id)
+	id, err := uuid.FromBytes(bId)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
 	fmt.Printf("id: %s\n", id.String())
-	fmt.Printf("name: %s\n", org.Name)
 }

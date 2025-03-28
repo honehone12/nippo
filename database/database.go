@@ -6,7 +6,7 @@ import (
 )
 
 type Database interface {
-	CreateOrg(name string) (*schema.Org, error)
+	CreateOrg(name string) ([]uint8, error)
 	UpdateOrgLineId(idStr string, newLineId string) error
 	ReadOrg(idStr string) (*schema.Org, error)
 
@@ -14,21 +14,12 @@ type Database interface {
 		orgIdStr string,
 		name string,
 		lineId string,
-	) (*schema.User, error)
+	) ([]uint8, error)
 	ReadUser(userLineId string) (*schema.User, error)
 
-	CreateMorningCall(
-		userLineId string,
-		date time.Time,
-	) (*schema.MorningCall, error)
+	CreateMorningCall(userLineId string, date time.Time) ([]uint8, error)
 
-	CreateEveningCall(
-		userLineId string,
-		date time.Time,
-	) (*schema.EveningCall, error)
+	CreateEveningCall(userLineId string, date time.Time) ([]uint8, error)
 
-	CreateDailyReport(
-		userLineId string,
-		date time.Time,
-	) (*schema.DailyReport, error)
+	CreateDailyReport(userLineId string, date time.Time) ([]uint8, error)
 }

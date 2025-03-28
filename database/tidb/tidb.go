@@ -46,7 +46,7 @@ func (ti *TiDb) AutoMigrate() error {
 	)
 }
 
-func (ti *TiDb) CreateOrg(name string) (*schema.Org, error) {
+func (ti *TiDb) CreateOrg(name string) ([]uint8, error) {
 	if len(name) > schema.MAX_NAME_LEN {
 		return nil, errors.New("unexpected name length")
 	}
@@ -65,7 +65,7 @@ func (ti *TiDb) CreateOrg(name string) (*schema.Org, error) {
 		return nil, res.Error
 	}
 
-	return &org, nil
+	return org.Id, nil
 }
 
 func (ti *TiDb) UpdateOrgLineId(idStr string, newLineId string) error {
@@ -105,7 +105,7 @@ func (ti *TiDb) CreateUser(
 	orgIdStr string,
 	name string,
 	lineId string,
-) (*schema.User, error) {
+) ([]uint8, error) {
 	if len(name) > schema.MAX_NAME_LEN {
 		return nil, errors.New("unexpected name length")
 	}
@@ -137,7 +137,7 @@ func (ti *TiDb) CreateUser(
 		return nil, err
 	}
 
-	return &user, nil
+	return user.Id, nil
 }
 
 func (ti *TiDb) ReadUser(userLineId string) (*schema.User, error) {
@@ -156,7 +156,7 @@ func (ti *TiDb) ReadUser(userLineId string) (*schema.User, error) {
 func (ti *TiDb) CreateMorningCall(
 	userLineId string,
 	date time.Time,
-) (*schema.MorningCall, error) {
+) ([]uint8, error) {
 	if len(userLineId) != schema.LINE_ID_LEN {
 		return nil, errors.New("unexpected line id length")
 	}
@@ -179,13 +179,13 @@ func (ti *TiDb) CreateMorningCall(
 		return nil, err
 	}
 
-	return &call, nil
+	return call.Id, nil
 }
 
 func (ti *TiDb) CreateEveningCall(
 	userLineId string,
 	date time.Time,
-) (*schema.EveningCall, error) {
+) ([]uint8, error) {
 	if len(userLineId) != schema.LINE_ID_LEN {
 		return nil, errors.New("unexpected line id length")
 	}
@@ -208,13 +208,13 @@ func (ti *TiDb) CreateEveningCall(
 		return nil, err
 	}
 
-	return &call, nil
+	return call.Id, nil
 }
 
 func (ti *TiDb) CreateDailyReport(
 	userLineId string,
 	date time.Time,
-) (*schema.DailyReport, error) {
+) ([]uint8, error) {
 	if len(userLineId) != schema.LINE_ID_LEN {
 		return nil, errors.New("unexpected line id length")
 	}
@@ -237,5 +237,5 @@ func (ti *TiDb) CreateDailyReport(
 		return nil, err
 	}
 
-	return &call, nil
+	return call.Id, nil
 }

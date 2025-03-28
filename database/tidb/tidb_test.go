@@ -31,12 +31,12 @@ func TestUserAndOrg(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	org, err := db.CreateOrg("テスト　企業")
+	bId, err := db.CreateOrg("テスト　企業")
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	orgId, err := uuid.FromBytes(org.Id)
+	orgId, err := uuid.FromBytes(bId)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -46,7 +46,7 @@ func TestUserAndOrg(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	user, err := db.CreateUser(
+	userId, err := db.CreateUser(
 		orgId.String(),
 		"テスト　ユーザー太郎",
 		"U8189cf6745fc0d808977bdb0b9f22885",
@@ -59,7 +59,7 @@ func TestUserAndOrg(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if readOrg.LineId != "U9198cf6745fc0d808977bdb0b9f22995" || readOrg.Name != org.Name {
+	if readOrg.LineId != "U9198cf6745fc0d808977bdb0b9f22995" || readOrg.Name != "テスト　企業" {
 		t.Fatal("read wrong data")
 	}
 
@@ -67,7 +67,7 @@ func TestUserAndOrg(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !bytes.Equal(readUser.Id, user.Id) || readUser.Name != user.Name {
+	if !bytes.Equal(readUser.Id, userId) || readUser.Name != "テスト　ユーザー太郎" {
 		t.Fatal("read wrong user")
 	}
 }
