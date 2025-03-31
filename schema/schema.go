@@ -99,7 +99,7 @@ type DailyReport struct {
 	Note      string `gorm:"size:5000"`
 
 	Locations []Location `gorm:"foreignKey:DailyReportId;references:Id"`
-	Standbys  []Standby  `gorm:"foreignKey:DailyReportId;references:Id"`
+	Waitings  []Waiting  `gorm:"foreignKey:DailyReportId;references:Id"`
 	Loadings  []Loading  `gorm:"foreignKey:DailyReportId;references:Id"`
 
 	UserId []uint8 `gorm:"not null;type:binary(16)"`
@@ -117,15 +117,14 @@ type Location struct {
 	DailyReportId []uint8 `gorm:"not null;type:binary(16)"`
 }
 
-type Standby struct {
+type Waiting struct {
 	Id        []uint8        `gorm:"primaryKey;type:binary(16)"`
 	CreatedAt time.Time      `gorm:"not null;index"`
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 
-	StartAt time.Time `gorm:"not null"`
-	EndAt   time.Time
-	Place   string `gorm:"size:100"`
-	Note    string `gorm:"size:5000"`
+	Place     string `gorm:"size:100"`
+	Note      string `gorm:"size:5000"`
+	Departure time.Time
 
 	DailyReportId []uint8 `gorm:"not null;type:binary(16)"`
 }
@@ -135,11 +134,10 @@ type Loading struct {
 	CreatedAt time.Time      `gorm:"not null;index"`
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 
-	StartAt       time.Time `gorm:"not null"`
-	EndAt         time.Time
 	Place         string `gorm:"size:100"`
 	ShippingCheck bool
 	Note          string `gorm:"size:5000"`
+	Departure     time.Time
 
 	DailyReportId []uint8 `gorm:"not null;type:binary(16)"`
 }
