@@ -20,7 +20,6 @@ func (ti *TiDb) CreateDailyReport(userLineId string, morningId []uint8) ([]uint8
 		"id",
 		"name",
 		"car_number",
-		"current_duty",
 	).Take(&user, "line_id = ?", userLineId); res.Error != nil {
 		return nil, res.Error
 	}

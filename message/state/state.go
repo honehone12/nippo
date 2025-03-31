@@ -1,14 +1,14 @@
 package state
 
 import (
-	"nippo/handlerprops"
+	"nippo/message"
 
 	"github.com/line/line-bot-sdk-go/v8/linebot/webhook"
 )
 
 type State interface {
 	run(
-		props *handlerprops.MessagingProperties,
+		props *message.MessagingProperties,
 		content webhook.MessageContentInterface,
 	) error
 }

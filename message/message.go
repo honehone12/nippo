@@ -10,7 +10,10 @@ import (
 	"gorm.io/gorm"
 )
 
-func validateDst(props *MessagingProperties, msg *webhook.CallbackRequest) error {
+func validateDst(
+	props *MessagingProperties,
+	msg *webhook.CallbackRequest,
+) error {
 	org, err := props.db.ReadOrg(props.orgIdStr)
 	if err != nil {
 		return fmt.Errorf("org is not configured, %w", err)
@@ -31,10 +34,15 @@ func validateDst(props *MessagingProperties, msg *webhook.CallbackRequest) error
 	return nil
 }
 
-func processEvent(props *MessagingProperties, event webhook.EventInterface) error {
+func processEvent(
+	props *MessagingProperties,
+	event webhook.EventInterface,
+) error {
 	switch e := event.(type) {
 	case webhook.MessageEvent:
 		return processContent(props, &e)
+	case webhook.PostbackEvent:
+		panic("todo")
 	default:
 		log.L.Warnf("unsupported event type: %s\n", event.GetType())
 		return nil

@@ -1,4 +1,4 @@
-package handlerprops
+package message
 
 import (
 	"nippo/database"
