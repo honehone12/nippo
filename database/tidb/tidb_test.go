@@ -30,7 +30,8 @@ func TestUserAndOrg(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	bId, err := db.CreateOrg("テスト　企業")
+	orgName := "テスト　企業"
+	bId, err := db.CreateOrg(orgName)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -40,16 +41,30 @@ func TestUserAndOrg(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	err = db.UpdateOrgLineId(orgId.String(), "U9198cf6745fc0d808977bdb0b9f22995")
+	orgLineId := "U9198cf6745fc0d808977bdb0b9f22995"
+	err = db.UpdateOrgLineId(orgId.String(), orgLineId)
 	if err != nil {
 		t.Fatal(err)
 	}
 
+	userName := "テスト　ユーザー太郎"
+	userLineId := "U8189cf6745fc0d808977bdb0b9f22885"
 	userId, err := db.CreateUser(
 		orgId.String(),
-		"テスト　ユーザー太郎",
-		"U8189cf6745fc0d808977bdb0b9f22885",
+		userName,
+		userLineId,
 	)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	carNumber := "く００９１２ー２３"
+	err = db.UpdateUserCarNumber(userLineId, carNumber)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	err = db.UpdateUserNextState(userLineId, 2)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -58,51 +73,55 @@ func TestUserAndOrg(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if readOrg.LineId != "U9198cf6745fc0d808977bdb0b9f22995" || readOrg.Name != "テスト　企業" {
+	if readOrg.LineId != orgLineId || readOrg.Name != orgName {
 		t.Fatal("read wrong data")
 	}
 
-	readUser, err := db.ReadUser("U8189cf6745fc0d808977bdb0b9f22885")
+	readUser, err := db.ReadUser(userLineId)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !bytes.Equal(readUser.Id, userId) || readUser.Name != "テスト　ユーザー太郎" {
+	if !bytes.Equal(readUser.Id, userId) || readUser.Name != userName {
+		t.Fatal("read wrong user")
+	}
+	if readUser.CarNumber != carNumber || readUser.NextState != 2 {
 		t.Fatal("read wrong user")
 	}
 }
 
-func TestMorningCall(t *testing.T) {
+func TestCallAndReport(t *testing.T) {
 	db, err := initTest()
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	_, err = db.CreateMorningCall("U8189cf6745fc0d808977bdb0b9f22885")
-	if err != nil {
-		t.Fatal(err)
-	}
-}
-
-func TestEveningCall(t *testing.T) {
-	db, err := initTest()
+	userLineId := "U8189cf6745fc0d808977bdb0b9f22885"
+	morningId, err := db.CreateMorningCall(userLineId)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	_, err = db.CreateEveningCall("U8189cf6745fc0d808977bdb0b9f22885")
-	if err != nil {
-		t.Fatal(err)
-	}
-}
-
-func TestDailyReport(t *testing.T) {
-	db, err := initTest()
+	reportId, err := db.CreateDailyReport(userLineId, morningId)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	_, err = db.CreateDailyReport("U8189cf6745fc0d808977bdb0b9f22885")
+	err = db.UpdateUserCurrentDuty(userLineId, reportId)
 	if err != nil {
 		t.Fatal(err)
+	}
+
+	_, err = db.CreateEveningCall(userLineId)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	readUser, err := db.ReadUser(userLineId)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if !bytes.Equal(readUser.CurrentDuty, reportId) {
+		t.Fatal("read wrong user")
 	}
 }

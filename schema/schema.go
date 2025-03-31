@@ -7,10 +7,11 @@ import (
 )
 
 const (
-	ID_LEN       = 16
-	ID_STR_LEN   = 36
-	MAX_NAME_LEN = 50
-	LINE_ID_LEN  = 33
+	ID_LEN             = 16
+	ID_STR_LEN         = 36
+	LINE_ID_LEN        = 33
+	MAX_SHORT_TEXT_LEN = 100
+	MAX_LONG_TEXT_LEN  = 5000
 )
 
 type Org struct {
@@ -19,8 +20,8 @@ type Org struct {
 	UpdatedAt time.Time
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 
-	Name   string `gorm:"not null;size:50"`
-	LineId string `gorm:"unique;type:char(33);index"`
+	Name   string `gorm:"not null;size:100"`
+	LineId string `gorm:"type:char(33);index"`
 	Users  []User `gorm:"foreignKey:OrgId;references:Id"`
 }
 
@@ -30,11 +31,12 @@ type User struct {
 	UpdatedAt time.Time
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 
-	Name      string   `gorm:"not null;size:50"`
-	LineId    string   `gorm:"unique;not null;type:char(33);index"`
-	CarNumber string   `gorm:"size:50"`
-	OrgId     []uint8  `gorm:"not null;type:binary(16)"`
-	NextState StateIdx `gorm:"default:4294967295"`
+	Name        string  `gorm:"not null;size:100"`
+	LineId      string  `gorm:"unique;not null;type:char(33);index"`
+	CarNumber   string  `gorm:"size:100"`
+	OrgId       []uint8 `gorm:"not null;type:binary(16)"`
+	CurrentDuty []uint8 `gorm:"type:binary(16)"`
+	NextState   StateIdx
 
 	MorningCalls []MorningCall `gorm:"foreignKey:UserId;references:Id"`
 	EveningCalls []EveningCall `gorm:"foreignKey:UserId;references:Id"`
@@ -46,8 +48,8 @@ type MorningCall struct {
 	CreatedAt time.Time      `gorm:"not null;index"`
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 
-	Caller          string `gorm:"size:50"`
-	Name            string `gorm:"size:50"`
+	Caller          string `gorm:"size:100"`
+	Name            string `gorm:"size:100"`
 	CarNumber       string `gorm:"size:100"`
 	Method          CallMethod
 	UsingAlcChecker bool
@@ -65,8 +67,8 @@ type EveningCall struct {
 	CreatedAt time.Time      `gorm:"not null;index"`
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 
-	Caller          string `gorm:"size:50"`
-	Name            string `gorm:"size:50"`
+	Caller          string `gorm:"size:100"`
+	Name            string `gorm:"size:100"`
 	CarNumber       string `gorm:"size:100"`
 	Method          CallMethod
 	UsingAlcChecker bool
@@ -82,26 +84,23 @@ type DailyReport struct {
 	CreatedAt time.Time      `gorm:"not null;index"`
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 
-	StartAt       time.Time `gorm:"not null;index"`
-	MorningCallId []uint8   `gorm:"type:binary(16)"`
-	EndAt         time.Time
+	MorningCallId []uint8 `gorm:"not null;type:binary(16)"`
 	EveningCallId []uint8 `gorm:"type:binary(16)"`
 
-	Name      string `gorm:"size:50"`
-	CarNumber string `gorm:"size:50"`
+	Name      string `gorm:"size:100"`
+	CarNumber string `gorm:"size:100"`
 
 	Pickup    uint32
 	Deliverry uint32
 	Odo       float64
 	Trip      float64
-	Rests     string `gorm:"size:2000"`
-	Highway   string `gorm:"size:2000"`
-	Troubles  string `gorm:"size:2000"`
+	Rests     string `gorm:"size:5000"`
+	Troubles  string `gorm:"size:5000"`
 	Note      string `gorm:"size:5000"`
 
-	Locations []Location
-	Standbys  []Standby
-	Loadings  []Loading
+	Locations []Location `gorm:"foreignKey:DailyReportId;references:Id"`
+	Standbys  []Standby  `gorm:"foreignKey:DailyReportId;references:Id"`
+	Loadings  []Loading  `gorm:"foreignKey:DailyReportId;references:Id"`
 
 	UserId []uint8 `gorm:"not null;type:binary(16)"`
 }
@@ -114,6 +113,8 @@ type Location struct {
 	Address   string `gorm:"size:100"`
 	Latitude  float64
 	Longitude float64
+
+	DailyReportId []uint8 `gorm:"not null;type:binary(16)"`
 }
 
 type Standby struct {
@@ -121,10 +122,12 @@ type Standby struct {
 	CreatedAt time.Time      `gorm:"not null;index"`
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 
-	StartAt time.Time `gorm:"not null;index"`
-	Place   string    `gorm:"size:100"`
-	EndAt   time.Time `gorm:"not null;index"`
-	Note    string    `gorm:"size:5000"`
+	StartAt time.Time `gorm:"not null"`
+	EndAt   time.Time
+	Place   string `gorm:"size:100"`
+	Note    string `gorm:"size:5000"`
+
+	DailyReportId []uint8 `gorm:"not null;type:binary(16)"`
 }
 
 type Loading struct {
@@ -132,9 +135,11 @@ type Loading struct {
 	CreatedAt time.Time      `gorm:"not null;index"`
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 
-	StartAt       time.Time `gorm:"not null;index"`
-	Place         string    `gorm:"size:100"`
+	StartAt       time.Time `gorm:"not null"`
+	EndAt         time.Time
+	Place         string `gorm:"size:100"`
 	ShippingCheck bool
-	EndAt         time.Time `gorm:"not null;index"`
-	Note          string    `gorm:"size:5000"`
+	Note          string `gorm:"size:5000"`
+
+	DailyReportId []uint8 `gorm:"not null;type:binary(16)"`
 }
