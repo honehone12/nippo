@@ -3,26 +3,14 @@ package message
 import (
 	"errors"
 	"fmt"
-	"nippo/database"
 	"nippo/log"
 	"strings"
 
 	"github.com/line/line-bot-sdk-go/v8/linebot/webhook"
+	"gorm.io/gorm"
 )
 
-type MessageProps struct {
-	orgIdStr string
-	db       database.Database
-}
-
-func NewMessageProps(orgIdStr string, db database.Database) *MessageProps {
-	return &MessageProps{
-		orgIdStr,
-		db,
-	}
-}
-
-func validateDst(props *MessageProps, msg *webhook.CallbackRequest) error {
+func validateDst(props *MessagingProperties, msg *webhook.CallbackRequest) error {
 	org, err := props.db.ReadOrg(props.orgIdStr)
 	if err != nil {
 		return fmt.Errorf("org is not configured, %w", err)
@@ -43,7 +31,7 @@ func validateDst(props *MessageProps, msg *webhook.CallbackRequest) error {
 	return nil
 }
 
-func processEvent(props *MessageProps, event webhook.EventInterface) error {
+func processEvent(props *MessagingProperties, event webhook.EventInterface) error {
 	switch e := event.(type) {
 	case webhook.MessageEvent:
 		return processContent(props, &e)
@@ -67,7 +55,7 @@ func getSource(content *webhook.MessageEvent) (string, error) {
 	}
 }
 
-func processContent(props *MessageProps, content *webhook.MessageEvent) error {
+func processContent(props *MessagingProperties, content *webhook.MessageEvent) error {
 	sourceId, err := getSource(content)
 	if err != nil {
 		log.L.Warn(err)
@@ -77,9 +65,12 @@ func processContent(props *MessageProps, content *webhook.MessageEvent) error {
 	log.L.Info(sourceId)
 
 	_, err = props.db.ReadUser(sourceId)
-	if err != nil {
+	if errors.Is(err, gorm.ErrRecordNotFound) {
 		log.L.Warnf("user not configured: %s", err)
+
 		return nil
+	} else if err != nil {
+		return err
 	}
 
 	switch c := content.Message.(type) {
@@ -87,12 +78,12 @@ func processContent(props *MessageProps, content *webhook.MessageEvent) error {
 		log.L.Info(c.Text)
 		return nil
 	default:
-		log.L.Warnf("unsupported user message event type: %s\n", content.Type)
+		log.L.Warnf("unsupported content type: %s\n", content.Type)
 		return nil
 	}
 }
 
-func MessageMain(props *MessageProps, msg *webhook.CallbackRequest) error {
+func MessageMain(props *MessagingProperties, msg *webhook.CallbackRequest) error {
 	if err := validateDst(props, msg); err != nil {
 		return err
 	}

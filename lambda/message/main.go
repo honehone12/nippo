@@ -6,31 +6,39 @@ import (
 	"errors"
 	"nippo/database"
 	"nippo/database/tidb"
+	"nippo/lambda/response"
 	"nippo/log"
 	"nippo/message"
-	"nippo/response"
 	"os"
 	"strings"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
+	"github.com/line/line-bot-sdk-go/v8/linebot/messaging_api"
 	"github.com/line/line-bot-sdk-go/v8/linebot/webhook"
 )
 
 type variable struct {
 	lnChSec  string
+	lnChTkn  string
 	orgIdStr string
 	dbUri    string
 }
 
 var (
-	env variable
-	db  database.Database
+	env     variable
+	db      database.Database
+	api     *messaging_api.MessagingApiAPI
+	blobApi *messaging_api.MessagingApiBlobAPI
 )
 
 func collectEnv() error {
 	if env.lnChSec = os.Getenv("LN_CH_SEC"); len(env.lnChSec) == 0 {
 		return errors.New("env for lnChSec is not set")
+	}
+
+	if env.lnChTkn = os.Getenv("LN_CH_TKN"); len(env.lnChTkn) == 0 {
+		return errors.New("env for lnChTkn is not set")
 	}
 
 	if env.orgIdStr = os.Getenv("ORG_ID"); len(env.orgIdStr) == 0 {
@@ -45,10 +53,24 @@ func collectEnv() error {
 }
 
 func connectDb() error {
-
 	var err error
 	db, err = tidb.Open(env.dbUri)
 	return err
+}
+
+func initApi() error {
+	var err error
+	api, err = messaging_api.NewMessagingApiAPI(env.lnChTkn)
+	if err != nil {
+		return err
+	}
+
+	blobApi, err = messaging_api.NewMessagingApiBlobAPI(env.lnChTkn)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func validateMsg(req *events.APIGatewayProxyRequest) error {
@@ -122,7 +144,7 @@ func handler(
 		return response.BadRequest(), nil
 	}
 
-	props := message.NewMessageProps(env.orgIdStr, db)
+	props := message.NewMessageProps(env.orgIdStr, db, api, blobApi)
 	if err := message.MessageMain(props, &msg); err != nil {
 		log.L.Error(err)
 	}
@@ -140,6 +162,10 @@ func main() {
 	}
 
 	if err := connectDb(); err != nil {
+		log.L.Fatal(err)
+	}
+
+	if err := initApi(); err != nil {
 		log.L.Fatal(err)
 	}
 
