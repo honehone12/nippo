@@ -41,27 +41,24 @@ type User struct {
 
 type MorningCall struct {
 	Id        []uint8        `gorm:"primaryKey;type:binary(16)"`
-	CreatedAt time.Time      `gorm:"not null"`
+	CreatedAt time.Time      `gorm:"not null;index"`
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 
-	UserId []uint8   `gorm:"not null;type:binary(16)"`
-	Date   time.Time `gorm:"not null;type:date;index"`
+	UserId []uint8 `gorm:"not null;type:binary(16)"`
 }
 
 type EveningCall struct {
 	Id        []uint8        `gorm:"primaryKey;type:binary(16)"`
-	CreatedAt time.Time      `gorm:"not null"`
+	CreatedAt time.Time      `gorm:"not null;index"`
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 
-	UserId []uint8   `gorm:"not null;type:binary(16)"`
-	Date   time.Time `gorm:"not null;type:date;index"`
+	UserId []uint8 `gorm:"not null;type:binary(16)"`
 }
 
 type DailyReport struct {
 	Id        []uint8        `gorm:"primaryKey;type:binary(16)"`
-	CreatedAt time.Time      `gorm:"not null"`
+	CreatedAt time.Time      `gorm:"not null;index"`
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 
-	UserId []uint8   `gorm:"not null;type:binary(16)"`
-	Date   time.Time `gorm:"not null;type:date;index"`
+	UserId []uint8 `gorm:"not null;type:binary(16)"`
 }

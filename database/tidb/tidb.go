@@ -153,10 +153,7 @@ func (ti *TiDb) ReadUser(userLineId string) (*schema.User, error) {
 	return &user, nil
 }
 
-func (ti *TiDb) CreateMorningCall(
-	userLineId string,
-	date time.Time,
-) ([]uint8, error) {
+func (ti *TiDb) CreateMorningCall(userLineId string) ([]uint8, error) {
 	if len(userLineId) != schema.LINE_ID_LEN {
 		return nil, errors.New("unexpected line id length")
 	}
@@ -171,10 +168,7 @@ func (ti *TiDb) CreateMorningCall(
 		return nil, err
 	}
 
-	call := schema.MorningCall{
-		Id:   id[:],
-		Date: date,
-	}
+	call := schema.MorningCall{Id: id[:]}
 	if err := ti.orm.Model(&user).Association("MorningCalls").Append(&call); err != nil {
 		return nil, err
 	}
@@ -182,10 +176,7 @@ func (ti *TiDb) CreateMorningCall(
 	return call.Id, nil
 }
 
-func (ti *TiDb) CreateEveningCall(
-	userLineId string,
-	date time.Time,
-) ([]uint8, error) {
+func (ti *TiDb) CreateEveningCall(userLineId string) ([]uint8, error) {
 	if len(userLineId) != schema.LINE_ID_LEN {
 		return nil, errors.New("unexpected line id length")
 	}
@@ -200,10 +191,7 @@ func (ti *TiDb) CreateEveningCall(
 		return nil, err
 	}
 
-	call := schema.EveningCall{
-		Id:   id[:],
-		Date: date,
-	}
+	call := schema.EveningCall{Id: id[:]}
 	if err := ti.orm.Model(&user).Association("EveningCalls").Append(&call); err != nil {
 		return nil, err
 	}
@@ -211,10 +199,7 @@ func (ti *TiDb) CreateEveningCall(
 	return call.Id, nil
 }
 
-func (ti *TiDb) CreateDailyReport(
-	userLineId string,
-	date time.Time,
-) ([]uint8, error) {
+func (ti *TiDb) CreateDailyReport(userLineId string) ([]uint8, error) {
 	if len(userLineId) != schema.LINE_ID_LEN {
 		return nil, errors.New("unexpected line id length")
 	}
@@ -229,10 +214,7 @@ func (ti *TiDb) CreateDailyReport(
 		return nil, err
 	}
 
-	call := schema.DailyReport{
-		Id:   id[:],
-		Date: date,
-	}
+	call := schema.DailyReport{Id: id[:]}
 	if err := ti.orm.Model(&user).Association("DailyReports").Append(&call); err != nil {
 		return nil, err
 	}

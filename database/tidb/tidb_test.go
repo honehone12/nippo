@@ -6,7 +6,6 @@ import (
 	"nippo/database"
 	"os"
 	"testing"
-	"time"
 
 	"github.com/google/uuid"
 	"github.com/joho/godotenv"
@@ -78,8 +77,7 @@ func TestMorningCall(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	today := time.Now().Local()
-	_, err = db.CreateMorningCall("U8189cf6745fc0d808977bdb0b9f22885", today)
+	_, err = db.CreateMorningCall("U8189cf6745fc0d808977bdb0b9f22885")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -91,8 +89,7 @@ func TestEveningCall(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	today := time.Now().Local()
-	_, err = db.CreateEveningCall("U8189cf6745fc0d808977bdb0b9f22885", today)
+	_, err = db.CreateEveningCall("U8189cf6745fc0d808977bdb0b9f22885")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -104,8 +101,7 @@ func TestDailyReport(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	today := time.Now().Local()
-	_, err = db.CreateDailyReport("U8189cf6745fc0d808977bdb0b9f22885", today)
+	_, err = db.CreateDailyReport("U8189cf6745fc0d808977bdb0b9f22885")
 	if err != nil {
 		t.Fatal(err)
 	}

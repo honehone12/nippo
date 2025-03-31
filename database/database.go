@@ -2,7 +2,6 @@ package database
 
 import (
 	"nippo/schema"
-	"time"
 )
 
 type Database interface {
@@ -17,9 +16,9 @@ type Database interface {
 	) ([]uint8, error)
 	ReadUser(userLineId string) (*schema.User, error)
 
-	CreateMorningCall(userLineId string, date time.Time) ([]uint8, error)
+	CreateMorningCall(userLineId string) ([]uint8, error)
 
-	CreateEveningCall(userLineId string, date time.Time) ([]uint8, error)
+	CreateEveningCall(userLineId string) ([]uint8, error)
 
-	CreateDailyReport(userLineId string, date time.Time) ([]uint8, error)
+	CreateDailyReport(userLineId string) ([]uint8, error)
 }
