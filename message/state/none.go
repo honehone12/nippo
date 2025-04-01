@@ -7,11 +7,9 @@ import (
 	"github.com/line/line-bot-sdk-go/v8/linebot/webhook"
 )
 
-type StNone struct {
-	idx schema.StateIdx
-}
+type StNone struct{}
 
-func (s *StNone) Run(
+func (s StNone) Run(
 	props *property.MessagingProps,
 	user *schema.User,
 	event webhook.EventInterface,

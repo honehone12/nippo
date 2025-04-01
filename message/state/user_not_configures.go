@@ -2,8 +2,8 @@ package state
 
 import (
 	"fmt"
-	"nippo/message/action"
 	"nippo/message/property"
+	"nippo/message/reply"
 	"nippo/schema"
 	"strings"
 
@@ -11,25 +11,9 @@ import (
 	"github.com/line/line-bot-sdk-go/v8/linebot/webhook"
 )
 
-type StUserNotConfigured struct {
-	idx schema.StateIdx
-}
+type StUserNotConfigured struct{}
 
-func UserNotConfigured() State {
-	return &StUserNotConfigured{idx: ST_USER_NOT_CONFIGURED}
-}
-
-func quickReply() *messaging_api.QuickReply {
-	return &messaging_api.QuickReply{
-		Items: []messaging_api.QuickReplyItem{
-			{
-				Action: action.UserSettingAction(),
-			},
-		},
-	}
-}
-
-func (s *StUserNotConfigured) Run(
+func (s StUserNotConfigured) Run(
 	props *property.MessagingProps,
 	user *schema.User,
 	event webhook.EventInterface,
@@ -40,7 +24,8 @@ func (s *StUserNotConfigured) Run(
 		req.ReplyToken = e.ReplyToken
 	case webhook.PostbackEvent:
 		req.ReplyToken = e.ReplyToken
-		if strings.Compare(e.Postback.Data, action.USER_SETTING_ACTION_DATA) == 0 {
+
+		if strings.Compare(e.Postback.Data, reply.USER_SETTING_ACT_DATA) == 0 {
 			db := props.Db()
 			id, err := db.CreateUser(props.OrgId(), user.LineId)
 			if err != nil {
@@ -58,8 +43,9 @@ func (s *StUserNotConfigured) Run(
 				},
 			}
 
+			_, err = props.Api().ReplyMessage(&req)
+			return err
 		}
-
 	default:
 		return fmt.Errorf("unexpected event: %s", event.GetType())
 	}
@@ -67,7 +53,7 @@ func (s *StUserNotConfigured) Run(
 	req.Messages = []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
 			Text:       "ユーザー設定を行ってください",
-			QuickReply: quickReply(),
+			QuickReply: reply.UserSettingQuickReply(),
 		},
 	}
 

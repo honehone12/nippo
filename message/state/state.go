@@ -8,6 +8,15 @@ import (
 	"github.com/line/line-bot-sdk-go/v8/linebot/webhook"
 )
 
+const (
+	ST_USER_NOT_CONFIGURED schema.StateIdx = iota
+
+	ST_USER_SET_NAME
+	ST_USER_SET_CAR
+
+	ST_NONE
+)
+
 type State interface {
 	Run(
 		props *property.MessagingProps,
@@ -18,10 +27,14 @@ type State interface {
 
 func FromIdx(idx schema.StateIdx) (State, error) {
 	switch idx {
-	case ST_IDX_NONE:
-		return &StNone{idx}, nil
 	case ST_USER_NOT_CONFIGURED:
-		return &StUserNotConfigured{idx}, nil
+		return StUserNotConfigured{}, nil
+	case ST_USER_SET_NAME:
+		return StUserSetName{}, nil
+	case ST_USER_SET_CAR:
+		return StUserSetCar{}, nil
+	case ST_NONE:
+		return StNone{}, nil
 	default:
 		return nil, errors.New("undefined state index")
 	}

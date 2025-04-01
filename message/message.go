@@ -71,7 +71,7 @@ func processEvent(props *property.MessagingProps, event webhook.EventInterface) 
 	user, err := props.Db().ReadUser(source)
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		log.L.Warnf("user not configured: %s", err)
-		st := state.UserNotConfigured()
+		st := state.StUserNotConfigured{}
 
 		return st.Run(props, &schema.User{LineId: source}, event)
 	} else if err != nil {
