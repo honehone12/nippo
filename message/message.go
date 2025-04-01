@@ -10,10 +10,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func validateDst(
-	props *MessagingProperties,
-	msg *webhook.CallbackRequest,
-) error {
+func validateDst(props *MessagingProperties, msg *webhook.CallbackRequest) error {
 	org, err := props.db.ReadOrg(props.orgIdStr)
 	if err != nil {
 		return fmt.Errorf("org is not configured, %w", err)
@@ -34,37 +31,20 @@ func validateDst(
 	return nil
 }
 
-func processEvent(
-	props *MessagingProperties,
-	event webhook.EventInterface,
-) error {
-	switch e := event.(type) {
-	case webhook.MessageEvent:
-		return processContent(props, &e)
-	case webhook.PostbackEvent:
-		panic("todo")
-	default:
-		log.L.Warnf("unsupported event type: %s\n", event.GetType())
-		return nil
+func getSource(source webhook.SourceInterface) (string, error) {
+	s, ok := source.(webhook.UserSource)
+	if !ok {
+		return "", fmt.Errorf("unsupported source: %s", source.GetType())
 	}
+	if len(s.UserId) == 0 {
+		return "", errors.New("empty source")
+	}
+
+	return s.UserId, nil
 }
 
-func getSource(content *webhook.MessageEvent) (string, error) {
-	switch c := content.Source.(type) {
-	case webhook.UserSource:
-		if len(c.UserId) == 0 {
-
-			return "", errors.New("empty source")
-		}
-
-		return c.UserId, nil
-	default:
-		return "", fmt.Errorf("unsupported source: %s", content.Source.GetType())
-	}
-}
-
-func processContent(props *MessagingProperties, content *webhook.MessageEvent) error {
-	sourceId, err := getSource(content)
+func processMessageEvent(props *MessagingProperties, event *webhook.MessageEvent) error {
+	sourceId, err := getSource(event.Source)
 	if err != nil {
 		log.L.Warn(err)
 		return nil
@@ -81,12 +61,39 @@ func processContent(props *MessagingProperties, content *webhook.MessageEvent) e
 		return err
 	}
 
-	switch c := content.Message.(type) {
+	switch c := event.Message.(type) {
 	case webhook.TextMessageContent:
 		log.L.Info(c.Text)
 		return nil
 	default:
-		log.L.Warnf("unsupported content type: %s\n", content.Type)
+		log.L.Warnf("unsupported content type: %s\n", event.Type)
+		return nil
+	}
+}
+
+func processPostbackEvent(props *MessagingProperties, event *webhook.PostbackEvent) error {
+	sourceId, err := getSource(event)
+	if err != nil {
+		log.L.Warn(err)
+		return nil
+	}
+
+	log.L.Info(sourceId)
+
+	panic("todo")
+}
+
+func processEvent(
+	props *MessagingProperties,
+	event webhook.EventInterface,
+) error {
+	switch e := event.(type) {
+	case webhook.MessageEvent:
+		return processMessageEvent(props, &e)
+	case webhook.PostbackEvent:
+		panic("todo")
+	default:
+		log.L.Warnf("unsupported event type: %s\n", event.GetType())
 		return nil
 	}
 }

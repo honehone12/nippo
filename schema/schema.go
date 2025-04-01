@@ -31,12 +31,12 @@ type User struct {
 	UpdatedAt time.Time
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 
-	Name        string  `gorm:"not null;size:100"`
-	LineId      string  `gorm:"unique;not null;type:char(33);index"`
-	CarNumber   string  `gorm:"size:100"`
-	OrgId       []uint8 `gorm:"not null;type:binary(16)"`
-	CurrentDuty []uint8 `gorm:"type:binary(16)"`
-	NextState   StateIdx
+	Name        string   `gorm:"not null;size:100"`
+	LineId      string   `gorm:"unique;not null;type:char(33);index"`
+	CarNumber   string   `gorm:"size:100"`
+	OrgId       []uint8  `gorm:"not null;type:binary(16)"`
+	CurrentDuty []uint8  `gorm:"type:binary(16)"`
+	NextState   StateIdx `gorm:"default:4294967295"`
 
 	MorningCalls []MorningCall `gorm:"foreignKey:UserId;references:Id"`
 	EveningCalls []EveningCall `gorm:"foreignKey:UserId;references:Id"`
@@ -80,8 +80,9 @@ type EveningCall struct {
 }
 
 type DailyReport struct {
-	Id        []uint8        `gorm:"primaryKey;type:binary(16)"`
-	CreatedAt time.Time      `gorm:"not null;index"`
+	Id        []uint8   `gorm:"primaryKey;type:binary(16)"`
+	CreatedAt time.Time `gorm:"not null;index"`
+	UpdatedAt time.Time
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 
 	MorningCallId []uint8 `gorm:"not null;type:binary(16)"`
@@ -118,26 +119,26 @@ type Location struct {
 }
 
 type Waiting struct {
-	Id        []uint8        `gorm:"primaryKey;type:binary(16)"`
-	CreatedAt time.Time      `gorm:"not null;index"`
+	Id        []uint8   `gorm:"primaryKey;type:binary(16)"`
+	CreatedAt time.Time `gorm:"not null;index"`
+	UpdatedAt time.Time
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 
-	Place     string `gorm:"size:100"`
-	Note      string `gorm:"size:5000"`
-	Departure time.Time
+	Place string `gorm:"size:100"`
+	Note  string `gorm:"size:5000"`
 
 	DailyReportId []uint8 `gorm:"not null;type:binary(16)"`
 }
 
 type Loading struct {
-	Id        []uint8        `gorm:"primaryKey;type:binary(16)"`
-	CreatedAt time.Time      `gorm:"not null;index"`
+	Id        []uint8   `gorm:"primaryKey;type:binary(16)"`
+	CreatedAt time.Time `gorm:"not null;index"`
+	UpdatedAt time.Time
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 
 	Place         string `gorm:"size:100"`
 	ShippingCheck bool
 	Note          string `gorm:"size:5000"`
-	Departure     time.Time
 
 	DailyReportId []uint8 `gorm:"not null;type:binary(16)"`
 }
