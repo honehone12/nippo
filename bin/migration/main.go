@@ -10,29 +10,27 @@ import (
 )
 
 func migrate() error {
-	tiUri := os.Getenv("TIDB_URI")
-	if len(tiUri) == 0 {
-		return errors.New("env TIDB_URI is not set")
+	dbUri := os.Getenv("DB_URI")
+	if len(dbUri) == 0 {
+		return errors.New("env DB_URI is not set")
 	}
 
-	ti, err := tidb.Open(tiUri)
+	db, err := tidb.Open(dbUri)
 	if err != nil {
 		return err
 	}
 
-	if err := ti.AutoMigrate(); err != nil {
+	if err := db.AutoMigrate(); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func init() {
-	godotenv.Load()
-	log.FmtPlain()
-}
-
 func main() {
+	godotenv.Load("../.env")
+	log.FmtPlain()
+
 	if err := migrate(); err != nil {
 		log.L.Error(err)
 		return

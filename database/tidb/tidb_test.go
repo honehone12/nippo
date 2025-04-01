@@ -14,7 +14,7 @@ import (
 var _ database.Database = &TiDb{}
 
 func initTest() (database.Database, error) {
-	godotenv.Load("migration/.env")
+	godotenv.Load("../../bin/.env")
 
 	tiUri := os.Getenv("TIDB_URI")
 	if len(tiUri) == 0 {
