@@ -1,4 +1,4 @@
-package message
+package property
 
 import (
 	"nippo/database"
@@ -25,4 +25,20 @@ func NewMessageProps(
 		api,
 		blobApi,
 	}
+}
+
+func (p *MessagingProperties) OrgId() string {
+	return p.orgIdStr
+}
+
+func (p *MessagingProperties) Db() database.Database {
+	return p.db
+}
+
+func (p *MessagingProperties) Api() *messaging_api.MessagingApiAPI {
+	return p.api
+}
+
+func (p *MessagingProperties) BlobApi() *messaging_api.MessagingApiBlobAPI {
+	return p.blobApi
 }

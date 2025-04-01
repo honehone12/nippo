@@ -1,7 +1,19 @@
 package state
 
-import "nippo/schema"
+import (
+	"nippo/message/property"
+	"nippo/schema"
 
-type StateNone struct {
+	"github.com/line/line-bot-sdk-go/v8/linebot/webhook"
+)
+
+type StNone struct {
 	idx schema.StateIdx
+}
+
+func (s *StNone) Run(
+	props *property.MessagingProperties,
+	event webhook.EventInterface,
+) error {
+	panic("not implemented")
 }

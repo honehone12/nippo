@@ -4,14 +4,16 @@ import (
 	"errors"
 	"fmt"
 	"nippo/log"
+	"nippo/message/property"
+	"nippo/message/state"
 	"strings"
 
 	"github.com/line/line-bot-sdk-go/v8/linebot/webhook"
 	"gorm.io/gorm"
 )
 
-func validateDst(props *MessagingProperties, msg *webhook.CallbackRequest) error {
-	org, err := props.db.ReadOrg(props.orgIdStr)
+func validateDst(props *property.MessagingProperties, msg *webhook.CallbackRequest) error {
+	org, err := props.Db().ReadOrg(props.OrgId())
 	if err != nil {
 		return fmt.Errorf("org is not configured, %w", err)
 	}
@@ -31,7 +33,20 @@ func validateDst(props *MessagingProperties, msg *webhook.CallbackRequest) error
 	return nil
 }
 
-func getSource(source webhook.SourceInterface) (string, error) {
+func getSource(event webhook.EventInterface) (string, error) {
+	var source webhook.SourceInterface
+	switch e := event.(type) {
+	case webhook.MessageEvent:
+		source = e.Source
+	case webhook.PostbackEvent:
+		source = e.Source
+	default:
+		return "", fmt.Errorf("unsupported event: %s", event.GetType())
+	}
+	if source == nil {
+		return "", errors.New("nil source")
+	}
+
 	s, ok := source.(webhook.UserSource)
 	if !ok {
 		return "", fmt.Errorf("unsupported source: %s", source.GetType())
@@ -43,16 +58,13 @@ func getSource(source webhook.SourceInterface) (string, error) {
 	return s.UserId, nil
 }
 
-func processMessageEvent(props *MessagingProperties, event *webhook.MessageEvent) error {
-	sourceId, err := getSource(event.Source)
+func processEvent(props *property.MessagingProperties, event webhook.EventInterface) error {
+	source, err := getSource(event)
 	if err != nil {
-		log.L.Warn(err)
-		return nil
+		return err
 	}
 
-	log.L.Info(sourceId)
-
-	_, err = props.db.ReadUser(sourceId)
+	user, err := props.Db().ReadUser(source)
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		log.L.Warnf("user not configured: %s", err)
 
@@ -61,44 +73,15 @@ func processMessageEvent(props *MessagingProperties, event *webhook.MessageEvent
 		return err
 	}
 
-	switch c := event.Message.(type) {
-	case webhook.TextMessageContent:
-		log.L.Info(c.Text)
-		return nil
-	default:
-		log.L.Warnf("unsupported content type: %s\n", event.Type)
-		return nil
-	}
-}
-
-func processPostbackEvent(props *MessagingProperties, event *webhook.PostbackEvent) error {
-	sourceId, err := getSource(event)
+	st, err := state.FromIdx(user.NextState)
 	if err != nil {
-		log.L.Warn(err)
-		return nil
+		return err
 	}
 
-	log.L.Info(sourceId)
-
-	panic("todo")
+	return st.Run(props, event)
 }
 
-func processEvent(
-	props *MessagingProperties,
-	event webhook.EventInterface,
-) error {
-	switch e := event.(type) {
-	case webhook.MessageEvent:
-		return processMessageEvent(props, &e)
-	case webhook.PostbackEvent:
-		panic("todo")
-	default:
-		log.L.Warnf("unsupported event type: %s\n", event.GetType())
-		return nil
-	}
-}
-
-func MessageMain(props *MessagingProperties, msg *webhook.CallbackRequest) error {
+func MessageMain(props *property.MessagingProperties, msg *webhook.CallbackRequest) error {
 	if err := validateDst(props, msg); err != nil {
 		return err
 	}

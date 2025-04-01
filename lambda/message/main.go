@@ -9,6 +9,7 @@ import (
 	"nippo/lambda/response"
 	"nippo/log"
 	"nippo/message"
+	"nippo/message/property"
 	"os"
 	"strings"
 
@@ -144,7 +145,7 @@ func handler(
 		return response.BadRequest(), nil
 	}
 
-	props := message.NewMessageProps(env.orgIdStr, db, api, blobApi)
+	props := property.NewMessageProps(env.orgIdStr, db, api, blobApi)
 	if err := message.MessageMain(props, &msg); err != nil {
 		log.L.Error(err)
 	}
