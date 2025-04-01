@@ -2,4 +2,4 @@
 
 build:
 	go build
-	mv org_config ../bin
+	mv org_config ../../bin

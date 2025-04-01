@@ -10,7 +10,7 @@ import (
 
 type State interface {
 	Run(
-		props *property.MessagingProperties,
+		props *property.MsgProps,
 		event webhook.EventInterface,
 	) error
 }
@@ -20,7 +20,7 @@ func FromIdx(idx schema.StateIdx) (State, error) {
 	case schema.ST_IDX_NONE:
 		return &StNone{idx}, nil
 	case schema.ST_USER_NOT_CONFIGURED:
-		return &StUseNotConfigured{idx}, nil
+		return &StUserNotConfigured{idx}, nil
 	default:
 		return nil, errors.New("undefined state index")
 	}

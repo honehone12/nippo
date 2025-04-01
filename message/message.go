@@ -12,7 +12,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func validateDst(props *property.MessagingProperties, msg *webhook.CallbackRequest) error {
+func validateDst(props *property.MsgProps, msg *webhook.CallbackRequest) error {
 	org, err := props.Db().ReadOrg(props.OrgId())
 	if err != nil {
 		return fmt.Errorf("org is not configured, %w", err)
@@ -58,7 +58,7 @@ func getSource(event webhook.EventInterface) (string, error) {
 	return s.UserId, nil
 }
 
-func processEvent(props *property.MessagingProperties, event webhook.EventInterface) error {
+func processEvent(props *property.MsgProps, event webhook.EventInterface) error {
 	source, err := getSource(event)
 	if err != nil {
 		return err
@@ -68,7 +68,8 @@ func processEvent(props *property.MessagingProperties, event webhook.EventInterf
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		log.L.Warnf("user not configured: %s", err)
 
-		return nil
+		st := state.UserNotConfigured()
+		return st.Run(props, event)
 	} else if err != nil {
 		return err
 	}
@@ -81,7 +82,7 @@ func processEvent(props *property.MessagingProperties, event webhook.EventInterf
 	return st.Run(props, event)
 }
 
-func MessageMain(props *property.MessagingProperties, msg *webhook.CallbackRequest) error {
+func MessageMain(props *property.MsgProps, msg *webhook.CallbackRequest) error {
 	if err := validateDst(props, msg); err != nil {
 		return err
 	}

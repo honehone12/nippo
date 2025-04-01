@@ -12,7 +12,7 @@ type StNone struct {
 }
 
 func (s *StNone) Run(
-	props *property.MessagingProperties,
+	props *property.MsgProps,
 	event webhook.EventInterface,
 ) error {
 	panic("not implemented")

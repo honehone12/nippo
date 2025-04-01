@@ -7,13 +7,17 @@ import (
 	"github.com/line/line-bot-sdk-go/v8/linebot/webhook"
 )
 
-type StUseNotConfigured struct {
+type StUserNotConfigured struct {
 	idx schema.StateIdx
 }
 
-func (s *StUseNotConfigured) Run(
-	props *property.MessagingProperties,
+func (s *StUserNotConfigured) Run(
+	props *property.MsgProps,
 	event webhook.EventInterface,
 ) error {
 	panic("not implemented")
+}
+
+func UserNotConfigured() State {
+	return &StUserNotConfigured{idx: schema.ST_USER_NOT_CONFIGURED}
 }
