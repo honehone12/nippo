@@ -1,9 +1,11 @@
-package tidb
+package test
 
 import (
 	"bytes"
 	"errors"
 	"nippo/database"
+	"nippo/database/tidb"
+
 	"os"
 	"testing"
 
@@ -11,17 +13,17 @@ import (
 	"github.com/joho/godotenv"
 )
 
-var _ database.Database = &TiDb{}
+var _ database.Database = &tidb.TiDb{}
 
 func initTest() (database.Database, error) {
-	godotenv.Load("../../bin/.env")
+	godotenv.Load("../bin/.env")
 
 	tiUri := os.Getenv("DB_URI")
 	if len(tiUri) == 0 {
 		return nil, errors.New("env DB_URI is not set")
 	}
 
-	return Open(tiUri)
+	return tidb.Open(tiUri)
 }
 
 func TestUserAndOrg(t *testing.T) {
