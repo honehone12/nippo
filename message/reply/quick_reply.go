@@ -2,7 +2,7 @@ package reply
 
 import "github.com/line/line-bot-sdk-go/v8/linebot/messaging_api"
 
-func UserSettingQuickReply() *messaging_api.QuickReply {
+func ConfigMenuQuickReply() *messaging_api.QuickReply {
 	return &messaging_api.QuickReply{
 		Items: []messaging_api.QuickReplyItem{
 			{
@@ -12,8 +12,15 @@ func UserSettingQuickReply() *messaging_api.QuickReply {
 	}
 }
 
-func StartQuickReply() *messaging_api.QuickReply {
+func StartMenuQuickReply() *messaging_api.QuickReply {
 	return &messaging_api.QuickReply{
-		Items: []messaging_api.QuickReplyItem{},
+		Items: []messaging_api.QuickReplyItem{
+			{
+				Action: StartDutyAction(),
+			},
+			{
+				Action: UserSettingAction(),
+			},
+		},
 	}
 }

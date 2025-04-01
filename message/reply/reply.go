@@ -6,7 +6,7 @@ func ReplyDoUserSetting() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
 			Text:       "ユーザー設定を行ってください",
-			QuickReply: UserSettingQuickReply(),
+			QuickReply: ConfigMenuQuickReply(),
 		},
 	}
 }
@@ -31,7 +31,7 @@ func ReplyDone() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
 			Text:       "完了しました",
-			QuickReply: StartQuickReply(),
+			QuickReply: StartMenuQuickReply(),
 		},
 	}
 }

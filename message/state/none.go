@@ -14,5 +14,5 @@ func (s StNone) Run(
 	user *schema.User,
 	event webhook.EventInterface,
 ) error {
-	panic("not implemented")
+	return nil
 }
