@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"nippo/input"
 	"nippo/message/property"
+	"nippo/message/reply"
 	"nippo/schema"
 
 	"github.com/line/line-bot-sdk-go/v8/linebot/messaging_api"
@@ -41,11 +42,7 @@ func (s StUserSetName) Run(
 
 	req := messaging_api.ReplyMessageRequest{
 		ReplyToken: e.ReplyToken,
-		Messages: []messaging_api.MessageInterface{
-			messaging_api.TextMessage{
-				Text: "車両番号を入力してください",
-			},
-		},
+		Messages:   reply.ReplyInpuCar(),
 	}
 
 	_, err = props.Api().ReplyMessage(&req)

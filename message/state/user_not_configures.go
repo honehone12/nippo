@@ -37,11 +37,7 @@ func (s StUserNotConfigured) Run(
 				return err
 			}
 
-			req.Messages = []messaging_api.MessageInterface{
-				messaging_api.TextMessage{
-					Text: "名前を入力してください",
-				},
-			}
+			req.Messages = reply.ReplyInputName()
 
 			_, err = props.Api().ReplyMessage(&req)
 			return err
@@ -50,12 +46,7 @@ func (s StUserNotConfigured) Run(
 		return fmt.Errorf("unexpected event: %s", event.GetType())
 	}
 
-	req.Messages = []messaging_api.MessageInterface{
-		messaging_api.TextMessage{
-			Text:       "ユーザー設定を行ってください",
-			QuickReply: reply.UserSettingQuickReply(),
-		},
-	}
+	req.Messages = reply.ReplyDoUserSetting()
 
 	_, err := props.Api().ReplyMessage(&req)
 	return err

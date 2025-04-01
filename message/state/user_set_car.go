@@ -42,12 +42,7 @@ func (s StUserSetCar) Run(
 
 	req := messaging_api.ReplyMessageRequest{
 		ReplyToken: e.ReplyToken,
-		Messages: []messaging_api.MessageInterface{
-			messaging_api.TextMessage{
-				Text:       "完了しました",
-				QuickReply: reply.StartQuickReply(),
-			},
-		},
+		Messages:   reply.ReplyDone(),
 	}
 
 	_, err = props.Api().ReplyMessage(&req)
