@@ -1,8 +1,8 @@
 package state
 
 import (
-	"fmt"
 	"nippo/input"
+	"nippo/log"
 	"nippo/message/property"
 	"nippo/message/reply"
 	"nippo/schema"
@@ -19,32 +19,40 @@ func (s StUserSetCar) Run(
 	event webhook.EventInterface,
 ) error {
 	e, ok := event.(webhook.MessageEvent)
-	if !ok {
-		return fmt.Errorf("unexpected event: %s", event.GetType())
-	}
+	if ok {
+		t, ok := e.Message.(webhook.TextMessageContent)
+		if ok {
+			db := props.Db()
+			text := input.Clean(t.Text)
+			err := db.UpdateUserCarNumber(user.Id, text)
+			if err != nil {
+				return err
+			}
 
-	t, ok := e.Message.(webhook.TextMessageContent)
-	if !ok {
-		return fmt.Errorf("unexpected message content: %s", e.Message.GetType())
-	}
+			err = db.UpdateUserNextState(user.Id, ST_NONE)
+			if err != nil {
+				return err
+			}
 
-	db := props.Db()
-	text := input.Clean(t.Text)
-	err := db.UpdateUserCarNumber(user.Id, text)
-	if err != nil {
-		return err
-	}
+			req := messaging_api.ReplyMessageRequest{
+				ReplyToken: e.ReplyToken,
+				Messages:   reply.ReplyDone(),
+			}
 
-	err = db.UpdateUserNextState(user.Id, ST_NONE)
-	if err != nil {
-		return err
+			_, err = props.Api().ReplyMessage(&req)
+			return err
+		} else {
+			log.L.Warnf("unexpected message content: %s", e.Message.GetType())
+		}
+	} else {
+		log.L.Warnf("unexpected event: %s", event.GetType())
 	}
 
 	req := messaging_api.ReplyMessageRequest{
 		ReplyToken: e.ReplyToken,
-		Messages:   reply.ReplyDone(),
+		Messages:   reply.ReplyInputCar(),
 	}
 
-	_, err = props.Api().ReplyMessage(&req)
+	_, err := props.Api().ReplyMessage(&req)
 	return err
 }

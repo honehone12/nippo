@@ -19,7 +19,7 @@ func ReplyInputName() []messaging_api.MessageInterface {
 	}
 }
 
-func ReplyInpuCar() []messaging_api.MessageInterface {
+func ReplyInputCar() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
 			Text: "車両番号を入力してください",
