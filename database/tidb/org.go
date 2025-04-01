@@ -40,7 +40,7 @@ func (ti *TiDb) UpdateOrgLineId(idStr string, newLineId string) error {
 	}
 
 	org := schema.Org{}
-	res := ti.orm.Model(&org).Where("id = ?", id[:]).Update("LineId", newLineId)
+	res := ti.orm.Model(&org).Where("id = ?", id[:]).Update("line_id", newLineId)
 	return res.Error
 }
 

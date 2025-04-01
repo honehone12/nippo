@@ -47,13 +47,14 @@ func TestUserAndOrg(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	userName := "テスト　ユーザー太郎"
 	userLineId := "U8189cf6745fc0d808977bdb0b9f22885"
-	userId, err := db.CreateUser(
-		orgId.String(),
-		userName,
-		userLineId,
-	)
+	userId, err := db.CreateUser(orgId.String(), userLineId)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	userName := "テスト　ユーザー太郎"
+	err = db.UpdateUserName(userLineId, userName)
 	if err != nil {
 		t.Fatal(err)
 	}

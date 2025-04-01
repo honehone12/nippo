@@ -7,14 +7,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func (ti *TiDb) CreateUser(
-	orgIdStr string,
-	name string,
-	lineId string,
-) ([]uint8, error) {
-	if len(name) > schema.MAX_SHORT_TEXT_LEN {
-		return nil, errors.New("unexpected name length")
-	}
+func (ti *TiDb) CreateUser(orgIdStr string, lineId string) ([]uint8, error) {
 	if len(lineId) != schema.LINE_ID_LEN {
 		return nil, errors.New("unexpected line id length")
 	}
@@ -34,7 +27,6 @@ func (ti *TiDb) CreateUser(
 
 	user := schema.User{
 		Id:     id[:],
-		Name:   name,
 		LineId: lineId,
 	}
 	if err := ti.orm.Model(&schema.Org{
@@ -46,6 +38,19 @@ func (ti *TiDb) CreateUser(
 	return user.Id, nil
 }
 
+func (ti *TiDb) UpdateUserName(lineId string, name string) error {
+	if len(lineId) != schema.LINE_ID_LEN {
+		return errors.New("unexpected line id length")
+	}
+	if len(name) > schema.MAX_SHORT_TEXT_LEN {
+		return errors.New("unexpected name length")
+	}
+
+	user := schema.User{}
+	res := ti.orm.Model(&user).Where("line_id = ?", lineId).Update("name", name)
+	return res.Error
+}
+
 func (ti *TiDb) UpdateUserCarNumber(lineId string, carNumber string) error {
 	if len(lineId) != schema.LINE_ID_LEN {
 		return errors.New("unexpected line id length")
@@ -55,7 +60,7 @@ func (ti *TiDb) UpdateUserCarNumber(lineId string, carNumber string) error {
 	}
 
 	user := schema.User{}
-	res := ti.orm.Model(&user).Where("line_id = ?", lineId).Update("CarNumber", carNumber)
+	res := ti.orm.Model(&user).Where("line_id = ?", lineId).Update("car_number", carNumber)
 	return res.Error
 }
 
@@ -65,7 +70,7 @@ func (ti *TiDb) UpdateUserNextState(lineId string, nextState schema.StateIdx) er
 	}
 
 	user := schema.User{}
-	res := ti.orm.Model(&user).Where("line_id = ?", lineId).Update("NextState", nextState)
+	res := ti.orm.Model(&user).Where("line_id = ?", lineId).Update("next_state", nextState)
 	return res.Error
 }
 
@@ -78,7 +83,7 @@ func (ti *TiDb) UpdateUserCurrentDuty(lineId string, reportId []uint8) error {
 	}
 
 	user := schema.User{}
-	res := ti.orm.Model(&user).Where("line_id = ?", lineId).Update("CurrentDuty", reportId)
+	res := ti.orm.Model(&user).Where("line_id = ?", lineId).Update("current_duty", reportId)
 	return res.Error
 }
 

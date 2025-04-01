@@ -9,12 +9,9 @@ type Database interface {
 	ReadOrg(idStr string) (*schema.Org, error)
 	UpdateOrgLineId(idStr string, newLineId string) error
 
-	CreateUser(
-		orgIdStr string,
-		name string,
-		lineId string,
-	) ([]uint8, error)
+	CreateUser(orgIdStr string, lineId string) ([]uint8, error)
 	ReadUser(lineId string) (*schema.User, error)
+	UpdateUserName(lineId string, name string) error
 	UpdateUserCarNumber(lineId string, carNumber string) error
 	UpdateUserNextState(lineId string, nextState schema.StateIdx) error
 	UpdateUserCurrentDuty(lineId string, duty []uint8) error
