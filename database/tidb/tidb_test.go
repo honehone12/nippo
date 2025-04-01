@@ -16,9 +16,9 @@ var _ database.Database = &TiDb{}
 func initTest() (database.Database, error) {
 	godotenv.Load("../../bin/.env")
 
-	tiUri := os.Getenv("TIDB_URI")
+	tiUri := os.Getenv("DB_URI")
 	if len(tiUri) == 0 {
-		return nil, errors.New("env TIDB_URI is not set")
+		return nil, errors.New("env DB_URI is not set")
 	}
 
 	return Open(tiUri)
@@ -54,18 +54,18 @@ func TestUserAndOrg(t *testing.T) {
 	}
 
 	userName := "テスト　ユーザー太郎"
-	err = db.UpdateUserName(userLineId, userName)
+	err = db.UpdateUserName(userId, userName)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	carNumber := "く００９１２ー２３"
-	err = db.UpdateUserCarNumber(userLineId, carNumber)
+	carNumber := "て００９１２ー２３"
+	err = db.UpdateUserCarNumber(userId, carNumber)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	err = db.UpdateUserNextState(userLineId, 2)
+	err = db.UpdateUserNextState(userId, 2)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -97,22 +97,27 @@ func TestCallAndReport(t *testing.T) {
 	}
 
 	userLineId := "U8189cf6745fc0d808977bdb0b9f22885"
-	morningId, err := db.CreateMorningCall(userLineId)
+	user, err := db.ReadUser(userLineId)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	reportId, err := db.CreateDailyReport(userLineId, morningId)
+	morningId, err := db.CreateMorningCall(user.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	err = db.UpdateUserCurrentDuty(userLineId, reportId)
+	reportId, err := db.CreateDailyReport(user.Id, morningId)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	_, err = db.CreateEveningCall(userLineId)
+	err = db.UpdateUserCurrentDuty(user.Id, reportId)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	_, err = db.CreateEveningCall(user.Id)
 	if err != nil {
 		t.Fatal(err)
 	}

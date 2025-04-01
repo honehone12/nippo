@@ -12,7 +12,8 @@ type StNone struct {
 }
 
 func (s *StNone) Run(
-	props *property.MsgProps,
+	props *property.MessagingProps,
+	user *schema.User,
 	event webhook.EventInterface,
 ) error {
 	panic("not implemented")

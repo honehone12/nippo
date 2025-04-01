@@ -11,14 +11,14 @@ type Database interface {
 
 	CreateUser(orgIdStr string, lineId string) ([]uint8, error)
 	ReadUser(lineId string) (*schema.User, error)
-	UpdateUserName(lineId string, name string) error
-	UpdateUserCarNumber(lineId string, carNumber string) error
-	UpdateUserNextState(lineId string, nextState schema.StateIdx) error
-	UpdateUserCurrentDuty(lineId string, duty []uint8) error
+	UpdateUserName(id []uint8, name string) error
+	UpdateUserCarNumber(id []uint8, carNumber string) error
+	UpdateUserNextState(id []uint8, nextState schema.StateIdx) error
+	UpdateUserCurrentDuty(id []uint8, duty []uint8) error
 
-	CreateMorningCall(userLineId string) ([]uint8, error)
+	CreateMorningCall(userId []uint8) ([]uint8, error)
 
-	CreateDailyReport(userLineId string, morningId []uint8) ([]uint8, error)
+	CreateDailyReport(userId []uint8, morningId []uint8) ([]uint8, error)
 
-	CreateEveningCall(userLineId string) ([]uint8, error)
+	CreateEveningCall(userId []uint8) ([]uint8, error)
 }

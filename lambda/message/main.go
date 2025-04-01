@@ -79,7 +79,6 @@ func validateMsg(req *events.APIGatewayProxyRequest) error {
 	if !ok {
 		userAgent, ok = req.Headers["user-agent"]
 	}
-	log.L.Infof("user agent: %s\n", userAgent)
 	if !ok || !strings.Contains(userAgent, "LineBotWebhook") {
 		return errors.New("invalid user agent")
 	} else if strings.Compare(userAgent, "LineBotWebhook/2.0") != 0 {
@@ -132,8 +131,6 @@ func handler(
 	_ context.Context,
 	req events.APIGatewayProxyRequest,
 ) (events.APIGatewayProxyResponse, error) {
-	log.L.Infof("%#v\n", req.Headers)
-
 	if err := validateMsg(&req); err != nil {
 		log.L.Warn(err)
 		return response.BadRequest(), nil
@@ -145,12 +142,10 @@ func handler(
 		return response.BadRequest(), nil
 	}
 
-	props := property.NewMessageProps(env.orgIdStr, db, api, blobApi)
+	props := property.NewMessagingProps(env.orgIdStr, db, api, blobApi)
 	if err := message.MessageMain(props, &msg); err != nil {
 		log.L.Error(err)
 	}
-
-	log.L.Info("ok")
 
 	return response.Ok(), nil
 }

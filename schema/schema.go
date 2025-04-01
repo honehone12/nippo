@@ -31,12 +31,12 @@ type User struct {
 	UpdatedAt time.Time
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 
-	Name        string   `gorm:"not null;size:100"`
-	LineId      string   `gorm:"unique;not null;type:char(33);index"`
-	CarNumber   string   `gorm:"size:100"`
-	OrgId       []uint8  `gorm:"not null;type:binary(16)"`
-	CurrentDuty []uint8  `gorm:"type:binary(16)"`
-	NextState   StateIdx `gorm:"default:4294967295"`
+	Name        string  `gorm:"not null;size:100"`
+	LineId      string  `gorm:"unique;not null;type:char(33);index"`
+	CarNumber   string  `gorm:"size:100"`
+	OrgId       []uint8 `gorm:"not null;type:binary(16)"`
+	CurrentDuty []uint8 `gorm:"type:binary(16)"`
+	NextState   StateIdx
 
 	MorningCalls []MorningCall `gorm:"foreignKey:UserId;references:Id"`
 	EveningCalls []EveningCall `gorm:"foreignKey:UserId;references:Id"`

@@ -10,37 +10,19 @@ import (
 
 type State interface {
 	Run(
-		props *property.MsgProps,
+		props *property.MessagingProps,
+		user *schema.User,
 		event webhook.EventInterface,
 	) error
 }
 
 func FromIdx(idx schema.StateIdx) (State, error) {
 	switch idx {
-	case schema.ST_IDX_NONE:
+	case ST_IDX_NONE:
 		return &StNone{idx}, nil
-	case schema.ST_USER_NOT_CONFIGURED:
+	case ST_USER_NOT_CONFIGURED:
 		return &StUserNotConfigured{idx}, nil
 	default:
 		return nil, errors.New("undefined state index")
 	}
 }
-
-// func __processEvent(props *property.MessagingProperties, event *webhook.MessageEvent) error {
-// 	sourceId, err := getSource(event.Source)
-// 	if err != nil {
-// 		log.L.Warn(err)
-// 		return nil
-// 	}
-
-// 	log.L.Info(sourceId)
-
-// 	switch c := event.Message.(type) {
-// 	case webhook.TextMessageContent:
-// 		log.L.Info(c.Text)
-// 		return nil
-// 	default:
-// 		log.L.Warnf("unsupported content type: %s\n", event.Type)
-// 		return nil
-// 	}
-// }

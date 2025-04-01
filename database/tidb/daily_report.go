@@ -7,12 +7,12 @@ import (
 	"github.com/google/uuid"
 )
 
-func (ti *TiDb) CreateDailyReport(userLineId string, morningId []uint8) ([]uint8, error) {
-	if len(userLineId) != schema.LINE_ID_LEN {
-		return nil, errors.New("unexpected line id length")
+func (ti *TiDb) CreateDailyReport(userId []uint8, morningId []uint8) ([]uint8, error) {
+	if len(userId) != schema.ID_LEN {
+		return nil, errors.New("unexpected user id length")
 	}
 	if len(morningId) != schema.ID_LEN {
-		return nil, errors.New("unexpected id len")
+		return nil, errors.New("unexpected morning id len")
 	}
 
 	user := schema.User{}
@@ -20,7 +20,7 @@ func (ti *TiDb) CreateDailyReport(userLineId string, morningId []uint8) ([]uint8
 		"id",
 		"name",
 		"car_number",
-	).Take(&user, "line_id = ?", userLineId); res.Error != nil {
+	).Take(&user, "id = ?", userId); res.Error != nil {
 		return nil, res.Error
 	}
 

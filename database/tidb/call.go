@@ -7,13 +7,13 @@ import (
 	"github.com/google/uuid"
 )
 
-func (ti *TiDb) CreateMorningCall(userLineId string) ([]uint8, error) {
-	if len(userLineId) != schema.LINE_ID_LEN {
-		return nil, errors.New("unexpected line id length")
+func (ti *TiDb) CreateMorningCall(userId []uint8) ([]uint8, error) {
+	if len(userId) != schema.ID_LEN {
+		return nil, errors.New("unexpected user id length")
 	}
 
 	user := schema.User{}
-	if res := ti.orm.Select("id").Take(&user, "line_id = ?", userLineId); res.Error != nil {
+	if res := ti.orm.Select("id").Take(&user, "id = ?", userId); res.Error != nil {
 		return nil, res.Error
 	}
 
@@ -30,13 +30,13 @@ func (ti *TiDb) CreateMorningCall(userLineId string) ([]uint8, error) {
 	return call.Id, nil
 }
 
-func (ti *TiDb) CreateEveningCall(userLineId string) ([]uint8, error) {
-	if len(userLineId) != schema.LINE_ID_LEN {
-		return nil, errors.New("unexpected line id length")
+func (ti *TiDb) CreateEveningCall(userId []uint8) ([]uint8, error) {
+	if len(userId) != schema.ID_LEN {
+		return nil, errors.New("unexpected user id length")
 	}
 
 	user := schema.User{}
-	if res := ti.orm.Select("id").Take(&user, "line_id = ?", userLineId); res.Error != nil {
+	if res := ti.orm.Select("id").Take(&user, "id = ?", userId); res.Error != nil {
 		return nil, res.Error
 	}
 

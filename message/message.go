@@ -6,21 +6,25 @@ import (
 	"nippo/log"
 	"nippo/message/property"
 	"nippo/message/state"
+	"nippo/schema"
 	"strings"
 
 	"github.com/line/line-bot-sdk-go/v8/linebot/webhook"
 	"gorm.io/gorm"
 )
 
-func validateDst(props *property.MsgProps, msg *webhook.CallbackRequest) error {
-	org, err := props.Db().ReadOrg(props.OrgId())
+func validateDst(props *property.MessagingProps, msg *webhook.CallbackRequest) error {
+	db := props.Db()
+	orgId := props.OrgId()
+
+	org, err := db.ReadOrg(orgId)
 	if err != nil {
 		return fmt.Errorf("org is not configured, %w", err)
 	}
 
 	if len(org.LineId) == 0 {
-		log.L.Warnf("updating org line id to: %s\n", msg.Destination)
-		return nil
+		log.L.Warnf("updating org line id to: %s", msg.Destination)
+		return db.UpdateOrgLineId(orgId, msg.Destination)
 	}
 
 	if strings.Compare(org.LineId, msg.Destination) != 0 {
@@ -58,7 +62,7 @@ func getSource(event webhook.EventInterface) (string, error) {
 	return s.UserId, nil
 }
 
-func processEvent(props *property.MsgProps, event webhook.EventInterface) error {
+func processEvent(props *property.MessagingProps, event webhook.EventInterface) error {
 	source, err := getSource(event)
 	if err != nil {
 		return err
@@ -67,9 +71,9 @@ func processEvent(props *property.MsgProps, event webhook.EventInterface) error 
 	user, err := props.Db().ReadUser(source)
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		log.L.Warnf("user not configured: %s", err)
-
 		st := state.UserNotConfigured()
-		return st.Run(props, event)
+
+		return st.Run(props, &schema.User{LineId: source}, event)
 	} else if err != nil {
 		return err
 	}
@@ -79,10 +83,10 @@ func processEvent(props *property.MsgProps, event webhook.EventInterface) error 
 		return err
 	}
 
-	return st.Run(props, event)
+	return st.Run(props, user, event)
 }
 
-func MessageMain(props *property.MsgProps, msg *webhook.CallbackRequest) error {
+func MessageMain(props *property.MessagingProps, msg *webhook.CallbackRequest) error {
 	if err := validateDst(props, msg); err != nil {
 		return err
 	}
@@ -91,6 +95,9 @@ func MessageMain(props *property.MsgProps, msg *webhook.CallbackRequest) error {
 		if err := processEvent(props, e); err != nil {
 			log.L.Error(err)
 		}
+
+		// todo: send error message here
+		// https://github.com/honehone12/nippo/issues/12
 	}
 
 	return nil
