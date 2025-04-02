@@ -2,6 +2,7 @@ package state
 
 import (
 	"fmt"
+	"nippo/log"
 	"nippo/message/property"
 	"nippo/message/reply"
 	"nippo/schema"
@@ -18,13 +19,16 @@ func (s StUserNotConfigured) Run(
 	user *schema.User,
 	event webhook.EventInterface,
 ) error {
-	req := messaging_api.ReplyMessageRequest{}
 	switch e := event.(type) {
 	case webhook.MessageEvent:
-		req.ReplyToken = e.ReplyToken
-	case webhook.PostbackEvent:
-		req.ReplyToken = e.ReplyToken
+		req := messaging_api.ReplyMessageRequest{
+			ReplyToken: e.ReplyToken,
+			Messages:   reply.ReplyDoUserSetting(),
+		}
 
+		_, err := props.Api().ReplyMessage(&req)
+		return err
+	case webhook.PostbackEvent:
 		if strings.Compare(e.Postback.Data, reply.USER_SETTING_ACT_DATA) == 0 {
 			db := props.Db()
 			id, err := db.CreateUser(props.OrgId(), user.LineId)
@@ -37,17 +41,18 @@ func (s StUserNotConfigured) Run(
 				return err
 			}
 
-			req.Messages = reply.ReplyInputName()
+			req := messaging_api.ReplyMessageRequest{
+				ReplyToken: e.ReplyToken,
+				Messages:   reply.ReplyInputName(),
+			}
 
 			_, err = props.Api().ReplyMessage(&req)
 			return err
+		} else {
+			return fmt.Errorf("unexpected postback data: %s", e.Postback.Data)
 		}
 	default:
-		return fmt.Errorf("unexpected event: %s", event.GetType())
+		log.L.Warnf("unexpected event: %s", event.GetType())
+		return nil
 	}
-
-	req.Messages = reply.ReplyDoUserSetting()
-
-	_, err := props.Api().ReplyMessage(&req)
-	return err
 }

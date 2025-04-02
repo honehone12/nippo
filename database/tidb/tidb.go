@@ -15,6 +15,10 @@ type TiDb struct {
 	orm *gorm.DB
 }
 
+func now() time.Time {
+	return time.Now().UTC()
+}
+
 func Open(tiUri string) (*TiDb, error) {
 	gormLogger := logger.New(
 		stdlog.New(os.Stdout, "\r\n", stdlog.LstdFlags),
@@ -26,7 +30,10 @@ func Open(tiUri string) (*TiDb, error) {
 		},
 	)
 
-	orm, err := gorm.Open(mysql.Open(tiUri), &gorm.Config{Logger: gormLogger})
+	orm, err := gorm.Open(mysql.Open(tiUri), &gorm.Config{
+		Logger:  gormLogger,
+		NowFunc: now,
+	})
 	if err != nil {
 		return nil, err
 	}

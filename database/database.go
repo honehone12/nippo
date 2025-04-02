@@ -13,8 +13,8 @@ type Database interface {
 	ReadUser(lineId string) (*schema.User, error)
 	UpdateUserName(id []uint8, name string) error
 	UpdateUserCarNumber(id []uint8, carNumber string) error
-	UpdateUserNextState(id []uint8, nextState schema.StateIdx) error
 	UpdateUserCurrentDuty(id []uint8, duty []uint8) error
+	UpdateUserNextState(id []uint8, nextState schema.StateIdx) error
 
 	CreateMorningCall(userId []uint8) ([]uint8, error)
 

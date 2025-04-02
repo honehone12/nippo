@@ -5,9 +5,15 @@ import "github.com/line/line-bot-sdk-go/v8/linebot/messaging_api"
 func ConfigMenuQuickReply() *messaging_api.QuickReply {
 	return &messaging_api.QuickReply{
 		Items: []messaging_api.QuickReplyItem{
-			{
-				Action: UserSettingAction(),
-			},
+			{Action: UserSettingAction()},
+		},
+	}
+}
+
+func SendAlcPhotoQuickReply() *messaging_api.QuickReply {
+	return &messaging_api.QuickReply{
+		Items: []messaging_api.QuickReplyItem{
+			{Action: SendAlcPhotoAction()},
 		},
 	}
 }
@@ -15,12 +21,8 @@ func ConfigMenuQuickReply() *messaging_api.QuickReply {
 func StartMenuQuickReply() *messaging_api.QuickReply {
 	return &messaging_api.QuickReply{
 		Items: []messaging_api.QuickReplyItem{
-			{
-				Action: StartDutyAction(),
-			},
-			{
-				Action: UserSettingAction(),
-			},
+			{Action: StartDutyAction()},
+			{Action: UserSettingAction()},
 		},
 	}
 }

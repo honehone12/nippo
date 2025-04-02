@@ -14,6 +14,8 @@ const (
 	ST_USER_SET_NAME
 	ST_USER_SET_CAR
 
+	ST_MC_ALC_PHOTO
+
 	ST_NONE
 )
 
@@ -33,6 +35,8 @@ func FromIdx(idx schema.StateIdx) (State, error) {
 		return StUserSetName{}, nil
 	case ST_USER_SET_CAR:
 		return StUserSetCar{}, nil
+	case ST_MC_ALC_PHOTO:
+		return StMcAlcPhoto{}, nil
 	case ST_NONE:
 		return StNone{}, nil
 	default:

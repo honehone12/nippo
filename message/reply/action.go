@@ -21,3 +21,9 @@ func StartDutyAction() messaging_api.PostbackAction {
 		DisplayText: "業務を開始する",
 	}
 }
+
+func SendAlcPhotoAction() messaging_api.CameraAction {
+	return messaging_api.CameraAction{
+		Label: "アルコール検査機の結果を写真に撮る",
+	}
+}

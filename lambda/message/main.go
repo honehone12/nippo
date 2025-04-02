@@ -50,6 +50,10 @@ func collectEnv() error {
 		return errors.New("env for dbUri is not set")
 	}
 
+	if len(os.Getenv("BUCKET")) == 0 {
+		return errors.New("env for bucket is not set")
+	}
+
 	return nil
 }
 
@@ -128,7 +132,7 @@ func parseMsg(
 }
 
 func handler(
-	_ context.Context,
+	ctx context.Context,
 	req events.APIGatewayProxyRequest,
 ) (events.APIGatewayProxyResponse, error) {
 	if err := validateMsg(&req); err != nil {
@@ -142,7 +146,7 @@ func handler(
 		return response.BadRequest(), nil
 	}
 
-	props := property.NewMessagingProps(env.orgIdStr, db, api, blobApi)
+	props := property.NewMessagingProps(ctx, env.orgIdStr, db, api, blobApi)
 	if err := message.MessageMain(props, &msg); err != nil {
 		log.L.Error(err)
 	}

@@ -27,10 +27,28 @@ func ReplyInputCar() []messaging_api.MessageInterface {
 	}
 }
 
+func ReplySendAlcPhoto() []messaging_api.MessageInterface {
+	return []messaging_api.MessageInterface{
+		messaging_api.TextMessage{
+			Text:       "アルコール検査機を使用し、結果を写真に撮って送信してください",
+			QuickReply: SendAlcPhotoQuickReply(),
+		},
+	}
+}
+
 func ReplyDone() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
 			Text:       "完了しました",
+			QuickReply: StartMenuQuickReply(),
+		},
+	}
+}
+
+func ReplyNone() []messaging_api.MessageInterface {
+	return []messaging_api.MessageInterface{
+		messaging_api.TextMessage{
+			Text:       "現在進行中のタスクはありません",
 			QuickReply: StartMenuQuickReply(),
 		},
 	}

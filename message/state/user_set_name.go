@@ -42,17 +42,16 @@ func (s StUserSetName) Run(
 			_, err = props.Api().ReplyMessage(&req)
 			return err
 		} else {
-			log.L.Warnf("unexpected content: %s", e.Message.GetType())
+			req := messaging_api.ReplyMessageRequest{
+				ReplyToken: e.ReplyToken,
+				Messages:   reply.ReplyInputName(),
+			}
+
+			_, err := props.Api().ReplyMessage(&req)
+			return err
 		}
 	} else {
 		log.L.Warnf("unexpected event: %s", event.GetType())
+		return nil
 	}
-
-	req := messaging_api.ReplyMessageRequest{
-		ReplyToken: e.ReplyToken,
-		Messages:   reply.ReplyInputName(),
-	}
-
-	_, err := props.Api().ReplyMessage(&req)
-	return err
 }
