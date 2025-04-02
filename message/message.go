@@ -5,10 +5,12 @@ import (
 	"fmt"
 	"nippo/log"
 	"nippo/message/property"
+	"nippo/message/reply"
 	"nippo/message/state"
 	"nippo/schema"
 	"strings"
 
+	"github.com/line/line-bot-sdk-go/v8/linebot/messaging_api"
 	"github.com/line/line-bot-sdk-go/v8/linebot/webhook"
 	"gorm.io/gorm"
 )
@@ -62,10 +64,30 @@ func getSource(event webhook.EventInterface) (string, error) {
 	return s.UserId, nil
 }
 
+func sendErrMsg(props *property.MessagingProps, event webhook.EventInterface) {
+	req := messaging_api.ReplyMessageRequest{}
+	switch e := event.(type) {
+	case webhook.MessageEvent:
+		req.ReplyToken = e.ReplyToken
+	case webhook.PostbackEvent:
+		req.ReplyToken = e.ReplyToken
+	default:
+		log.L.Warn("stop sending err msg as unexpected msg type")
+		return
+	}
+
+	req.Messages = reply.ReplyErrMsg()
+	_, err := props.Api().ReplyMessage(&req)
+	if err != nil {
+		log.L.Errorf("failed to send err msg: %s", err)
+	}
+}
+
 func processEvent(props *property.MessagingProps, event webhook.EventInterface) error {
 	source, err := getSource(event)
 	if err != nil {
-		return err
+		log.L.Warn(err)
+		return nil
 	}
 
 	user, err := props.Db().ReadUser(source)
@@ -73,32 +95,40 @@ func processEvent(props *property.MessagingProps, event webhook.EventInterface) 
 		log.L.Warnf("user not configured: %s", err)
 		st := state.StUserNotConfigured{}
 
-		return st.Run(props, &schema.User{LineId: source}, event)
+		err = st.Run(props, &schema.User{LineId: source}, event)
+		if err != nil {
+			sendErrMsg(props, event)
+			return err
+		}
 	} else if err != nil {
+		sendErrMsg(props, event)
 		return err
 	}
 
 	st, err := state.FromIdx(user.NextState)
 	if err != nil {
+		sendErrMsg(props, event)
 		return err
 	}
 
-	return st.Run(props, user, event)
+	err = st.Run(props, user, event)
+	if err != nil {
+		sendErrMsg(props, event)
+		return err
+	}
+
+	return nil
 }
 
-func MessageMain(props *property.MessagingProps, msg *webhook.CallbackRequest) error {
+func MessageMain(props *property.MessagingProps, msg *webhook.CallbackRequest) {
 	if err := validateDst(props, msg); err != nil {
-		return err
+		log.L.Error(err)
+		return
 	}
 
 	for _, e := range msg.Events {
 		if err := processEvent(props, e); err != nil {
 			log.L.Error(err)
 		}
-
-		// todo: send error message here
-		// https://github.com/honehone12/nippo/issues/12
 	}
-
-	return nil
 }

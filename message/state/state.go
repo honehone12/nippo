@@ -15,6 +15,7 @@ const (
 	ST_USER_SET_CAR
 
 	ST_MC_ALC_PHOTO
+	ST_MC_HEALTH
 
 	ST_NONE
 )

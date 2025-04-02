@@ -147,9 +147,7 @@ func handler(
 	}
 
 	props := property.NewMessagingProps(ctx, env.orgIdStr, db, api, blobApi)
-	if err := message.MessageMain(props, &msg); err != nil {
-		log.L.Error(err)
-	}
+	message.MessageMain(props, &msg)
 
 	return response.Ok(), nil
 }

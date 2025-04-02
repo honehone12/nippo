@@ -1,13 +1,12 @@
 package state
 
 import (
-	"errors"
 	"nippo/log"
+	"nippo/message/blob"
 	"nippo/message/property"
 	"nippo/message/reply"
 	"nippo/schema"
 	"nippo/sss"
-	"time"
 
 	"github.com/line/line-bot-sdk-go/v8/linebot/messaging_api"
 	"github.com/line/line-bot-sdk-go/v8/linebot/webhook"
@@ -25,29 +24,9 @@ func (s StMcAlcPhoto) Run(
 		img, ok := e.Message.(webhook.ImageMessageContent)
 		if ok {
 			if img.ContentProvider.Type == webhook.ContentProviderTYPE_LINE {
-				blobApi := props.BlobApi()
-				try := 1
-			LOOP:
-				for {
-					if try > 8 {
-						return errors.New("exceeded max tries, failed to obtain img")
-					}
-
-					res, err := blobApi.GetMessageContentTranscodingByMessageId(img.Id)
-					if err != nil {
-						return err
-					}
-
-					switch res.Status {
-					case messaging_api.GetMessageContentTranscodingResponseSTATUS_SUCCEEDED:
-						break LOOP
-					case messaging_api.GetMessageContentTranscodingResponseSTATUS_PROCESSING:
-						log.L.Warn("being going to sleep")
-						time.Sleep(time.Millisecond * 250)
-						try++
-					default:
-						return errors.New("img processing failed")
-					}
+				err := blob.PreRequest(props.BlobApi(), img.Id)
+				if err != nil {
+					return err
 				}
 
 				res, err := props.BlobApi().GetMessageContent(img.Id)
@@ -60,16 +39,22 @@ func (s StMcAlcPhoto) Run(
 				if err != nil {
 					return err
 				}
+
+				err = props.Db().UpdateUserNextState(user.Id, ST_MC_HEALTH)
+				if err != nil {
+					return err
+				}
+
 			}
-		}
+		} else {
+			req := messaging_api.ReplyMessageRequest{
+				ReplyToken: e.ReplyToken,
+				Messages:   reply.ReplySendAlcPhoto(),
+			}
 
-		req := messaging_api.ReplyMessageRequest{
-			ReplyToken: e.ReplyToken,
-			Messages:   reply.ReplySendAlcPhoto(),
+			_, err := props.Api().ReplyMessage(&req)
+			return err
 		}
-
-		_, err := props.Api().ReplyMessage(&req)
-		return err
 	} else {
 		log.L.Warnf("unexpected event: %s", event.GetType())
 		return nil
