@@ -109,6 +109,19 @@ func TestCallAndReport(t *testing.T) {
 		t.Fatal(err)
 	}
 
+	err = db.UpdateUserCurrentCall(user.Id, morningId)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	readUser, err := db.ReadUser(userLineId)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !bytes.Equal(readUser.CurrentCall, morningId) {
+		t.Fatal("read wrong user")
+	}
+
 	reportId, err := db.CreateDailyReport(user.Id, morningId)
 	if err != nil {
 		t.Fatal(err)
@@ -119,17 +132,45 @@ func TestCallAndReport(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, err = db.CreateEveningCall(user.Id)
+	eveningId, err := db.CreateEveningCall(user.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	readUser, err := db.ReadUser(userLineId)
+	err = db.UpdateUserCurrentCall(user.Id, eveningId)
 	if err != nil {
 		t.Fatal(err)
 	}
 
+	readUser, err = db.ReadUser(userLineId)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !bytes.Equal(readUser.CurrentCall, eveningId) {
+		t.Fatal("read wrong user")
+	}
 	if !bytes.Equal(readUser.CurrentDuty, reportId) {
+		t.Fatal("read wrong user")
+	}
+
+	err = db.UpdateUserCurrentCall(user.Id, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	err = db.UpdateUserCurrentDuty(user.Id, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	readUser, err = db.ReadUser(userLineId)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !bytes.Equal(readUser.CurrentCall, nil) {
+		t.Fatal("read wrong user")
+	}
+	if !bytes.Equal(readUser.CurrentDuty, nil) {
 		t.Fatal("read wrong user")
 	}
 }

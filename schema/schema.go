@@ -35,6 +35,7 @@ type User struct {
 	LineId      string  `gorm:"unique;not null;type:char(33);index"`
 	CarNumber   string  `gorm:"size:100"`
 	OrgId       []uint8 `gorm:"not null;type:binary(16)"`
+	CurrentCall []uint8 `gorm:"type:binary(16)"`
 	CurrentDuty []uint8 `gorm:"type:binary(16)"`
 	NextState   StateIdx
 

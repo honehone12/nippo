@@ -3,6 +3,6 @@ package schema
 type CallMethod uint32
 
 const (
-	Person = iota + 1
-	Remote
+	METHOD_PERSON = iota + 1
+	METHOD_REMOTE
 )

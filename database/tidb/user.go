@@ -74,6 +74,19 @@ func (ti *TiDb) UpdateUserNextState(id []uint8, nextState schema.StateIdx) error
 	return res.Error
 }
 
+func (ti *TiDb) UpdateUserCurrentCall(id []uint8, callId []uint8) error {
+	if len(id) != schema.ID_LEN {
+		return errors.New("unexpected id length")
+	}
+	if len(callId) != schema.ID_LEN {
+		return errors.New("unexpected call id length")
+	}
+
+	user := schema.User{}
+	res := ti.orm.Model(&user).Where("id = ?", id).Update("current_call", callId)
+	return res.Error
+}
+
 func (ti *TiDb) UpdateUserCurrentDuty(id []uint8, reportId []uint8) error {
 	if len(id) != schema.ID_LEN {
 		return errors.New("unexpected id length")

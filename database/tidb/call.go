@@ -7,13 +7,16 @@ import (
 	"github.com/google/uuid"
 )
 
-func (ti *TiDb) CreateMorningCall(userId []uint8) ([]uint8, error) {
+func (ti *TiDb) CreateMorningCall(userId []uint8, photo string) ([]uint8, error) {
 	if len(userId) != schema.ID_LEN {
 		return nil, errors.New("unexpected user id length")
 	}
+	if len(photo) > schema.MAX_SHORT_TEXT_LEN {
+		return nil, errors.New("unexpected photo length")
+	}
 
 	user := schema.User{}
-	if res := ti.orm.Select("id").Take(&user, "id = ?", userId); res.Error != nil {
+	if res := ti.orm.Take(&user, "id = ?", userId); res.Error != nil {
 		return nil, res.Error
 	}
 
@@ -22,12 +25,29 @@ func (ti *TiDb) CreateMorningCall(userId []uint8) ([]uint8, error) {
 		return nil, err
 	}
 
-	call := schema.MorningCall{Id: id[:]}
+	call := schema.MorningCall{
+		Id:              id[:],
+		Caller:          user.Name,
+		Name:            user.Name,
+		Method:          schema.METHOD_PERSON,
+		UsingAlcChecker: true,
+		AlcCheck:        true,
+		Photo:           photo,
+	}
 	if err := ti.orm.Model(&user).Association("MorningCalls").Append(&call); err != nil {
 		return nil, err
 	}
 
 	return call.Id, nil
+}
+
+func (ti *TiDb) UpdateMorningCallHealth(userId []uint8) error {
+	if len(userId) != schema.ID_LEN {
+		return errors.New("unexpected user id length")
+	}
+
+	call := schema.MorningCall{}
+	res := ti.orm.Model(&call).Where("id = ?")
 }
 
 func (ti *TiDb) CreateEveningCall(userId []uint8) ([]uint8, error) {
@@ -36,7 +56,7 @@ func (ti *TiDb) CreateEveningCall(userId []uint8) ([]uint8, error) {
 	}
 
 	user := schema.User{}
-	if res := ti.orm.Select("id").Take(&user, "id = ?", userId); res.Error != nil {
+	if res := ti.orm.Take(&user, "id = ?", userId); res.Error != nil {
 		return nil, res.Error
 	}
 

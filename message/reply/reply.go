@@ -53,3 +53,11 @@ func ReplyNone() []messaging_api.MessageInterface {
 		},
 	}
 }
+
+func ReplyErrMsg() []messaging_api.MessageInterface {
+	return []messaging_api.MessageInterface{
+		messaging_api.TextMessage{
+			Text: "エラーが発生しております\nお手数ですが、スタンプを送信して復帰を試みてください",
+		},
+	}
+}
