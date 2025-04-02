@@ -96,11 +96,8 @@ func processEvent(props *property.MessagingProps, event webhook.EventInterface) 
 		st := state.StUserNotConfigured{}
 
 		err = st.Run(props, &schema.User{LineId: source}, event)
-		if err != nil {
-			sendErrMsg(props, event)
-			return err
-		}
-	} else if err != nil {
+	}
+	if err != nil {
 		sendErrMsg(props, event)
 		return err
 	}

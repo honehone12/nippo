@@ -14,5 +14,5 @@ func (s StMcHealth) Run(
 	user *schema.User,
 	event webhook.EventInterface,
 ) error {
-
+	panic("not implemented")
 }

@@ -45,16 +45,17 @@ func (s StMcAlcPhoto) Run(
 					return err
 				}
 
+				panic("not implemented")
 			}
-		} else {
-			req := messaging_api.ReplyMessageRequest{
-				ReplyToken: e.ReplyToken,
-				Messages:   reply.ReplySendAlcPhoto(),
-			}
-
-			_, err := props.Api().ReplyMessage(&req)
-			return err
 		}
+
+		req := messaging_api.ReplyMessageRequest{
+			ReplyToken: e.ReplyToken,
+			Messages:   reply.ReplySendAlcPhoto(),
+		}
+
+		_, err := props.Api().ReplyMessage(&req)
+		return err
 	} else {
 		log.L.Warnf("unexpected event: %s", event.GetType())
 		return nil

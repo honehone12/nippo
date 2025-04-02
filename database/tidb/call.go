@@ -16,7 +16,10 @@ func (ti *TiDb) CreateMorningCall(userId []uint8, photo string) ([]uint8, error)
 	}
 
 	user := schema.User{}
-	if res := ti.orm.Take(&user, "id = ?", userId); res.Error != nil {
+	if res := ti.orm.Select(
+		"id",
+		"name",
+	).Take(&user, "id = ?", userId); res.Error != nil {
 		return nil, res.Error
 	}
 
@@ -46,8 +49,14 @@ func (ti *TiDb) UpdateMorningCallHealth(userId []uint8) error {
 		return errors.New("unexpected user id length")
 	}
 
+	user := schema.User{}
+	if res := ti.orm.Select("current_call").Take(&user, "id = ?", userId); res.Error != nil {
+		return res.Error
+	}
+
 	call := schema.MorningCall{}
-	res := ti.orm.Model(&call).Where("id = ?")
+	res := ti.orm.Model(&call).Where("id = ?", user.CurrentCall).Update("health_check", true)
+	return res.Error
 }
 
 func (ti *TiDb) CreateEveningCall(userId []uint8) ([]uint8, error) {
@@ -56,7 +65,10 @@ func (ti *TiDb) CreateEveningCall(userId []uint8) ([]uint8, error) {
 	}
 
 	user := schema.User{}
-	if res := ti.orm.Take(&user, "id = ?", userId); res.Error != nil {
+	if res := ti.orm.Select(
+		"id",
+		"name",
+	).Take(&user, "id = ?", userId); res.Error != nil {
 		return nil, res.Error
 	}
 

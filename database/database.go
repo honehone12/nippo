@@ -17,7 +17,7 @@ type Database interface {
 	UpdateUserCurrentDuty(id []uint8, duty []uint8) error
 	UpdateUserNextState(id []uint8, nextState schema.StateIdx) error
 
-	CreateMorningCall(userId []uint8) ([]uint8, error)
+	CreateMorningCall(userId []uint8, photo string) ([]uint8, error)
 
 	CreateDailyReport(userId []uint8, morningId []uint8) ([]uint8, error)
 

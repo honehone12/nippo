@@ -30,7 +30,7 @@ func ReplyInputCar() []messaging_api.MessageInterface {
 func ReplySendAlcPhoto() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
-			Text:       "アルコール検査機を使用し、結果を写真に撮って送信してください",
+			Text:       "アルコール検査機を使用し、結果が良好な場合は写真に撮って送信してください",
 			QuickReply: SendAlcPhotoQuickReply(),
 		},
 	}
