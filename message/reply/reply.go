@@ -2,7 +2,7 @@ package reply
 
 import "github.com/line/line-bot-sdk-go/v8/linebot/messaging_api"
 
-func ReplyDoUserSetting() []messaging_api.MessageInterface {
+func ReplyDoUsrSet() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
 			Text:       "ユーザー設定を行ってください",
@@ -11,7 +11,7 @@ func ReplyDoUserSetting() []messaging_api.MessageInterface {
 	}
 }
 
-func ReplyUsInputName() []messaging_api.MessageInterface {
+func ReplyUsrSetName() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
 			Text: "名前を入力してください",
@@ -19,7 +19,7 @@ func ReplyUsInputName() []messaging_api.MessageInterface {
 	}
 }
 
-func ReplyUsInputCar() []messaging_api.MessageInterface {
+func ReplyUsrSetCarNum() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
 			Text: "車両番号を入力してください",
@@ -36,7 +36,7 @@ func ReplySendAlcPhoto() []messaging_api.MessageInterface {
 	}
 }
 
-func ReplyMcHealth() []messaging_api.MessageInterface {
+func ReplyMoCallHealth() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
 			Text:       "疾病、疲労、睡眠不足等はありますか？",
@@ -45,7 +45,7 @@ func ReplyMcHealth() []messaging_api.MessageInterface {
 	}
 }
 
-func ReplyMcCarCheck() []messaging_api.MessageInterface {
+func ReplyMoCallCarCk() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
 			Text:       "車両の日常点検は良好でしたか？",
@@ -54,19 +54,20 @@ func ReplyMcCarCheck() []messaging_api.MessageInterface {
 	}
 }
 
-func ReplyMcNote() []messaging_api.MessageInterface {
+func ReplyMoCallNote() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
 			Text:       "指示事項、その他必要な事項を入力してください",
-			QuickReply: QuickRepMcNote(),
+			QuickReply: QuickRepMoCallNote(),
 		},
 	}
 }
 
-func ReplyEcNote() []messaging_api.MessageInterface {
+func ReplyEvCallNote() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
-			Text: "その他必要な事項を入力してください",
+			Text:       "その他必要な事項を入力してください",
+			QuickReply: QuickRepEvCallNote(),
 		},
 	}
 }

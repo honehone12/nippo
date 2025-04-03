@@ -10,10 +10,18 @@ func QuickRepConfigMenu() *messaging_api.QuickReply {
 	}
 }
 
-func QuickRepMcNote() *messaging_api.QuickReply {
+func QuickRepMoCallNote() *messaging_api.QuickReply {
 	return &messaging_api.QuickReply{
 		Items: []messaging_api.QuickReplyItem{
-			{Action: ActionMcNote()},
+			{Action: ActionMoCallNote()},
+		},
+	}
+}
+
+func QuickRepEvCallNote() *messaging_api.QuickReply {
+	return &messaging_api.QuickReply{
+		Items: []messaging_api.QuickReplyItem{
+			{Action: ActionMoCallNote()},
 		},
 	}
 }

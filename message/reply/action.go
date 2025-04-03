@@ -21,11 +21,21 @@ func ActionUserSetting() messaging_api.PostbackAction {
 	}
 }
 
-func ActionMcNote() messaging_api.PostbackAction {
+func ActionMoCallNote() messaging_api.PostbackAction {
 	return messaging_api.PostbackAction{
+		Label:       "入力する",
 		Data:        IGNORE_TXT_TEMPLATE,
 		InputOption: "openKeyboard",
 		FillInText:  "【指示事項】\n\n【天気】\n\n【その他】\n",
+	}
+}
+
+func ActionEvCallNote() messaging_api.PostbackAction {
+	return messaging_api.PostbackAction{
+		Label:       "入力する",
+		Data:        IGNORE_TXT_TEMPLATE,
+		InputOption: "openKeyboard",
+		FillInText:  "【その他】\n",
 	}
 }
 

@@ -23,7 +23,7 @@ func (s StUserNotConfigured) Run(
 	case webhook.MessageEvent:
 		req := messaging_api.ReplyMessageRequest{
 			ReplyToken: e.ReplyToken,
-			Messages:   reply.ReplyDoUserSetting(),
+			Messages:   reply.ReplyDoUsrSet(),
 		}
 
 		_, err := props.Api().ReplyMessage(&req)
@@ -43,7 +43,7 @@ func (s StUserNotConfigured) Run(
 
 			req := messaging_api.ReplyMessageRequest{
 				ReplyToken: e.ReplyToken,
-				Messages:   reply.ReplyUsInputName(),
+				Messages:   reply.ReplyUsrSetName(),
 			}
 
 			_, err = props.Api().ReplyMessage(&req)

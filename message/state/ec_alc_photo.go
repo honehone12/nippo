@@ -58,7 +58,7 @@ func (s StEcAlcPhoto) Run(
 
 				req := messaging_api.ReplyMessageRequest{
 					ReplyToken: e.ReplyToken,
-					Messages:   reply.ReplyEcNote(),
+					Messages:   reply.ReplyEvCallNote(),
 				}
 
 				_, err = props.Api().ReplyMessage(&req)

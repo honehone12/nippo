@@ -23,7 +23,7 @@ func (s StMcHealth) Run(
 	case webhook.MessageEvent:
 		req := messaging_api.ReplyMessageRequest{
 			ReplyToken: e.ReplyToken,
-			Messages:   reply.ReplyMcHealth(),
+			Messages:   reply.ReplyMoCallHealth(),
 		}
 
 		_, err := props.Api().ReplyMessage(&req)
@@ -43,7 +43,7 @@ func (s StMcHealth) Run(
 
 			req := messaging_api.ReplyMessageRequest{
 				ReplyToken: e.ReplyToken,
-				Messages:   reply.ReplyMcCarCheck(),
+				Messages:   reply.ReplyMoCallCarCk(),
 			}
 
 			_, err = props.Api().ReplyMessage(&req)

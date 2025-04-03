@@ -7,6 +7,7 @@ import (
 	"nippo/message/property"
 	"nippo/message/reply"
 	"nippo/schema"
+	"strings"
 
 	"github.com/line/line-bot-sdk-go/v8/linebot/messaging_api"
 	"github.com/line/line-bot-sdk-go/v8/linebot/webhook"
@@ -21,7 +22,7 @@ func (s StMcNote) Run(
 ) error {
 	switch e := event.(type) {
 	case webhook.PostbackEvent:
-		if e.Postback.Data == reply.IGNORE_TXT_TEMPLATE {
+		if strings.Compare(e.Postback.Data, reply.IGNORE_TXT_TEMPLATE) == 0 {
 			return nil
 		} else {
 			return fmt.Errorf("unexpected postback data: %s", e.Postback.Data)
@@ -42,12 +43,12 @@ func (s StMcNote) Run(
 				return err
 			}
 
-			err = db.UpdateUserCurrentCall(user.Id, nil)
+			err = db.UpdateUserCurrentDuty(user.Id, reportId)
 			if err != nil {
 				return err
 			}
 
-			err = db.UpdateUserCurrentDuty(user.Id, reportId)
+			err = db.UpdateUserCurrentCall(user.Id, nil)
 			if err != nil {
 				return err
 			}
@@ -67,7 +68,7 @@ func (s StMcNote) Run(
 		} else {
 			req := messaging_api.ReplyMessageRequest{
 				ReplyToken: e.ReplyToken,
-				Messages:   reply.ReplyMcNote(),
+				Messages:   reply.ReplyMoCallNote(),
 			}
 
 			_, err := props.Api().ReplyMessage(&req)
