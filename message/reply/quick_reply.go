@@ -2,7 +2,7 @@ package reply
 
 import "github.com/line/line-bot-sdk-go/v8/linebot/messaging_api"
 
-func QuickReplyConfigMenu() *messaging_api.QuickReply {
+func QuickRepConfigMenu() *messaging_api.QuickReply {
 	return &messaging_api.QuickReply{
 		Items: []messaging_api.QuickReplyItem{
 			{Action: ActionUserSetting()},
@@ -10,7 +10,7 @@ func QuickReplyConfigMenu() *messaging_api.QuickReply {
 	}
 }
 
-func QuickReplySendAlcPhoto() *messaging_api.QuickReply {
+func QuickRepSendAlcPhoto() *messaging_api.QuickReply {
 	return &messaging_api.QuickReply{
 		Items: []messaging_api.QuickReplyItem{
 			{Action: ActionSendAlcPhoto()},
@@ -19,16 +19,28 @@ func QuickReplySendAlcPhoto() *messaging_api.QuickReply {
 	}
 }
 
-func QuickReplyCarCheck() *messaging_api.QuickReply {
+func QuickRepCarCheck() *messaging_api.QuickReply {
 	return &messaging_api.QuickReply{
 		Items: []messaging_api.QuickReplyItem{
-			{Action: ActionFlagTrueAndMcNote()},
+			{Action: ActionMcCarCheck()},
 			// {Action: ActionReset()},
 		},
 	}
 }
 
-func QuickReplyFlag() *messaging_api.QuickReply {
+func QuickRepInDuty() *messaging_api.QuickReply {
+	return &messaging_api.QuickReply{
+		Items: []messaging_api.QuickReplyItem{
+			{Action: ActionSendGps()},
+			{Action: ActionStartResting()},
+			{Action: ActionStartWaiting()},
+			{Action: ActionStartLoading()},
+			{Action: ActionEndDuty()},
+		},
+	}
+}
+
+func QuickRepFlag() *messaging_api.QuickReply {
 	return &messaging_api.QuickReply{
 		Items: []messaging_api.QuickReplyItem{
 			{Action: ActionFlagTrue()},
@@ -37,7 +49,7 @@ func QuickReplyFlag() *messaging_api.QuickReply {
 	}
 }
 
-func QuickReplyStartMenu() *messaging_api.QuickReply {
+func QuickRepStartMenu() *messaging_api.QuickReply {
 	return &messaging_api.QuickReply{
 		Items: []messaging_api.QuickReplyItem{
 			{Action: ActionStartDuty()},

@@ -123,7 +123,7 @@ func TestMorningCall(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	err = db.UpdateMoCallNote(userId, "a: \nb: ")
+	err = db.UpdateMoCallNote(userId, "a: 無し\nb: 無し")
 	if err != nil {
 		t.Fatal(err)
 	}

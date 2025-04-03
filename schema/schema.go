@@ -92,17 +92,14 @@ type DailyReport struct {
 	Name      string `gorm:"size:100"`
 	CarNumber string `gorm:"size:100"`
 
-	Pickup    uint32
-	Deliverry uint32
-	Odo       float64
-	Trip      float64
-	Rests     string `gorm:"size:5000"`
-	Troubles  string `gorm:"size:5000"`
-	Note      string `gorm:"size:5000"`
+	MeterPhoto string `gorm:"size:5000"`
+	Troubles   string `gorm:"size:5000"`
+	Note       string `gorm:"size:5000"`
 
 	Locations []Location `gorm:"foreignKey:DailyReportId;references:Id"`
 	Waitings  []Waiting  `gorm:"foreignKey:DailyReportId;references:Id"`
 	Loadings  []Loading  `gorm:"foreignKey:DailyReportId;references:Id"`
+	Restings  []Resting  `gorm:"foreignKey:DailyReportId;references:Id"`
 
 	UserId []uint8 `gorm:"not null;type:binary(16)"`
 }
@@ -112,6 +109,7 @@ type Location struct {
 	CreatedAt time.Time      `gorm:"not null;index"`
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 
+	Label     string `gorm:"size:100"`
 	Address   string `gorm:"size:100"`
 	Latitude  float64
 	Longitude float64
@@ -125,8 +123,11 @@ type Waiting struct {
 	UpdatedAt time.Time
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 
-	Place string `gorm:"size:100"`
-	Note  string `gorm:"size:5000"`
+	Label     string `gorm:"size:100"`
+	Address   string `gorm:"size:100"`
+	Latitude  float64
+	Longitude float64
+	Note      string `gorm:"size:5000"`
 
 	DailyReportId []uint8 `gorm:"not null;type:binary(16)"`
 }
@@ -137,9 +138,27 @@ type Loading struct {
 	UpdatedAt time.Time
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 
-	Place         string `gorm:"size:100"`
+	Label         string `gorm:"size:100"`
+	Address       string `gorm:"size:100"`
+	Latitude      float64
+	Longitude     float64
 	ShippingCheck bool
 	Note          string `gorm:"size:5000"`
+
+	DailyReportId []uint8 `gorm:"not null;type:binary(16)"`
+}
+
+type Resting struct {
+	Id        []uint8   `gorm:"primaryKey;type:binary(16)"`
+	CreatedAt time.Time `gorm:"not null;index"`
+	UpdatedAt time.Time
+	DeletedAt gorm.DeletedAt `gorm:"index"`
+
+	Label     string `gorm:"size:100"`
+	Address   string `gorm:"size:100"`
+	Latitude  float64
+	Longitude float64
+	Note      string `gorm:"size:5000"`
 
 	DailyReportId []uint8 `gorm:"not null;type:binary(16)"`
 }
