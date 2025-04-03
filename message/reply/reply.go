@@ -62,6 +62,14 @@ func ReplyMcNote() []messaging_api.MessageInterface {
 	}
 }
 
+func ReplyEcNote() []messaging_api.MessageInterface {
+	return []messaging_api.MessageInterface{
+		messaging_api.TextMessage{
+			Text: "その他必要な事項を入力してください",
+		},
+	}
+}
+
 func ReplyInDuty() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{

@@ -19,8 +19,10 @@ const (
 	ST_MC_CAR_CHECK
 	ST_MC_NOTE
 
-	ST_IN_DUTY
+	ST_EC_ALC_PHOTO
+	ST_EC_NOTE
 
+	ST_IN_DUTY
 	ST_NONE
 )
 
@@ -36,6 +38,7 @@ func FromIdx(idx schema.StateIdx) (State, error) {
 	switch idx {
 	case ST_USER_NOT_CONFIGURED:
 		return StUserNotConfigured{}, nil
+
 	case ST_USER_SET_NAME:
 		return StUserSetName{}, nil
 	case ST_USER_SET_CAR:
@@ -48,10 +51,16 @@ func FromIdx(idx schema.StateIdx) (State, error) {
 		return StMcCarCheck{}, nil
 	case ST_MC_NOTE:
 		return StMcNote{}, nil
-	case ST_NONE:
-		return StNone{}, nil
+	case ST_EC_ALC_PHOTO:
+		return StEcAlcPhoto{}, nil
+	case ST_EC_NOTE:
+		return StEcNote{}, nil
+
 	case ST_IN_DUTY:
 		return StInDuty{}, nil
+	case ST_NONE:
+		return StNone{}, nil
+
 	default:
 		return nil, errors.New("undefined state index")
 	}

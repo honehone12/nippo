@@ -30,7 +30,17 @@ func (s StMcNote) Run(
 				return err
 			}
 
+			reportId, err := db.CreateDailyReport(user.Id, user.CurrentCall)
+			if err != nil {
+				return err
+			}
+
 			err = db.UpdateUserCurrentCall(user.Id, nil)
+			if err != nil {
+				return err
+			}
+
+			err = db.UpdateUserCurrentDuty(user.Id, reportId)
 			if err != nil {
 				return err
 			}

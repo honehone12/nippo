@@ -58,3 +58,55 @@ func PutJpg(ctx context.Context, userId []uint8, body io.Reader, length int64) (
 	_, err = s3Client.PutObject(ctx, &s3In)
 	return *key, err
 }
+
+/*
+package main
+
+import (
+    "context"
+    "fmt"
+    "time"
+
+    "github.com/aws/aws-sdk-go-v2/aws"
+    "github.com/aws/aws-sdk-go-v2/config"
+    "github.com/aws/aws-sdk-go-v2/service/s3"
+    "github.com/aws/aws-sdk-go-v2/service/s3/types"
+)
+
+func main() {
+    // AWSセッションを作成
+    cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion("ap-northeast-1")) // 適切なリージョンを指定
+    if err != nil {
+        fmt.Println("Error loading configuration:", err)
+        return
+    }
+
+    // S3クライアントを作成
+    client := s3.NewFromConfig(cfg)
+
+    // Presignクライアントを作成
+    presignClient := s3.NewPresignClient(client)
+
+    // バケット名とオブジェクトキーを指定
+    bucketName := "your-bucket-name"
+    objectKey := "your-object-key"
+
+    // GetObjectInputを作成
+    getObjectInput := &s3.GetObjectInput{
+        Bucket: aws.String(bucketName),
+        Key:    aws.String(objectKey),
+    }
+
+    // 事前署名付きURLを生成（有効期限を設定）
+    presignedURL, err := presignClient.PresignGetObject(context.TODO(), getObjectInput, func(options *s3.PresignOptions) {
+        options.Expires = 15 * time.Minute // 有効期限15分
+    })
+    if err != nil {
+        fmt.Println("Error generating presigned URL:", err)
+        return
+    }
+
+    fmt.Println("Presigned URL:", presignedURL.URL)
+}
+
+*/

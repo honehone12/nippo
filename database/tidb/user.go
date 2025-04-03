@@ -38,6 +38,19 @@ func (ti *TiDb) CreateUser(orgIdStr string, lineId string) ([]uint8, error) {
 	return user.Id, nil
 }
 
+func (ti *TiDb) ReadUser(lineId string) (*schema.User, error) {
+	if len(lineId) != schema.LINE_ID_LEN {
+		return nil, errors.New("unexpected line id length")
+	}
+
+	user := schema.User{}
+	if res := ti.orm.Take(&user, "line_id = ?", lineId); res.Error != nil {
+		return nil, res.Error
+	}
+
+	return &user, nil
+}
+
 func (ti *TiDb) UpdateUserName(id []uint8, name string) error {
 	if len(id) != schema.ID_LEN {
 		return errors.New("unexpected id length")
@@ -98,17 +111,4 @@ func (ti *TiDb) UpdateUserCurrentDuty(id []uint8, reportId []uint8) error {
 	user := schema.User{}
 	res := ti.orm.Model(&user).Where("id = ?", id).Update("current_duty", reportId)
 	return res.Error
-}
-
-func (ti *TiDb) ReadUser(lineId string) (*schema.User, error) {
-	if len(lineId) != schema.LINE_ID_LEN {
-		return nil, errors.New("unexpected line id length")
-	}
-
-	user := schema.User{}
-	if res := ti.orm.Take(&user, "line_id = ?", lineId); res.Error != nil {
-		return nil, res.Error
-	}
-
-	return &user, nil
 }

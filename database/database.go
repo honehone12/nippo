@@ -22,7 +22,8 @@ type Database interface {
 	UpdateMoCallCarCheck(userId []uint8) error
 	UpdateMoCallNote(userId []uint8, note string) error
 
-	CreateEveningCall(userId []uint8) ([]uint8, error)
+	CreateEveningCall(userId []uint8, photo string) ([]uint8, error)
+	UpdateEvCallNote(userId []uint8, note string) error
 
 	CreateDailyReport(userId []uint8, morningId []uint8) ([]uint8, error)
 }

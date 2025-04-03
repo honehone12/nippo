@@ -1,11 +1,13 @@
 package state
 
 import (
+	"errors"
 	"nippo/log"
 	"nippo/message/property"
 	"nippo/message/reply"
 	"nippo/schema"
 	"nippo/sss"
+	"strings"
 
 	"github.com/line/line-bot-sdk-go/v8/linebot/messaging_api"
 	"github.com/line/line-bot-sdk-go/v8/linebot/webhook"
@@ -29,8 +31,9 @@ func (s StMcAlcPhoto) Run(
 				}
 				defer res.Body.Close()
 
-				// check header here if you want
-				// but jpg is the only supported media format
+				if !strings.Contains(res.Header.Get("Content-Type"), "image/jpeg") {
+					return errors.New("unsupported iamge type")
+				}
 
 				photo, err := sss.PutJpg(props.Ctx(), user.Id, res.Body, res.ContentLength)
 				if err != nil {

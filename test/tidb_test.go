@@ -123,7 +123,7 @@ func TestMorningCall(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	err = db.UpdateMoCallNote(userId, "a: 無し\nb: 無し")
+	err = db.UpdateMoCallNote(userId, "【何か】\n無し\n【他の何か】\n無し")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -158,12 +158,17 @@ func TestDailyReport(t *testing.T) {
 }
 
 func TestEveningCall(t *testing.T) {
-	eveningId, err := db.CreateEveningCall(userId)
+	eveningId, err := db.CreateEveningCall(userId, PHOTO)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	err = db.UpdateUserCurrentCall(userId, eveningId)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	err = db.UpdateEvCallNote(userId, "【何なんだ】\n無し\n【なんだっけ】\n無し")
 	if err != nil {
 		t.Fatal(err)
 	}

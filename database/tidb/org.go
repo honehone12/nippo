@@ -29,6 +29,20 @@ func (ti *TiDb) CreateOrg(name string) ([]uint8, error) {
 	return org.Id, nil
 }
 
+func (ti *TiDb) ReadOrg(idStr string) (*schema.Org, error) {
+	id, err := uuid.Parse(idStr)
+	if err != nil {
+		return nil, err
+	}
+
+	org := schema.Org{}
+	if res := ti.orm.Take(&org, "id = ?", id[:]); res.Error != nil {
+		return nil, res.Error
+	}
+
+	return &org, nil
+}
+
 func (ti *TiDb) UpdateOrgLineId(idStr string, newLineId string) error {
 	if len(newLineId) != schema.LINE_ID_LEN {
 		return errors.New("unexpected line id length")
@@ -42,18 +56,4 @@ func (ti *TiDb) UpdateOrgLineId(idStr string, newLineId string) error {
 	org := schema.Org{}
 	res := ti.orm.Model(&org).Where("id = ?", id[:]).Update("line_id", newLineId)
 	return res.Error
-}
-
-func (ti *TiDb) ReadOrg(idStr string) (*schema.Org, error) {
-	id, err := uuid.Parse(idStr)
-	if err != nil {
-		return nil, err
-	}
-
-	org := schema.Org{}
-	if res := ti.orm.Take(&org, "id = ?", id[:]); res.Error != nil {
-		return nil, res.Error
-	}
-
-	return &org, nil
 }

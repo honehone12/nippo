@@ -106,15 +106,19 @@ func (ti *TiDb) UpdateMoCallNote(userId []uint8, note string) error {
 	return res.Error
 }
 
-func (ti *TiDb) CreateEveningCall(userId []uint8) ([]uint8, error) {
+func (ti *TiDb) CreateEveningCall(userId []uint8, photo string) ([]uint8, error) {
 	if len(userId) != schema.ID_LEN {
 		return nil, errors.New("unexpected user id length")
+	}
+	if len(photo) > schema.MAX_SHORT_TEXT_LEN {
+		return nil, errors.New("unexpected photo length")
 	}
 
 	user := schema.User{}
 	if res := ti.orm.Select(
 		"id",
 		"name",
+		"car_number",
 	).Take(&user, "id = ?", userId); res.Error != nil {
 		return nil, res.Error
 	}
@@ -124,10 +128,41 @@ func (ti *TiDb) CreateEveningCall(userId []uint8) ([]uint8, error) {
 		return nil, err
 	}
 
-	call := schema.EveningCall{Id: id[:]}
+	call := schema.EveningCall{
+		Id:              id[:],
+		Caller:          user.Name,
+		Name:            user.Name,
+		CarNumber:       user.CarNumber,
+		Method:          schema.METHOD_PERSON,
+		UsingAlcChecker: true,
+		AlcCheck:        true,
+		Photo:           photo,
+	}
 	if err := ti.orm.Model(&user).Association("EveningCalls").Append(&call); err != nil {
 		return nil, err
 	}
 
 	return call.Id, nil
+}
+
+func (ti *TiDb) UpdateEvCallNote(userId []uint8, note string) error {
+	if len(userId) != schema.ID_LEN {
+		return errors.New("unexpected user id length")
+	}
+	if len(note) > schema.MAX_LONG_TEXT_LEN {
+		return errors.New("unexpected note length")
+	}
+
+	user := schema.User{}
+	if res := ti.orm.Select("current_call").Take(&user, "id = ?", userId); res.Error != nil {
+		return res.Error
+	}
+
+	if len(user.CurrentCall) == 0 {
+		return errors.New("user does not have current call")
+	}
+
+	call := schema.EveningCall{}
+	res := ti.orm.Model(&call).Where("id = ?", user.CurrentCall).Update("note", note)
+	return res.Error
 }
