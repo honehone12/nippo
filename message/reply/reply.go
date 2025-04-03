@@ -6,7 +6,7 @@ func ReplyDoUserSetting() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
 			Text:       "ユーザー設定を行ってください",
-			QuickReply: ConfigMenuQuickReply(),
+			QuickReply: QuickReplyConfigMenu(),
 		},
 	}
 }
@@ -31,7 +31,16 @@ func ReplySendAlcPhoto() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
 			Text:       "アルコール検査機を使用し、結果が良好な場合は写真に撮って送信してください",
-			QuickReply: SendAlcPhotoQuickReply(),
+			QuickReply: QuickReplySendAlcPhoto(),
+		},
+	}
+}
+
+func ReplyHealth() []messaging_api.MessageInterface {
+	return []messaging_api.MessageInterface{
+		messaging_api.TextMessage{
+			Text:       "疾病、疲労、睡眠不足等はありますか？",
+			QuickReply: QuickReplyFlag(),
 		},
 	}
 }
@@ -40,7 +49,7 @@ func ReplyDone() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
 			Text:       "完了しました",
-			QuickReply: StartMenuQuickReply(),
+			QuickReply: QuickReplyStartMenu(),
 		},
 	}
 }
@@ -49,7 +58,7 @@ func ReplyNone() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
 			Text:       "現在進行中のタスクはありません",
-			QuickReply: StartMenuQuickReply(),
+			QuickReply: QuickReplyStartMenu(),
 		},
 	}
 }

@@ -102,6 +102,9 @@ func processEvent(props *property.MessagingProps, event webhook.EventInterface) 
 		return err
 	}
 
+	// add quit now logic here
+	// https://github.com/honehone12/nippo/issues/14
+
 	st, err := state.FromIdx(user.NextState)
 	if err != nil {
 		sendErrMsg(props, event)

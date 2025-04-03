@@ -37,15 +37,15 @@ func Key(userId []uint8) (*string, error) {
 	return &key, nil
 }
 
-func Put(ctx context.Context, userId []uint8, body io.Reader) error {
+func Put(ctx context.Context, userId []uint8, body io.Reader) (string, error) {
 	s3Client, err := S3Client(ctx)
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	key, err := Key(userId)
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	s3In := s3.PutObjectInput{
@@ -55,5 +55,5 @@ func Put(ctx context.Context, userId []uint8, body io.Reader) error {
 	}
 
 	_, err = s3Client.PutObject(ctx, &s3In)
-	return err
+	return *key, err
 }

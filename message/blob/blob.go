@@ -11,12 +11,12 @@ import (
 func PreRequest(blobApi *messaging_api.MessagingApiBlobAPI, blobId string) error {
 	// default lambda time out is 3s
 	// try within 2s / 250 = 8
-	const waitMil = 250
-	const MAX = 8
-	try := 1
+	const WAIT_MIL = 250
+	const MAX_TRY = 8
+	try := 0
 LOOP:
 	for {
-		if try > MAX {
+		if try >= MAX_TRY {
 			return errors.New("exceeded max tries, failed to obtain img")
 		}
 
@@ -30,7 +30,7 @@ LOOP:
 			break LOOP
 		case messaging_api.GetMessageContentTranscodingResponseSTATUS_PROCESSING:
 			log.L.Warn("being going to sleep")
-			time.Sleep(time.Millisecond * waitMil)
+			time.Sleep(time.Millisecond * WAIT_MIL)
 			try++
 		default:
 			return errors.New("img processing failed")

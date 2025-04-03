@@ -24,28 +24,46 @@ func (s StMcAlcPhoto) Run(
 		img, ok := e.Message.(webhook.ImageMessageContent)
 		if ok {
 			if img.ContentProvider.Type == webhook.ContentProviderTYPE_LINE {
-				err := blob.PreRequest(props.BlobApi(), img.Id)
+				blobApi := props.BlobApi()
+				err := blob.PreRequest(blobApi, img.Id)
 				if err != nil {
 					return err
 				}
 
-				res, err := props.BlobApi().GetMessageContent(img.Id)
+				res, err := blobApi.GetMessageContent(img.Id)
 				if err != nil {
 					return err
 				}
 				defer res.Body.Close()
 
-				err = sss.Put(props.Ctx(), user.Id, res.Body)
+				photo, err := sss.Put(props.Ctx(), user.Id, res.Body)
 				if err != nil {
 					return err
 				}
 
-				err = props.Db().UpdateUserNextState(user.Id, ST_MC_HEALTH)
+				db := props.Db()
+				callId, err := db.CreateMorningCall(user.Id, photo)
 				if err != nil {
 					return err
 				}
 
-				panic("not implemented")
+				err = db.UpdateUserCurrentCall(user.Id, callId)
+				if err != nil {
+					return err
+				}
+
+				err = db.UpdateUserNextState(user.Id, ST_MC_HEALTH)
+				if err != nil {
+					return err
+				}
+
+				req := messaging_api.ReplyMessageRequest{
+					ReplyToken: e.ReplyToken,
+					Messages:   reply.ReplyHealth(),
+				}
+
+				_, err = props.Api().ReplyMessage(&req)
+				return err
 			}
 		}
 
