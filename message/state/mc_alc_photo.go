@@ -59,7 +59,7 @@ func (s StMcAlcPhoto) Run(
 
 				req := messaging_api.ReplyMessageRequest{
 					ReplyToken: e.ReplyToken,
-					Messages:   reply.ReplyHealth(),
+					Messages:   reply.ReplyMcHealth(),
 				}
 
 				_, err = props.Api().ReplyMessage(&req)

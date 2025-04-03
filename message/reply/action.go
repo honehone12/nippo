@@ -5,6 +5,7 @@ import "github.com/line/line-bot-sdk-go/v8/linebot/messaging_api"
 const USER_SETTING_ACT_DATA = "USER_SETTING"
 const START_DUTY_ACT_DATA = "START_DUTY"
 const FLAG_TRUE_ACT_DATA = "FLAG_TRUE"
+const RESET_ACT_DATA = "RESET"
 
 func ActionUserSetting() messaging_api.PostbackAction {
 	return messaging_api.PostbackAction{
@@ -21,6 +22,16 @@ func ActionSendAlcPhoto() messaging_api.CameraAction {
 	}
 }
 
+func ActionFlagTrueAndMcNote() messaging_api.PostbackAction {
+	return messaging_api.PostbackAction{
+		Label:       "良好",
+		Data:        FLAG_TRUE_ACT_DATA,
+		DisplayText: "良好",
+		InputOption: "openKeyboard",
+		FillInText:  "指示事項： \nその他： ",
+	}
+}
+
 func ActionFlagTrue() messaging_api.PostbackAction {
 	return messaging_api.PostbackAction{
 		Label:       "良好",
@@ -34,5 +45,13 @@ func ActionStartDuty() messaging_api.PostbackAction {
 		Label:       "業務を開始する",
 		Data:        START_DUTY_ACT_DATA,
 		DisplayText: "業務を開始する",
+	}
+}
+
+func ActionReset() messaging_api.PostbackAction {
+	return messaging_api.PostbackAction{
+		Label:       "リセット",
+		Data:        RESET_ACT_DATA,
+		DisplayText: "リセット",
 	}
 }

@@ -50,7 +50,7 @@ func (s StNone) Run(
 
 			req := messaging_api.ReplyMessageRequest{
 				ReplyToken: e.ReplyToken,
-				Messages:   reply.ReplyInputName(),
+				Messages:   reply.ReplyUsInputName(),
 			}
 
 			_, err = props.Api().ReplyMessage(&req)

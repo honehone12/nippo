@@ -14,6 +14,16 @@ func QuickReplySendAlcPhoto() *messaging_api.QuickReply {
 	return &messaging_api.QuickReply{
 		Items: []messaging_api.QuickReplyItem{
 			{Action: ActionSendAlcPhoto()},
+			// {Action: ActionReset()},
+		},
+	}
+}
+
+func QuickReplyCarCheck() *messaging_api.QuickReply {
+	return &messaging_api.QuickReply{
+		Items: []messaging_api.QuickReplyItem{
+			{Action: ActionFlagTrueAndMcNote()},
+			// {Action: ActionReset()},
 		},
 	}
 }
@@ -22,6 +32,7 @@ func QuickReplyFlag() *messaging_api.QuickReply {
 	return &messaging_api.QuickReply{
 		Items: []messaging_api.QuickReplyItem{
 			{Action: ActionFlagTrue()},
+			// {Action: ActionReset()},
 		},
 	}
 }

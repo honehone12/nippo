@@ -104,7 +104,8 @@ func TestCallAndReport(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	morningId, err := db.CreateMorningCall(user.Id)
+	photo := "user-id-009.jpg"
+	morningId, err := db.CreateMorningCall(user.Id, photo)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -128,6 +129,21 @@ func TestCallAndReport(t *testing.T) {
 	}
 
 	err = db.UpdateUserCurrentDuty(user.Id, reportId)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	err = db.UpdateMoCallCarCheck(user.Id)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	err = db.UpdateMoCallCarCheck(user.Id)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	err = db.UpdateMoCallNote(user.Id, "a: \nb: ")
 	if err != nil {
 		t.Fatal(err)
 	}

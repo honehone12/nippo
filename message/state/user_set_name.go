@@ -36,7 +36,7 @@ func (s StUserSetName) Run(
 
 			req := messaging_api.ReplyMessageRequest{
 				ReplyToken: e.ReplyToken,
-				Messages:   reply.ReplyInputCar(),
+				Messages:   reply.ReplyUsInputCar(),
 			}
 
 			_, err = props.Api().ReplyMessage(&req)
@@ -44,7 +44,7 @@ func (s StUserSetName) Run(
 		} else {
 			req := messaging_api.ReplyMessageRequest{
 				ReplyToken: e.ReplyToken,
-				Messages:   reply.ReplyInputName(),
+				Messages:   reply.ReplyUsInputName(),
 			}
 
 			_, err := props.Api().ReplyMessage(&req)

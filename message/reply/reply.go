@@ -11,7 +11,7 @@ func ReplyDoUserSetting() []messaging_api.MessageInterface {
 	}
 }
 
-func ReplyInputName() []messaging_api.MessageInterface {
+func ReplyUsInputName() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
 			Text: "名前を入力してください",
@@ -19,7 +19,7 @@ func ReplyInputName() []messaging_api.MessageInterface {
 	}
 }
 
-func ReplyInputCar() []messaging_api.MessageInterface {
+func ReplyUsInputCar() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
 			Text: "車両番号を入力してください",
@@ -36,11 +36,37 @@ func ReplySendAlcPhoto() []messaging_api.MessageInterface {
 	}
 }
 
-func ReplyHealth() []messaging_api.MessageInterface {
+func ReplyMcHealth() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
 			Text:       "疾病、疲労、睡眠不足等はありますか？",
 			QuickReply: QuickReplyFlag(),
+		},
+	}
+}
+
+func ReplyMcCarCheck() []messaging_api.MessageInterface {
+	return []messaging_api.MessageInterface{
+		messaging_api.TextMessage{
+			Text:       "車両の日常点検は良好でしたか？",
+			QuickReply: QuickReplyCarCheck(),
+		},
+	}
+}
+
+func ReplyMcNote() []messaging_api.MessageInterface {
+	return []messaging_api.MessageInterface{
+		messaging_api.TextMessage{
+			Text: "指示事項、その他必要な事項を入力してください",
+		},
+	}
+}
+
+func ReplyInDuty() []messaging_api.MessageInterface {
+	return []messaging_api.MessageInterface{
+		messaging_api.TextMessage{
+			Text: "業務中に入りました",
+			// QuickReply: ,
 		},
 	}
 }

@@ -16,6 +16,10 @@ const (
 
 	ST_MC_ALC_PHOTO
 	ST_MC_HEALTH
+	ST_MC_CAR_CHECK
+	ST_MC_NOTE
+
+	ST_IN_DUTY
 
 	ST_NONE
 )
@@ -38,8 +42,16 @@ func FromIdx(idx schema.StateIdx) (State, error) {
 		return StUserSetCar{}, nil
 	case ST_MC_ALC_PHOTO:
 		return StMcAlcPhoto{}, nil
+	case ST_MC_HEALTH:
+		return StMcHealth{}, nil
+	case ST_MC_CAR_CHECK:
+		return StMcCarCheck{}, nil
+	case ST_MC_NOTE:
+		return StMcNote{}, nil
 	case ST_NONE:
 		return StNone{}, nil
+	case ST_IN_DUTY:
+		return StInDuty{}, nil
 	default:
 		return nil, errors.New("undefined state index")
 	}

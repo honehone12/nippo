@@ -44,7 +44,7 @@ func (ti *TiDb) CreateMorningCall(userId []uint8, photo string) ([]uint8, error)
 	return call.Id, nil
 }
 
-func (ti *TiDb) UpdateMorningCallHealth(userId []uint8) error {
+func (ti *TiDb) UpdateMoCallHealth(userId []uint8) error {
 	if len(userId) != schema.ID_LEN {
 		return errors.New("unexpected user id length")
 	}
@@ -56,6 +56,39 @@ func (ti *TiDb) UpdateMorningCallHealth(userId []uint8) error {
 
 	call := schema.MorningCall{}
 	res := ti.orm.Model(&call).Where("id = ?", user.CurrentCall).Update("health_check", true)
+	return res.Error
+}
+
+func (ti *TiDb) UpdateMoCallCarCheck(userId []uint8) error {
+	if len(userId) != schema.ID_LEN {
+		return errors.New("unexpected user id length")
+	}
+
+	user := schema.User{}
+	if res := ti.orm.Select("current_call").Take(&user, "id = ?", userId); res.Error != nil {
+		return res.Error
+	}
+
+	call := schema.MorningCall{}
+	res := ti.orm.Model(&call).Where("id = ?", user.CurrentCall).Update("car_check", true)
+	return res.Error
+}
+
+func (ti *TiDb) UpdateMoCallNote(userId []uint8, note string) error {
+	if len(userId) != schema.ID_LEN {
+		return errors.New("unexpected user id length")
+	}
+	if len(note) > schema.MAX_LONG_TEXT_LEN {
+		return errors.New("unexpected note length")
+	}
+
+	user := schema.User{}
+	if res := ti.orm.Select("current_call").Take(&user, "id = ?", userId); res.Error != nil {
+		return res.Error
+	}
+
+	call := schema.MorningCall{}
+	res := ti.orm.Model(&call).Where("id = ?", user.CurrentCall).Update("note", note)
 	return res.Error
 }
 
