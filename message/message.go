@@ -83,6 +83,21 @@ func sendErrMsg(props *property.MessagingProps, event webhook.EventInterface) {
 	}
 }
 
+func onUnknownUser(
+	props *property.MessagingProps,
+	source string,
+	event webhook.EventInterface,
+) error {
+	st := state.StUserNotConfigured{}
+	err := st.Run(props, &schema.User{LineId: source}, event)
+	if err != nil {
+		sendErrMsg(props, event)
+		return err
+	}
+
+	return nil
+}
+
 func processEvent(props *property.MessagingProps, event webhook.EventInterface) error {
 	source, err := getSource(event)
 	if err != nil {
@@ -93,11 +108,8 @@ func processEvent(props *property.MessagingProps, event webhook.EventInterface) 
 	user, err := props.Db().ReadUser(source)
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		log.L.Warnf("user not configured: %s", err)
-		st := state.StUserNotConfigured{}
-
-		err = st.Run(props, &schema.User{LineId: source}, event)
-	}
-	if err != nil {
+		return onUnknownUser(props, source, event)
+	} else if err != nil {
 		sendErrMsg(props, event)
 		return err
 	}

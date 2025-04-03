@@ -78,7 +78,7 @@ func (ti *TiDb) UpdateUserCurrentCall(id []uint8, callId []uint8) error {
 	if len(id) != schema.ID_LEN {
 		return errors.New("unexpected id length")
 	}
-	if len(callId) != schema.ID_LEN {
+	if callId != nil && len(callId) != schema.ID_LEN {
 		return errors.New("unexpected call id length")
 	}
 
@@ -91,7 +91,7 @@ func (ti *TiDb) UpdateUserCurrentDuty(id []uint8, reportId []uint8) error {
 	if len(id) != schema.ID_LEN {
 		return errors.New("unexpected id length")
 	}
-	if len(reportId) != schema.ID_LEN {
+	if reportId != nil && len(reportId) != schema.ID_LEN {
 		return errors.New("unexpected report id length")
 	}
 

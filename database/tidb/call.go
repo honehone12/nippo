@@ -19,6 +19,7 @@ func (ti *TiDb) CreateMorningCall(userId []uint8, photo string) ([]uint8, error)
 	if res := ti.orm.Select(
 		"id",
 		"name",
+		"car_number",
 	).Take(&user, "id = ?", userId); res.Error != nil {
 		return nil, res.Error
 	}
@@ -32,6 +33,7 @@ func (ti *TiDb) CreateMorningCall(userId []uint8, photo string) ([]uint8, error)
 		Id:              id[:],
 		Caller:          user.Name,
 		Name:            user.Name,
+		CarNumber:       user.CarNumber,
 		Method:          schema.METHOD_PERSON,
 		UsingAlcChecker: true,
 		AlcCheck:        true,

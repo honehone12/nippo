@@ -27,7 +27,7 @@ func Bucket() *string {
 	return &bucket
 }
 
-func Key(userId []uint8) (*string, error) {
+func JpgKey(userId []uint8) (*string, error) {
 	id, err := uuid.FromBytes(userId)
 	if err != nil {
 		return nil, err
@@ -37,21 +37,22 @@ func Key(userId []uint8) (*string, error) {
 	return &key, nil
 }
 
-func Put(ctx context.Context, userId []uint8, body io.Reader) (string, error) {
+func Put(ctx context.Context, userId []uint8, body io.Reader, length int64) (string, error) {
 	s3Client, err := S3Client(ctx)
 	if err != nil {
 		return "", err
 	}
 
-	key, err := Key(userId)
+	key, err := JpgKey(userId)
 	if err != nil {
 		return "", err
 	}
 
 	s3In := s3.PutObjectInput{
-		Bucket: Bucket(),
-		Key:    key,
-		Body:   body,
+		Bucket:        Bucket(),
+		Key:           key,
+		Body:          body,
+		ContentLength: &length,
 	}
 
 	_, err = s3Client.PutObject(ctx, &s3In)

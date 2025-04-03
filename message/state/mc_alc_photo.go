@@ -2,7 +2,6 @@ package state
 
 import (
 	"nippo/log"
-	"nippo/message/blob"
 	"nippo/message/property"
 	"nippo/message/reply"
 	"nippo/schema"
@@ -20,23 +19,20 @@ func (s StMcAlcPhoto) Run(
 	event webhook.EventInterface,
 ) error {
 	e, ok := event.(webhook.MessageEvent)
-	if !ok {
+	if ok {
 		img, ok := e.Message.(webhook.ImageMessageContent)
 		if ok {
 			if img.ContentProvider.Type == webhook.ContentProviderTYPE_LINE {
-				blobApi := props.BlobApi()
-				err := blob.PreRequest(blobApi, img.Id)
-				if err != nil {
-					return err
-				}
-
-				res, err := blobApi.GetMessageContent(img.Id)
+				res, err := props.BlobApi().GetMessageContent(img.Id)
 				if err != nil {
 					return err
 				}
 				defer res.Body.Close()
 
-				photo, err := sss.Put(props.Ctx(), user.Id, res.Body)
+				// check header here if you want
+				// but jpg is the only supported media format
+
+				photo, err := sss.Put(props.Ctx(), user.Id, res.Body, res.ContentLength)
 				if err != nil {
 					return err
 				}

@@ -133,7 +133,7 @@ func TestCallAndReport(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	err = db.UpdateMoCallCarCheck(user.Id)
+	err = db.UpdateMoCallHealth(user.Id)
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -30,6 +30,11 @@ func (s StMcNote) Run(
 				return err
 			}
 
+			err = db.UpdateUserCurrentCall(user.Id, nil)
+			if err != nil {
+				return err
+			}
+
 			err = db.UpdateUserNextState(user.Id, ST_IN_DUTY)
 			if err != nil {
 				return err
