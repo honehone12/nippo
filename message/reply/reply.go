@@ -40,7 +40,7 @@ func ReplyMcHealth() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
 			Text:       "疾病、疲労、睡眠不足等はありますか？",
-			QuickReply: QuickRepFlag(),
+			QuickReply: QuickRepFlagTrue(),
 		},
 	}
 }
@@ -49,7 +49,7 @@ func ReplyMcCarCheck() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
 			Text:       "車両の日常点検は良好でしたか？",
-			QuickReply: QuickRepCarCheck(),
+			QuickReply: QuickRepFlagTrue(),
 		},
 	}
 }
@@ -57,7 +57,8 @@ func ReplyMcCarCheck() []messaging_api.MessageInterface {
 func ReplyMcNote() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
-			Text: "指示事項、その他必要な事項を入力してください",
+			Text:       "指示事項、その他必要な事項を入力してください",
+			QuickReply: QuickRepMcNote(),
 		},
 	}
 }

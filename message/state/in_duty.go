@@ -20,9 +20,9 @@ func (s StInDuty) Run(
 ) error {
 	switch e := event.(type) {
 	case webhook.MessageEvent:
-		gps, ok := e.Message.(webhook.LocationMessageContent)
+		_, ok := e.Message.(webhook.LocationMessageContent)
 		if ok {
-
+			panic("not implemented")
 		} else {
 			req := messaging_api.ReplyMessageRequest{
 				ReplyToken: e.ReplyToken,
@@ -32,12 +32,14 @@ func (s StInDuty) Run(
 			_, err := props.Api().ReplyMessage(&req)
 			return err
 		}
-
 	case webhook.PostbackEvent:
 		switch e.Postback.Data {
 		case reply.START_WAITING_ACT_DATA:
+			panic("not implemented")
 		case reply.START_LOADING_ACT_DATA:
+			panic("not implemented")
 		case reply.START_RESTING_ACT_DATA:
+			panic("not implemented")
 		case reply.END_DUTY_ACT_DATA:
 			err := props.Db().UpdateUserNextState(user.Id, ST_EC_ALC_PHOTO)
 			if err != nil {
@@ -50,6 +52,7 @@ func (s StInDuty) Run(
 			}
 
 			_, err = props.Api().ReplyMessage(&req)
+			return err
 		default:
 			return fmt.Errorf("unexpected postback data: %s", e.Postback.Data)
 		}

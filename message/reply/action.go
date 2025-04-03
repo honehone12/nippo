@@ -2,6 +2,7 @@ package reply
 
 import "github.com/line/line-bot-sdk-go/v8/linebot/messaging_api"
 
+const IGNORE_TXT_TEMPLATE = "IGNORE_TXT_TEMPLATE"
 const USER_SETTING_ACT_DATA = "USER_SETTING"
 const START_DUTY_ACT_DATA = "START_DUTY"
 const START_WAITING_ACT_DATA = "START_WAITING"
@@ -20,11 +21,9 @@ func ActionUserSetting() messaging_api.PostbackAction {
 	}
 }
 
-func ActionMcCarCheck() messaging_api.PostbackAction {
+func ActionMcNote() messaging_api.PostbackAction {
 	return messaging_api.PostbackAction{
-		Label:       "良好",
-		Data:        FLAG_TRUE_ACT_DATA,
-		DisplayText: "良好",
+		Data:        IGNORE_TXT_TEMPLATE,
 		InputOption: "openKeyboard",
 		FillInText:  "【指示事項】\n\n【天気】\n\n【その他】\n",
 	}

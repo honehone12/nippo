@@ -1,6 +1,7 @@
 package state
 
 import (
+	"fmt"
 	"nippo/input"
 	"nippo/log"
 	"nippo/message/property"
@@ -18,8 +19,14 @@ func (s StMcNote) Run(
 	user *schema.User,
 	event webhook.EventInterface,
 ) error {
-	e, ok := event.(webhook.MessageEvent)
-	if ok {
+	switch e := event.(type) {
+	case webhook.PostbackEvent:
+		if e.Postback.Data == reply.IGNORE_TXT_TEMPLATE {
+			return nil
+		} else {
+			return fmt.Errorf("unexpected postback data: %s", e.Postback.Data)
+		}
+	case webhook.MessageEvent:
 		t, ok := e.Message.(webhook.TextMessageContent)
 		if ok {
 			db := props.Db()
@@ -66,7 +73,7 @@ func (s StMcNote) Run(
 			_, err := props.Api().ReplyMessage(&req)
 			return err
 		}
-	} else {
+	default:
 		log.L.Warnf("unexpected event: %s", event.GetType())
 		return nil
 	}
