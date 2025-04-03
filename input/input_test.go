@@ -8,7 +8,7 @@ import (
 func TestInput(t *testing.T) {
 	c := Clean("\"'<>&`#--%*;\\AND OR UNION")
 
-	if html.UnescapeString(c) != "\"'<>&" {
+	if html.UnescapeString(string(c)) != "\"'<>&" {
 		t.Fatal("result is not expected")
 	}
 }

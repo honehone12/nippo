@@ -2,6 +2,7 @@ package tidb
 
 import (
 	"errors"
+	"nippo/input"
 	"nippo/schema"
 
 	"github.com/google/uuid"
@@ -51,7 +52,7 @@ func (ti *TiDb) ReadUser(lineId string) (*schema.User, error) {
 	return &user, nil
 }
 
-func (ti *TiDb) UpdateUserName(id []uint8, name string) error {
+func (ti *TiDb) UpdateUserName(id []uint8, name input.CleanText) error {
 	if len(id) != schema.ID_LEN {
 		return errors.New("unexpected id length")
 	}
@@ -64,7 +65,7 @@ func (ti *TiDb) UpdateUserName(id []uint8, name string) error {
 	return res.Error
 }
 
-func (ti *TiDb) UpdateUserCarNumber(id []uint8, carNumber string) error {
+func (ti *TiDb) UpdateUserCarNumber(id []uint8, carNumber input.CleanText) error {
 	if len(id) != schema.ID_LEN {
 		return errors.New("unexpected id length")
 	}

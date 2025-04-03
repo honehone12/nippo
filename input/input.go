@@ -13,16 +13,22 @@ var forbidden = []string{
 	"OR", "AND", "UNION",
 }
 
-func CleanSql(s string) string {
-	n := s
+type CleanText string
+
+func cleanSql(s string) string {
+	c := s
 	for _, f := range forbidden {
-		n = strings.ReplaceAll(n, f, "")
+		c = strings.ReplaceAll(c, f, "")
 	}
-	return n
+	return c
 }
 
-func Clean(s string) string {
-	n := CleanSql(s)
-	n = html.EscapeString(n)
-	return strings.TrimSpace(n)
+func CleanSql(s string) CleanText {
+	return CleanText(cleanSql(s))
+}
+
+func Clean(s string) CleanText {
+	c := cleanSql(s)
+	c = html.EscapeString(c)
+	return CleanText(strings.TrimSpace(c))
 }
