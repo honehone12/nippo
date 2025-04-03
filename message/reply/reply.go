@@ -65,7 +65,7 @@ func ReplyMcNote() []messaging_api.MessageInterface {
 func ReplyInDuty() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
-			Text: "業務中に入りました",
+			Text: "業務に入りました",
 			// QuickReply: ,
 		},
 	}
@@ -83,7 +83,7 @@ func ReplyDone() []messaging_api.MessageInterface {
 func ReplyNone() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
-			Text:       "現在進行中のタスクはありません",
+			Text:       "現在進行中の業務はありません",
 			QuickReply: QuickReplyStartMenu(),
 		},
 	}

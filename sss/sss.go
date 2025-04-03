@@ -37,7 +37,7 @@ func JpgKey(userId []uint8) (*string, error) {
 	return &key, nil
 }
 
-func Put(ctx context.Context, userId []uint8, body io.Reader, length int64) (string, error) {
+func PutJpg(ctx context.Context, userId []uint8, body io.Reader, length int64) (string, error) {
 	s3Client, err := S3Client(ctx)
 	if err != nil {
 		return "", err

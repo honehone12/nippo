@@ -32,7 +32,7 @@ func (s StMcAlcPhoto) Run(
 				// check header here if you want
 				// but jpg is the only supported media format
 
-				photo, err := sss.Put(props.Ctx(), user.Id, res.Body, res.ContentLength)
+				photo, err := sss.PutJpg(props.Ctx(), user.Id, res.Body, res.ContentLength)
 				if err != nil {
 					return err
 				}

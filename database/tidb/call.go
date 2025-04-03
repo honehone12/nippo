@@ -56,6 +56,10 @@ func (ti *TiDb) UpdateMoCallHealth(userId []uint8) error {
 		return res.Error
 	}
 
+	if len(user.CurrentCall) == 0 {
+		return errors.New("user does not have current call")
+	}
+
 	call := schema.MorningCall{}
 	res := ti.orm.Model(&call).Where("id = ?", user.CurrentCall).Update("health_check", true)
 	return res.Error
@@ -69,6 +73,10 @@ func (ti *TiDb) UpdateMoCallCarCheck(userId []uint8) error {
 	user := schema.User{}
 	if res := ti.orm.Select("current_call").Take(&user, "id = ?", userId); res.Error != nil {
 		return res.Error
+	}
+
+	if len(user.CurrentCall) == 0 {
+		return errors.New("user does not have current call")
 	}
 
 	call := schema.MorningCall{}
@@ -87,6 +95,10 @@ func (ti *TiDb) UpdateMoCallNote(userId []uint8, note string) error {
 	user := schema.User{}
 	if res := ti.orm.Select("current_call").Take(&user, "id = ?", userId); res.Error != nil {
 		return res.Error
+	}
+
+	if len(user.CurrentCall) == 0 {
+		return errors.New("user does not have current call")
 	}
 
 	call := schema.MorningCall{}

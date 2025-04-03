@@ -2,7 +2,6 @@ package test
 
 import (
 	"bytes"
-	"errors"
 	"nippo/database"
 	"nippo/database/tidb"
 
@@ -13,27 +12,35 @@ import (
 	"github.com/joho/godotenv"
 )
 
-var _ database.Database = &tidb.TiDb{}
+const ORG_NAME = "テスト　企業"
+const ORG_LINE_ID = "U9198cf6745fc0d808977bdb0b9f22995"
+const USER_LINE_ID = "U8189cf6745fc0d808977bdb0b9f22885"
+const USER_NAME = "テスト　ユーザー太郎"
+const CAR_NUMBER = "て００９１２ー２３"
+const PHOTO = "user-id-009.jpg"
 
-func initTest() (database.Database, error) {
+var db database.Database = &tidb.TiDb{}
+var orgIdStr string
+var userId []uint8
+var morningId []uint8
+
+func TestOpenDb(t *testing.T) {
 	godotenv.Load("../bin/.env")
 
 	tiUri := os.Getenv("DB_URI")
 	if len(tiUri) == 0 {
-		return nil, errors.New("env DB_URI is not set")
+		t.Fatal("env DB_URI is not set")
 	}
 
-	return tidb.Open(tiUri)
-}
-
-func TestUserAndOrg(t *testing.T) {
-	db, err := initTest()
+	var err error
+	db, err = tidb.Open(tiUri)
 	if err != nil {
 		t.Fatal(err)
 	}
+}
 
-	orgName := "テスト　企業"
-	bId, err := db.CreateOrg(orgName)
+func TestCreateOrg(t *testing.T) {
+	bId, err := db.CreateOrg(ORG_NAME)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -42,27 +49,27 @@ func TestUserAndOrg(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	orgIdStr = orgId.String()
 
-	orgLineId := "U9198cf6745fc0d808977bdb0b9f22995"
-	err = db.UpdateOrgLineId(orgId.String(), orgLineId)
+	err = db.UpdateOrgLineId(orgIdStr, ORG_LINE_ID)
+	if err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestUserSetting(t *testing.T) {
+	var err error
+	userId, err = db.CreateUser(orgIdStr, USER_LINE_ID)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	userLineId := "U8189cf6745fc0d808977bdb0b9f22885"
-	userId, err := db.CreateUser(orgId.String(), userLineId)
+	err = db.UpdateUserName(userId, USER_NAME)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	userName := "テスト　ユーザー太郎"
-	err = db.UpdateUserName(userId, userName)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	carNumber := "て００９１２ー２３"
-	err = db.UpdateUserCarNumber(userId, carNumber)
+	err = db.UpdateUserCarNumber(userId, CAR_NUMBER)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -71,115 +78,117 @@ func TestUserAndOrg(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+}
 
-	readOrg, err := db.ReadOrg(orgId.String())
+func ReadOrgAndUser(t *testing.T) {
+	readOrg, err := db.ReadOrg(orgIdStr)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if readOrg.LineId != orgLineId || readOrg.Name != orgName {
+	if readOrg.LineId != ORG_LINE_ID || readOrg.Name != ORG_NAME {
 		t.Fatal("read wrong data")
 	}
 
-	readUser, err := db.ReadUser(userLineId)
+	readUser, err := db.ReadUser(USER_LINE_ID)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !bytes.Equal(readUser.Id, userId) || readUser.Name != userName {
+	if !bytes.Equal(readUser.Id, userId) || readUser.Name != USER_NAME {
 		t.Fatal("read wrong user")
 	}
-	if readUser.CarNumber != carNumber || readUser.NextState != 2 {
+	if readUser.CarNumber != CAR_NUMBER || readUser.NextState != 2 {
 		t.Fatal("read wrong user")
 	}
 }
 
-func TestCallAndReport(t *testing.T) {
-	db, err := initTest()
+func TestMorningCall(t *testing.T) {
+	var err error
+	morningId, err = db.CreateMorningCall(userId, PHOTO)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	userLineId := "U8189cf6745fc0d808977bdb0b9f22885"
-	user, err := db.ReadUser(userLineId)
+	err = db.UpdateUserCurrentCall(userId, morningId)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	photo := "user-id-009.jpg"
-	morningId, err := db.CreateMorningCall(user.Id, photo)
+	err = db.UpdateMoCallHealth(userId)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	err = db.UpdateUserCurrentCall(user.Id, morningId)
+	err = db.UpdateMoCallCarCheck(userId)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	readUser, err := db.ReadUser(userLineId)
+	err = db.UpdateMoCallNote(userId, "a: \nb: ")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	readUser, err := db.ReadUser(USER_LINE_ID)
 	if err != nil {
 		t.Fatal(err)
 	}
 	if !bytes.Equal(readUser.CurrentCall, morningId) {
 		t.Fatal("read wrong user")
 	}
+}
 
-	reportId, err := db.CreateDailyReport(user.Id, morningId)
+func TestDailyReport(t *testing.T) {
+	reportId, err := db.CreateDailyReport(userId, morningId)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	err = db.UpdateUserCurrentDuty(user.Id, reportId)
+	err = db.UpdateUserCurrentDuty(userId, reportId)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	err = db.UpdateMoCallHealth(user.Id)
+	readUser, err := db.ReadUser(USER_LINE_ID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !bytes.Equal(readUser.CurrentDuty, reportId) {
+		t.Fatal("read wrong user")
+	}
+}
+
+func TestEveningCall(t *testing.T) {
+	eveningId, err := db.CreateEveningCall(userId)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	err = db.UpdateMoCallCarCheck(user.Id)
+	err = db.UpdateUserCurrentCall(userId, eveningId)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	err = db.UpdateMoCallNote(user.Id, "a: \nb: ")
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	eveningId, err := db.CreateEveningCall(user.Id)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	err = db.UpdateUserCurrentCall(user.Id, eveningId)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	readUser, err = db.ReadUser(userLineId)
+	readUser, err := db.ReadUser(USER_LINE_ID)
 	if err != nil {
 		t.Fatal(err)
 	}
 	if !bytes.Equal(readUser.CurrentCall, eveningId) {
 		t.Fatal("read wrong user")
 	}
-	if !bytes.Equal(readUser.CurrentDuty, reportId) {
-		t.Fatal("read wrong user")
-	}
+}
 
-	err = db.UpdateUserCurrentCall(user.Id, nil)
+func TestOnEnd(t *testing.T) {
+	err := db.UpdateUserCurrentCall(userId, nil)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	err = db.UpdateUserCurrentDuty(user.Id, nil)
+	err = db.UpdateUserCurrentDuty(userId, nil)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	readUser, err = db.ReadUser(userLineId)
+	readUser, err := db.ReadUser(USER_LINE_ID)
 	if err != nil {
 		t.Fatal(err)
 	}
