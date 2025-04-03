@@ -92,7 +92,7 @@ type DailyReport struct {
 	Name      string `gorm:"size:100"`
 	CarNumber string `gorm:"size:100"`
 
-	MeterPhoto string `gorm:"size:5000"`
+	MeterPhoto string `gorm:"size:100"`
 	Troubles   string `gorm:"size:5000"`
 	Note       string `gorm:"size:5000"`
 
