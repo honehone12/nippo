@@ -35,6 +35,14 @@ func QuickRepSendAlcPhoto() *messaging_api.QuickReply {
 	}
 }
 
+func QuickRepSendMtrPhoto() *messaging_api.QuickReply {
+	return &messaging_api.QuickReply{
+		Items: []messaging_api.QuickReplyItem{
+			{Action: ActionSendMtrPhoto()},
+		},
+	}
+}
+
 func QuickRepInDuty() *messaging_api.QuickReply {
 	return &messaging_api.QuickReply{
 		Items: []messaging_api.QuickReplyItem{

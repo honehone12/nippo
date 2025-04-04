@@ -22,6 +22,8 @@ const (
 	ST_EC_ALC_PHOTO
 	ST_EC_NOTE
 
+	ST_DR_MTR_PHOTO
+
 	ST_IN_DUTY
 	ST_NONE
 )
@@ -55,6 +57,8 @@ func FromIdx(idx schema.StateIdx) (State, error) {
 		return StEcAlcPhoto{}, nil
 	case ST_EC_NOTE:
 		return StEcNote{}, nil
+	case ST_DR_MTR_PHOTO:
+		return StDrMtrPhoto{}, nil
 
 	case ST_IN_DUTY:
 		return StInDuty{}, nil

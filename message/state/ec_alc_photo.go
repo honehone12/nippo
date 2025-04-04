@@ -25,6 +25,10 @@ func (s StEcAlcPhoto) Run(
 		img, ok := e.Message.(webhook.ImageMessageContent)
 		if ok {
 			if img.ContentProvider.Type == webhook.ContentProviderTYPE_LINE {
+				if len(user.CurrentDuty) == 0 {
+					return errors.New("user does not have current duty")
+				}
+
 				res, err := props.BlobApi().GetMessageContent(img.Id)
 				if err != nil {
 					return err
@@ -42,6 +46,11 @@ func (s StEcAlcPhoto) Run(
 
 				db := props.Db()
 				callId, err := db.CreateEveningCall(user.Id, photo)
+				if err != nil {
+					return err
+				}
+
+				err = db.UpdateDReportEvCall(user.CurrentDuty, callId)
 				if err != nil {
 					return err
 				}

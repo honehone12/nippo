@@ -72,6 +72,15 @@ func ReplyEvCallNote() []messaging_api.MessageInterface {
 	}
 }
 
+func ReplySendMtrPhoto() []messaging_api.MessageInterface {
+	return []messaging_api.MessageInterface{
+		messaging_api.TextMessage{
+			Text:       "車両のメーターを写真に撮って送信してください",
+			QuickReply: QuickRepSendMtrPhoto(),
+		},
+	}
+}
+
 func ReplyInDuty() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{

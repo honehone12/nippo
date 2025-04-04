@@ -45,6 +45,12 @@ func ActionSendAlcPhoto() messaging_api.CameraAction {
 	}
 }
 
+func ActionSendMtrPhoto() messaging_api.CameraAction {
+	return messaging_api.CameraAction{
+		Label: "車両のメーターを写真に撮る",
+	}
+}
+
 func ActionSendGps() messaging_api.LocationAction {
 	return messaging_api.LocationAction{
 		Label: "位置情報を登録する",

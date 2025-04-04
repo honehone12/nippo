@@ -48,20 +48,18 @@ func (s StEcNote) Run(
 				return err
 			}
 
-			panic("not implemented")
+			err = db.UpdateUserNextState(user.Id, ST_DR_MTR_PHOTO)
+			if err != nil {
+				return err
+			}
 
-			// err = db.UpdateUserNextState(user.Id, )
-			// if err != nil {
-			// 	return err
-			// }
+			req := messaging_api.ReplyMessageRequest{
+				ReplyToken: e.ReplyToken,
+				Messages:   reply.ReplySendMtrPhoto(),
+			}
 
-			// req := messaging_api.ReplyMessageRequest{
-			// 	ReplyToken: e.ReplyToken,
-			// 	Messages:   ,
-			// }
-
-			// _, err = props.Api().ReplyMessage(&req)
-			// return err
+			_, err = props.Api().ReplyMessage(&req)
+			return err
 		} else {
 			req := messaging_api.ReplyMessageRequest{
 				ReplyToken: e.ReplyToken,
