@@ -31,12 +31,12 @@ func (s StMcCarCheck) Run(
 		return err
 	case webhook.PostbackEvent:
 		if strings.Compare(e.Postback.Data, reply.FLAG_TRUE_ACT_DATA) == 0 {
-			if len(user.CurrentCall) == 0 {
+			if len(user.CurrentOperation) == 0 {
 				return errors.New("user does not have current call")
 			}
 
 			db := props.Db()
-			err := db.UpdateMoCallCarCheck(user.CurrentCall)
+			err := db.UpdateMoCallCarCheck(user.CurrentOperation)
 			if err != nil {
 				return err
 			}

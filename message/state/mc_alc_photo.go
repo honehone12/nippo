@@ -46,7 +46,7 @@ func (s StMcAlcPhoto) Run(
 					return err
 				}
 
-				err = db.UpdateUserCurrentCall(user.Id, callId)
+				err = db.UpdateUserCurrentOpe(user.Id, callId)
 				if err != nil {
 					return err
 				}

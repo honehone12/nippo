@@ -31,19 +31,19 @@ func (s StEcNote) Run(
 	case webhook.MessageEvent:
 		t, ok := e.Message.(webhook.TextMessageContent)
 		if ok {
-			if len(user.CurrentCall) == 0 {
+			if len(user.CurrentOperation) == 0 {
 				return errors.New("user does not have current call")
 			}
 
 			db := props.Db()
 			text := input.Clean(t.Text)
 
-			err := db.UpdateEvCallNote(user.CurrentCall, text)
+			err := db.UpdateEvCallNote(user.CurrentOperation, text)
 			if err != nil {
 				return err
 			}
 
-			err = db.UpdateUserCurrentCall(user.Id, nil)
+			err = db.UpdateUserCurrentOpe(user.Id, nil)
 			if err != nil {
 				return err
 			}

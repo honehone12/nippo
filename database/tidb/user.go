@@ -87,7 +87,7 @@ func (ti *TiDb) UpdateUserNextState(id []uint8, nextState schema.StateIdx) error
 	return res.Error
 }
 
-func (ti *TiDb) UpdateUserCurrentCall(id []uint8, callId []uint8) error {
+func (ti *TiDb) UpdateUserCurrentOpe(id []uint8, callId []uint8) error {
 	if len(id) != schema.ID_LEN {
 		return errors.New("unexpected id length")
 	}

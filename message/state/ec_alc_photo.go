@@ -50,12 +50,12 @@ func (s StEcAlcPhoto) Run(
 					return err
 				}
 
-				err = db.UpdateDReportEvCall(user.CurrentDuty, callId)
+				err = db.UpdateUserCurrentOpe(user.Id, callId)
 				if err != nil {
 					return err
 				}
 
-				err = db.UpdateUserCurrentCall(user.Id, callId)
+				err = db.UpdateDReportEvCall(user.CurrentDuty, callId)
 				if err != nil {
 					return err
 				}

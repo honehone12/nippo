@@ -31,13 +31,13 @@ type User struct {
 	UpdatedAt time.Time
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 
-	Name        CleanText `gorm:"not null;size:100"`
-	LineId      CleanText `gorm:"unique;not null;type:char(33);index"`
-	CarNumber   CleanText `gorm:"size:100"`
-	OrgId       []uint8   `gorm:"not null;type:binary(16)"`
-	CurrentCall []uint8   `gorm:"type:binary(16)"`
-	CurrentDuty []uint8   `gorm:"type:binary(16)"`
-	NextState   StateIdx
+	Name             CleanText `gorm:"not null;size:100"`
+	LineId           CleanText `gorm:"unique;not null;type:char(33);index"`
+	CarNumber        CleanText `gorm:"size:100"`
+	OrgId            []uint8   `gorm:"not null;type:binary(16)"`
+	CurrentOperation []uint8   `gorm:"type:binary(16)"`
+	CurrentDuty      []uint8   `gorm:"type:binary(16)"`
+	NextState        StateIdx
 
 	MorningCalls []MorningCall `gorm:"foreignKey:UserId;references:Id"`
 	EveningCalls []EveningCall `gorm:"foreignKey:UserId;references:Id"`
@@ -105,14 +105,16 @@ type DailyReport struct {
 }
 
 type Location struct {
-	Id        []uint8        `gorm:"primaryKey;type:binary(16)"`
-	CreatedAt time.Time      `gorm:"not null;index"`
+	Id        []uint8   `gorm:"primaryKey;type:binary(16)"`
+	CreatedAt time.Time `gorm:"not null;index"`
+	UpdatedAt time.Time
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 
 	Label     CleanText `gorm:"size:100"`
 	Address   CleanText `gorm:"size:100"`
 	Latitude  float64
 	Longitude float64
+	Note      CleanText `gorm:"size:5000"`
 
 	DailyReportId []uint8 `gorm:"not null;type:binary(16)"`
 }

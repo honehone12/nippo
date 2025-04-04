@@ -110,7 +110,7 @@ func TestMorningCall(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	err = db.UpdateUserCurrentCall(userId, morningId)
+	err = db.UpdateUserCurrentOpe(userId, morningId)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -134,7 +134,7 @@ func TestMorningCall(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !bytes.Equal(readUser.CurrentCall, morningId) {
+	if !bytes.Equal(readUser.CurrentOperation, morningId) {
 		t.Fatal("read wrong user")
 	}
 }
@@ -181,7 +181,7 @@ func TestEveningCall(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	err = db.UpdateUserCurrentCall(userId, eveningId)
+	err = db.UpdateUserCurrentOpe(userId, eveningId)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -200,13 +200,13 @@ func TestEveningCall(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !bytes.Equal(readUser.CurrentCall, eveningId) {
+	if !bytes.Equal(readUser.CurrentOperation, eveningId) {
 		t.Fatal("read wrong user")
 	}
 }
 
 func TestOnEnd(t *testing.T) {
-	err := db.UpdateUserCurrentCall(userId, nil)
+	err := db.UpdateUserCurrentOpe(userId, nil)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -220,7 +220,7 @@ func TestOnEnd(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !bytes.Equal(readUser.CurrentCall, nil) {
+	if !bytes.Equal(readUser.CurrentOperation, nil) {
 		t.Fatal("read wrong user")
 	}
 	if !bytes.Equal(readUser.CurrentDuty, nil) {
