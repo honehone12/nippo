@@ -2,6 +2,7 @@ package input
 
 import (
 	"html"
+	"nippo/schema"
 	"strings"
 )
 
@@ -13,8 +14,6 @@ var forbidden = []string{
 	"OR", "AND", "UNION",
 }
 
-type CleanText string
-
 func cleanSql(s string) string {
 	c := s
 	for _, f := range forbidden {
@@ -23,12 +22,12 @@ func cleanSql(s string) string {
 	return c
 }
 
-func CleanSql(s string) CleanText {
-	return CleanText(cleanSql(s))
+func CleanSql(s string) schema.CleanText {
+	return schema.CleanText(cleanSql(s))
 }
 
-func Clean(s string) CleanText {
+func Clean(s string) schema.CleanText {
 	c := cleanSql(s)
 	c = html.EscapeString(c)
-	return CleanText(strings.TrimSpace(c))
+	return schema.CleanText(strings.TrimSpace(c))
 }

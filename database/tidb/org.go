@@ -7,7 +7,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func (ti *TiDb) CreateOrg(name string) ([]uint8, error) {
+func (ti *TiDb) CreateOrg(name schema.CleanText) ([]uint8, error) {
 	if len(name) > schema.MAX_SHORT_TEXT_LEN {
 		return nil, errors.New("unexpected name length")
 	}

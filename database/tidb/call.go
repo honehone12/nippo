@@ -2,7 +2,6 @@ package tidb
 
 import (
 	"errors"
-	"nippo/input"
 	"nippo/schema"
 
 	"github.com/google/uuid"
@@ -38,7 +37,7 @@ func (ti *TiDb) CreateMorningCall(userId []uint8, photo string) ([]uint8, error)
 		Method:          schema.METHOD_PERSON,
 		UsingAlcChecker: true,
 		AlcCheck:        true,
-		Photo:           photo,
+		AlcPhoto:        photo,
 	}
 	if err := ti.orm.Model(&user).Association("MorningCalls").Append(&call); err != nil {
 		return nil, err
@@ -85,7 +84,7 @@ func (ti *TiDb) UpdateMoCallCarCheck(userId []uint8) error {
 	return res.Error
 }
 
-func (ti *TiDb) UpdateMoCallNote(userId []uint8, note input.CleanText) error {
+func (ti *TiDb) UpdateMoCallNote(userId []uint8, note schema.CleanText) error {
 	if len(userId) != schema.ID_LEN {
 		return errors.New("unexpected user id length")
 	}
@@ -137,7 +136,7 @@ func (ti *TiDb) CreateEveningCall(userId []uint8, photo string) ([]uint8, error)
 		Method:          schema.METHOD_PERSON,
 		UsingAlcChecker: true,
 		AlcCheck:        true,
-		Photo:           photo,
+		AlcPhoto:        photo,
 	}
 	if err := ti.orm.Model(&user).Association("EveningCalls").Append(&call); err != nil {
 		return nil, err
@@ -146,7 +145,7 @@ func (ti *TiDb) CreateEveningCall(userId []uint8, photo string) ([]uint8, error)
 	return call.Id, nil
 }
 
-func (ti *TiDb) UpdateEvCallNote(userId []uint8, note input.CleanText) error {
+func (ti *TiDb) UpdateEvCallNote(userId []uint8, note schema.CleanText) error {
 	if len(userId) != schema.ID_LEN {
 		return errors.New("unexpected user id length")
 	}
