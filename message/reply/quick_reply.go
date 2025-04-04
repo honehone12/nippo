@@ -51,6 +51,14 @@ func QuickRepDReportTrouble() *messaging_api.QuickReply {
 	}
 }
 
+func QuickRepDReportNote() *messaging_api.QuickReply {
+	return &messaging_api.QuickReply{
+		Items: []messaging_api.QuickReplyItem{
+			{Action: ActionDReportNote()},
+		},
+	}
+}
+
 func QuickRepInDuty() *messaging_api.QuickReply {
 	return &messaging_api.QuickReply{
 		Items: []messaging_api.QuickReplyItem{

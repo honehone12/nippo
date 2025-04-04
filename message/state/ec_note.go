@@ -43,12 +43,12 @@ func (s StEcNote) Run(
 				return err
 			}
 
-			err = db.UpdateUserCurrentOpe(user.Id, nil)
+			err = db.UpdateUserNextState(user.Id, ST_DR_MTR_PHOTO)
 			if err != nil {
 				return err
 			}
 
-			err = db.UpdateUserNextState(user.Id, ST_DR_MTR_PHOTO)
+			err = db.UpdateUserCurrentOpe(user.Id, nil)
 			if err != nil {
 				return err
 			}
