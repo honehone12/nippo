@@ -3,12 +3,12 @@ package message
 import (
 	"errors"
 	"fmt"
+	"nippo/input"
 	"nippo/log"
 	"nippo/message/property"
 	"nippo/message/reply"
 	"nippo/message/state"
 	"nippo/schema"
-	"strings"
 
 	"github.com/line/line-bot-sdk-go/v8/linebot/messaging_api"
 	"github.com/line/line-bot-sdk-go/v8/linebot/webhook"
@@ -24,15 +24,17 @@ func validateDst(props *property.MessagingProps, msg *webhook.CallbackRequest) e
 		return fmt.Errorf("org is not configured, %w", err)
 	}
 
+	cleanDst := input.CleanSql(msg.Destination)
+
 	if len(org.LineId) == 0 {
-		log.L.Warnf("updating org line id to: %s", msg.Destination)
-		return db.UpdateOrgLineId(orgId, msg.Destination)
+		log.L.Warnf("updating org line id to: %s", cleanDst)
+		return db.UpdateOrgLineId(orgId, cleanDst)
 	}
 
-	if strings.Compare(org.LineId, msg.Destination) != 0 {
+	if org.LineId != cleanDst {
 		return fmt.Errorf(
 			"dst has changed from: %s to %s. this is not expected",
-			org.LineId, msg.Destination,
+			org.LineId, cleanDst,
 		)
 	}
 
@@ -85,7 +87,7 @@ func sendErrMsg(props *property.MessagingProps, event webhook.EventInterface) {
 
 func onUnknownUser(
 	props *property.MessagingProps,
-	source string,
+	source schema.CleanText,
 	event webhook.EventInterface,
 ) error {
 	st := state.StUserNotConfigured{}
@@ -105,10 +107,11 @@ func processEvent(props *property.MessagingProps, event webhook.EventInterface) 
 		return nil
 	}
 
-	user, err := props.Db().ReadUser(source)
+	cleanSource := input.CleanSql(source)
+	user, err := props.Db().ReadUser(cleanSource)
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		log.L.Warnf("user not configured: %s", err)
-		return onUnknownUser(props, source, event)
+		return onUnknownUser(props, cleanSource, event)
 	} else if err != nil {
 		sendErrMsg(props, event)
 		return err

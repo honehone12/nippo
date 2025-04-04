@@ -43,7 +43,7 @@ func (ti *TiDb) ReadOrg(idStr string) (*schema.Org, error) {
 	return &org, nil
 }
 
-func (ti *TiDb) UpdateOrgLineId(idStr string, newLineId string) error {
+func (ti *TiDb) UpdateOrgLineId(idStr string, newLineId schema.CleanText) error {
 	if len(newLineId) != schema.LINE_ID_LEN {
 		return errors.New("unexpected line id length")
 	}

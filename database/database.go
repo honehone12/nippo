@@ -7,10 +7,10 @@ import (
 type Database interface {
 	CreateOrg(name schema.CleanText) ([]uint8, error)
 	ReadOrg(idStr string) (*schema.Org, error)
-	UpdateOrgLineId(idStr string, newLineId string) error
+	UpdateOrgLineId(idStr string, newLineId schema.CleanText) error
 
-	CreateUser(orgIdStr string, lineId string) ([]uint8, error)
-	ReadUser(lineId string) (*schema.User, error)
+	CreateUser(orgIdStr string, lineId schema.CleanText) ([]uint8, error)
+	ReadUser(lineId schema.CleanText) (*schema.User, error)
 	UpdateUserName(id []uint8, name schema.CleanText) error
 	UpdateUserCarNumber(id []uint8, carNumber schema.CleanText) error
 	UpdateUserCurrentCall(id []uint8, call []uint8) error

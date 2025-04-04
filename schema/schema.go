@@ -21,7 +21,7 @@ type Org struct {
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 
 	Name   CleanText `gorm:"not null;size:100"`
-	LineId string    `gorm:"type:char(33);index"`
+	LineId CleanText `gorm:"type:char(33);index"`
 	Users  []User    `gorm:"foreignKey:OrgId;references:Id"`
 }
 
@@ -32,7 +32,7 @@ type User struct {
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 
 	Name        CleanText `gorm:"not null;size:100"`
-	LineId      string    `gorm:"unique;not null;type:char(33);index"`
+	LineId      CleanText `gorm:"unique;not null;type:char(33);index"`
 	CarNumber   CleanText `gorm:"size:100"`
 	OrgId       []uint8   `gorm:"not null;type:binary(16)"`
 	CurrentCall []uint8   `gorm:"type:binary(16)"`
