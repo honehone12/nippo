@@ -1,6 +1,7 @@
 package state
 
 import (
+	"errors"
 	"fmt"
 	"nippo/input"
 	"nippo/log"
@@ -30,10 +31,14 @@ func (s StEcNote) Run(
 	case webhook.MessageEvent:
 		t, ok := e.Message.(webhook.TextMessageContent)
 		if ok {
+			if len(user.CurrentCall) == 0 {
+				return errors.New("user does not have current call")
+			}
+
 			db := props.Db()
 			text := input.Clean(t.Text)
 
-			err := db.UpdateEvCallNote(user.Id, text)
+			err := db.UpdateEvCallNote(user.CurrentCall, text)
 			if err != nil {
 				return err
 			}

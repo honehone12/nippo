@@ -1,6 +1,7 @@
 package state
 
 import (
+	"errors"
 	"fmt"
 	"nippo/log"
 	"nippo/message/property"
@@ -30,8 +31,12 @@ func (s StMcHealth) Run(
 		return err
 	case webhook.PostbackEvent:
 		if strings.Compare(e.Postback.Data, reply.FLAG_TRUE_ACT_DATA) == 0 {
+			if len(user.CurrentCall) == 0 {
+				return errors.New("user does not have current call")
+			}
+
 			db := props.Db()
-			err := db.UpdateMoCallHealth(user.Id)
+			err := db.UpdateMoCallHealth(user.CurrentCall)
 			if err != nil {
 				return err
 			}

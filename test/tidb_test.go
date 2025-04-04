@@ -23,6 +23,7 @@ var db database.Database = &tidb.TiDb{}
 var orgIdStr string
 var userId []uint8
 var morningId []uint8
+var reportId []uint8
 
 func TestOpenDb(t *testing.T) {
 	godotenv.Load("../bin/.env")
@@ -113,17 +114,17 @@ func TestMorningCall(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	err = db.UpdateMoCallHealth(userId)
+	err = db.UpdateMoCallHealth(morningId)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	err = db.UpdateMoCallCarCheck(userId)
+	err = db.UpdateMoCallCarCheck(morningId)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	err = db.UpdateMoCallNote(userId, "【ラベル】\n無し\n【ラベル】\n無し")
+	err = db.UpdateMoCallNote(morningId, "【ラベル】\n無し\n【ラベル】\n無し")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -138,7 +139,8 @@ func TestMorningCall(t *testing.T) {
 }
 
 func TestDailyReport(t *testing.T) {
-	reportId, err := db.CreateDailyReport(userId, morningId)
+	var err error
+	reportId, err = db.CreateDailyReport(userId, morningId)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -168,7 +170,12 @@ func TestEveningCall(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	err = db.UpdateEvCallNote(userId, "【ラベル】\n無し\n【ラベル】\n無し")
+	err = db.UpdateDReportEvCall(reportId, eveningId)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	err = db.UpdateEvCallNote(eveningId, "【ラベル】\n無し\n【ラベル】\n無し")
 	if err != nil {
 		t.Fatal(err)
 	}
