@@ -17,7 +17,8 @@ const ORG_LINE_ID = "U9198cf6745fc0d808977bdb0b9f22995"
 const USER_LINE_ID = "U8189cf6745fc0d808977bdb0b9f22885"
 const USER_NAME = "テスト　ユーザー太郎"
 const CAR_NUMBER = "て００９１２ー２３"
-const PHOTO = "user-id-009.jpg"
+const ALC_PHOTO = "user-id-009.jpg"
+const MTR_PHOTO = "user-id-018.jpg"
 
 var db database.Database = &tidb.TiDb{}
 var orgIdStr string
@@ -104,7 +105,7 @@ func ReadOrgAndUser(t *testing.T) {
 
 func TestMorningCall(t *testing.T) {
 	var err error
-	morningId, err = db.CreateMorningCall(userId, PHOTO)
+	morningId, err = db.CreateMorningCall(userId, ALC_PHOTO)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -150,6 +151,21 @@ func TestDailyReport(t *testing.T) {
 		t.Fatal(err)
 	}
 
+	err = db.UpdateDReportMtrPhoto(reportId, MTR_PHOTO)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	err = db.UpdateDReportTrouble(reportId, "【ラベル】\n特になし")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	err = db.UpdateDReportNote(reportId, "【ラベル】\n無し")
+	if err != nil {
+		t.Fatal(err)
+	}
+
 	readUser, err := db.ReadUser(USER_LINE_ID)
 	if err != nil {
 		t.Fatal(err)
@@ -160,7 +176,7 @@ func TestDailyReport(t *testing.T) {
 }
 
 func TestEveningCall(t *testing.T) {
-	eveningId, err := db.CreateEveningCall(userId, PHOTO)
+	eveningId, err := db.CreateEveningCall(userId, ALC_PHOTO)
 	if err != nil {
 		t.Fatal(err)
 	}

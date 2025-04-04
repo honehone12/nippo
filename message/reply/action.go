@@ -51,6 +51,15 @@ func ActionSendMtrPhoto() messaging_api.CameraAction {
 	}
 }
 
+func ActionDReportTrouble() messaging_api.PostbackAction {
+	return messaging_api.PostbackAction{
+		Label:       "入力する",
+		Data:        IGNORE_TXT_TEMPLATE,
+		InputOption: "openKeyboard",
+		FillInText:  "【事故】\n\n【著しい遅延】\n\n【その他の異常】\n",
+	}
+}
+
 func ActionSendGps() messaging_api.LocationAction {
 	return messaging_api.LocationAction{
 		Label: "位置情報を登録する",

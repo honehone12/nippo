@@ -81,6 +81,15 @@ func ReplySendMtrPhoto() []messaging_api.MessageInterface {
 	}
 }
 
+func ReplyDReportTrouble() []messaging_api.MessageInterface {
+	return []messaging_api.MessageInterface{
+		messaging_api.TextMessage{
+			Text:       "事故、著しい運行の遅延、その他異常な状態が発生した場合は入力してください",
+			QuickReply: QuickRepDReportTrouble(),
+		},
+	}
+}
+
 func ReplyInDuty() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{

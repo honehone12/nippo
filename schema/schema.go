@@ -93,7 +93,7 @@ type DailyReport struct {
 	CarNumber CleanText `gorm:"size:100"`
 
 	MeterPhoto string    `gorm:"size:100"`
-	Troubles   CleanText `gorm:"size:5000"`
+	Trouble    CleanText `gorm:"size:5000"`
 	Note       CleanText `gorm:"size:5000"`
 
 	Locations []Location `gorm:"foreignKey:DailyReportId;references:Id"`

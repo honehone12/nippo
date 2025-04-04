@@ -27,4 +27,7 @@ type Database interface {
 
 	CreateDailyReport(userId []uint8, morningId []uint8) ([]uint8, error)
 	UpdateDReportEvCall(repoId []uint8, evId []uint8) error
+	UpdateDReportMtrPhoto(repoId []uint8, photo string) error
+	UpdateDReportTrouble(repoId []uint8, trouble schema.CleanText) error
+	UpdateDReportNote(repoId []uint8, note schema.CleanText) error
 }
