@@ -2,6 +2,7 @@ package state
 
 import (
 	"errors"
+	"nippo/database"
 	"nippo/log"
 	"nippo/message/property"
 	"nippo/message/reply"
@@ -44,13 +45,14 @@ func (s StDrMtrPhoto) Run(
 					return err
 				}
 
-				db := props.Db()
-				err = db.UpdateDReportMtrPhoto(user.CurrentDuty, photo)
-				if err != nil {
-					return err
-				}
+				err = props.Db().Tx(func(tx database.Transaction) error {
+					err := tx.UpdateDReportMtrPhoto(user.CurrentDuty, photo)
+					if err != nil {
+						return err
+					}
 
-				err = db.UpdateUserNextState(user.Id, ST_DR_TROUBLE)
+					return tx.UpdateUserNextState(user.Id, ST_DR_TROUBLE)
+				})
 				if err != nil {
 					return err
 				}

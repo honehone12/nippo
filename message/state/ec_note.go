@@ -3,6 +3,7 @@ package state
 import (
 	"errors"
 	"fmt"
+	"nippo/database"
 	"nippo/input"
 	"nippo/log"
 	"nippo/message/property"
@@ -35,20 +36,20 @@ func (s StEcNote) Run(
 				return errors.New("user does not have current call")
 			}
 
-			db := props.Db()
 			text := input.Clean(t.Text)
+			err := props.Db().Tx(func(tx database.Transaction) error {
+				err := tx.UpdateEvCallNote(user.CurrentOperation, text)
+				if err != nil {
+					return err
+				}
 
-			err := db.UpdateEvCallNote(user.CurrentOperation, text)
-			if err != nil {
-				return err
-			}
+				err = tx.UpdateUserCurrentOpe(user.Id, nil)
+				if err != nil {
+					return err
+				}
 
-			err = db.UpdateUserNextState(user.Id, ST_DR_MTR_PHOTO)
-			if err != nil {
-				return err
-			}
-
-			err = db.UpdateUserCurrentOpe(user.Id, nil)
+				return tx.UpdateUserNextState(user.Id, ST_DR_MTR_PHOTO)
+			})
 			if err != nil {
 				return err
 			}

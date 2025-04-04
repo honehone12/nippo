@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"nippo/database"
 	"nippo/database/tidb"
+	"nippo/input"
 	"os"
 
 	"github.com/google/uuid"
@@ -13,6 +14,7 @@ import (
 
 func main() {
 	name := flag.String("name", "", "name")
+	cName := input.Clean(*name)
 
 	flag.Parse()
 	if len(*name) == 0 {
@@ -35,7 +37,12 @@ func main() {
 		return
 	}
 
-	bId, err := db.CreateOrg(*name)
+	var bId []uint8
+	err = db.Tx(func(tx database.Transaction) error {
+		var err error
+		bId, err = tx.CreateOrg(cName)
+		return err
+	})
 	if err != nil {
 		fmt.Println(err)
 		return

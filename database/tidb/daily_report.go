@@ -7,7 +7,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func (ti *TiDb) CreateDailyReport(userId []uint8, morningId []uint8) ([]uint8, error) {
+func (ti *TiDbTx) CreateDailyReport(userId []uint8, morningId []uint8) ([]uint8, error) {
 	if len(userId) != schema.ID_LEN {
 		return nil, errors.New("unexpected user id length")
 	}
@@ -42,7 +42,7 @@ func (ti *TiDb) CreateDailyReport(userId []uint8, morningId []uint8) ([]uint8, e
 	return call.Id, nil
 }
 
-func (ti *TiDb) UpdateDReportEvCall(repoId []uint8, evId []uint8) error {
+func (ti *TiDbTx) UpdateDReportEvCall(repoId []uint8, evId []uint8) error {
 	if len(repoId) != schema.ID_LEN {
 		return errors.New("unexpected report id length")
 	}
@@ -55,7 +55,7 @@ func (ti *TiDb) UpdateDReportEvCall(repoId []uint8, evId []uint8) error {
 	return res.Error
 }
 
-func (ti *TiDb) UpdateDReportMtrPhoto(repoId []uint8, photo string) error {
+func (ti *TiDbTx) UpdateDReportMtrPhoto(repoId []uint8, photo string) error {
 	if len(repoId) != schema.ID_LEN {
 		return errors.New("unexpected report id length")
 	}
@@ -68,7 +68,7 @@ func (ti *TiDb) UpdateDReportMtrPhoto(repoId []uint8, photo string) error {
 	return res.Error
 }
 
-func (ti *TiDb) UpdateDReportTrouble(repoId []uint8, trouble schema.CleanText) error {
+func (ti *TiDbTx) UpdateDReportTrouble(repoId []uint8, trouble schema.CleanText) error {
 	if len(repoId) != schema.ID_LEN {
 		return errors.New("unexpected report id length")
 	}
@@ -81,7 +81,7 @@ func (ti *TiDb) UpdateDReportTrouble(repoId []uint8, trouble schema.CleanText) e
 	return res.Error
 }
 
-func (ti *TiDb) UpdateDReportNote(repoId []uint8, note schema.CleanText) error {
+func (ti *TiDbTx) UpdateDReportNote(repoId []uint8, note schema.CleanText) error {
 	if len(repoId) != schema.ID_LEN {
 		return errors.New("unexpected report id length")
 	}

@@ -1,6 +1,7 @@
 package state
 
 import (
+	"nippo/database"
 	"nippo/input"
 	"nippo/log"
 	"nippo/message/property"
@@ -22,14 +23,15 @@ func (s StUserSetCar) Run(
 	if ok {
 		t, ok := e.Message.(webhook.TextMessageContent)
 		if ok {
-			db := props.Db()
 			text := input.Clean(t.Text)
-			err := db.UpdateUserCarNumber(user.Id, text)
-			if err != nil {
-				return err
-			}
+			err := props.Db().Tx(func(tx database.Transaction) error {
+				err := tx.UpdateUserCarNumber(user.Id, text)
+				if err != nil {
+					return err
+				}
 
-			err = db.UpdateUserNextState(user.Id, ST_NONE)
+				return tx.UpdateUserNextState(user.Id, ST_NONE)
+			})
 			if err != nil {
 				return err
 			}

@@ -24,6 +24,7 @@ var db database.Database = &tidb.TiDb{}
 var orgIdStr string
 var userId []uint8
 var morningId []uint8
+var eveningId []uint8
 var reportId []uint8
 
 func TestOpenDb(t *testing.T) {
@@ -42,41 +43,45 @@ func TestOpenDb(t *testing.T) {
 }
 
 func TestCreateOrg(t *testing.T) {
-	bId, err := db.CreateOrg(ORG_NAME)
-	if err != nil {
-		t.Fatal(err)
-	}
+	err := db.Tx(func(tx database.Transaction) error {
+		bId, err := tx.CreateOrg(ORG_NAME)
+		if err != nil {
+			return err
+		}
 
-	orgId, err := uuid.FromBytes(bId)
-	if err != nil {
-		t.Fatal(err)
-	}
-	orgIdStr = orgId.String()
+		orgId, err := uuid.FromBytes(bId)
+		if err != nil {
+			return err
+		}
+		orgIdStr = orgId.String()
 
-	err = db.UpdateOrgLineId(orgIdStr, ORG_LINE_ID)
+		return tx.UpdateOrgLineId(orgIdStr, ORG_LINE_ID)
+	})
 	if err != nil {
 		t.Fatal(err)
 	}
 }
 
 func TestUserSetting(t *testing.T) {
-	var err error
-	userId, err = db.CreateUser(orgIdStr, USER_LINE_ID)
-	if err != nil {
-		t.Fatal(err)
-	}
+	err := db.Tx(func(tx database.Transaction) error {
+		var err error
+		userId, err = tx.CreateUser(orgIdStr, USER_LINE_ID)
+		if err != nil {
+			return err
+		}
 
-	err = db.UpdateUserName(userId, USER_NAME)
-	if err != nil {
-		t.Fatal(err)
-	}
+		err = tx.UpdateUserName(userId, USER_NAME)
+		if err != nil {
+			return err
+		}
 
-	err = db.UpdateUserCarNumber(userId, CAR_NUMBER)
-	if err != nil {
-		t.Fatal(err)
-	}
+		err = tx.UpdateUserCarNumber(userId, CAR_NUMBER)
+		if err != nil {
+			return err
+		}
 
-	err = db.UpdateUserNextState(userId, 2)
+		return tx.UpdateUserNextState(userId, 9)
+	})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -104,28 +109,30 @@ func ReadOrgAndUser(t *testing.T) {
 }
 
 func TestMorningCall(t *testing.T) {
-	var err error
-	morningId, err = db.CreateMorningCall(userId, ALC_PHOTO)
-	if err != nil {
-		t.Fatal(err)
-	}
+	err := db.Tx(func(tx database.Transaction) error {
+		var err error
+		morningId, err = tx.CreateMorningCall(userId, ALC_PHOTO)
+		if err != nil {
+			return err
+		}
 
-	err = db.UpdateUserCurrentOpe(userId, morningId)
-	if err != nil {
-		t.Fatal(err)
-	}
+		err = tx.UpdateUserCurrentOpe(userId, morningId)
+		if err != nil {
+			return err
+		}
 
-	err = db.UpdateMoCallHealth(morningId)
-	if err != nil {
-		t.Fatal(err)
-	}
+		err = tx.UpdateMoCallHealth(morningId)
+		if err != nil {
+			return err
+		}
 
-	err = db.UpdateMoCallCarCheck(morningId)
-	if err != nil {
-		t.Fatal(err)
-	}
+		err = tx.UpdateMoCallCarCheck(morningId)
+		if err != nil {
+			return err
+		}
 
-	err = db.UpdateMoCallNote(morningId, "【ラベル】\n無し\n【ラベル】\n無し")
+		return tx.UpdateMoCallNote(morningId, "【ラベル】\n無し\n【ラベル】\n無し")
+	})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -140,28 +147,30 @@ func TestMorningCall(t *testing.T) {
 }
 
 func TestDailyReport(t *testing.T) {
-	var err error
-	reportId, err = db.CreateDailyReport(userId, morningId)
-	if err != nil {
-		t.Fatal(err)
-	}
+	err := db.Tx(func(tx database.Transaction) error {
+		var err error
+		reportId, err = tx.CreateDailyReport(userId, morningId)
+		if err != nil {
+			return err
+		}
 
-	err = db.UpdateUserCurrentDuty(userId, reportId)
-	if err != nil {
-		t.Fatal(err)
-	}
+		err = tx.UpdateUserCurrentDuty(userId, reportId)
+		if err != nil {
+			return err
+		}
 
-	err = db.UpdateDReportMtrPhoto(reportId, MTR_PHOTO)
-	if err != nil {
-		t.Fatal(err)
-	}
+		err = tx.UpdateDReportMtrPhoto(reportId, MTR_PHOTO)
+		if err != nil {
+			return err
+		}
 
-	err = db.UpdateDReportTrouble(reportId, "【ラベル】\n特になし")
-	if err != nil {
-		t.Fatal(err)
-	}
+		err = tx.UpdateDReportTrouble(reportId, "【ラベル】\n特になし")
+		if err != nil {
+			return err
+		}
 
-	err = db.UpdateDReportNote(reportId, "【ラベル】\n無し")
+		return tx.UpdateDReportNote(reportId, "【ラベル】\n無し")
+	})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -176,22 +185,25 @@ func TestDailyReport(t *testing.T) {
 }
 
 func TestEveningCall(t *testing.T) {
-	eveningId, err := db.CreateEveningCall(userId, ALC_PHOTO)
-	if err != nil {
-		t.Fatal(err)
-	}
+	err := db.Tx(func(tx database.Transaction) error {
+		var err error
+		eveningId, err = tx.CreateEveningCall(userId, ALC_PHOTO)
+		if err != nil {
+			return err
+		}
 
-	err = db.UpdateUserCurrentOpe(userId, eveningId)
-	if err != nil {
-		t.Fatal(err)
-	}
+		err = tx.UpdateUserCurrentOpe(userId, eveningId)
+		if err != nil {
+			return err
+		}
 
-	err = db.UpdateDReportEvCall(reportId, eveningId)
-	if err != nil {
-		t.Fatal(err)
-	}
+		err = tx.UpdateDReportEvCall(reportId, eveningId)
+		if err != nil {
+			return err
+		}
 
-	err = db.UpdateEvCallNote(eveningId, "【ラベル】\n無し\n【ラベル】\n無し")
+		return tx.UpdateEvCallNote(eveningId, "【ラベル】\n無し\n【ラベル】\n無し")
+	})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -206,12 +218,14 @@ func TestEveningCall(t *testing.T) {
 }
 
 func TestOnEnd(t *testing.T) {
-	err := db.UpdateUserCurrentOpe(userId, nil)
-	if err != nil {
-		t.Fatal(err)
-	}
+	err := db.Tx(func(tx database.Transaction) error {
+		err := tx.UpdateUserCurrentOpe(userId, nil)
+		if err != nil {
+			return err
+		}
 
-	err = db.UpdateUserCurrentDuty(userId, nil)
+		return tx.UpdateUserCurrentDuty(userId, nil)
+	})
 	if err != nil {
 		t.Fatal(err)
 	}

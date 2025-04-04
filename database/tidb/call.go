@@ -7,7 +7,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func (ti *TiDb) CreateMorningCall(userId []uint8, photo string) ([]uint8, error) {
+func (ti *TiDbTx) CreateMorningCall(userId []uint8, photo string) ([]uint8, error) {
 	if len(userId) != schema.ID_LEN {
 		return nil, errors.New("unexpected user id length")
 	}
@@ -46,7 +46,7 @@ func (ti *TiDb) CreateMorningCall(userId []uint8, photo string) ([]uint8, error)
 	return call.Id, nil
 }
 
-func (ti *TiDb) UpdateMoCallHealth(callId []uint8) error {
+func (ti *TiDbTx) UpdateMoCallHealth(callId []uint8) error {
 	if len(callId) != schema.ID_LEN {
 		return errors.New("unexpected call id length")
 	}
@@ -56,7 +56,7 @@ func (ti *TiDb) UpdateMoCallHealth(callId []uint8) error {
 	return res.Error
 }
 
-func (ti *TiDb) UpdateMoCallCarCheck(callId []uint8) error {
+func (ti *TiDbTx) UpdateMoCallCarCheck(callId []uint8) error {
 	if len(callId) != schema.ID_LEN {
 		return errors.New("unexpected call id length")
 	}
@@ -66,7 +66,7 @@ func (ti *TiDb) UpdateMoCallCarCheck(callId []uint8) error {
 	return res.Error
 }
 
-func (ti *TiDb) UpdateMoCallNote(callId []uint8, note schema.CleanText) error {
+func (ti *TiDbTx) UpdateMoCallNote(callId []uint8, note schema.CleanText) error {
 	if len(callId) != schema.ID_LEN {
 		return errors.New("unexpected call id length")
 	}
@@ -79,7 +79,7 @@ func (ti *TiDb) UpdateMoCallNote(callId []uint8, note schema.CleanText) error {
 	return res.Error
 }
 
-func (ti *TiDb) CreateEveningCall(userId []uint8, photo string) ([]uint8, error) {
+func (ti *TiDbTx) CreateEveningCall(userId []uint8, photo string) ([]uint8, error) {
 	if len(userId) != schema.ID_LEN {
 		return nil, errors.New("unexpected user id length")
 	}
@@ -118,7 +118,7 @@ func (ti *TiDb) CreateEveningCall(userId []uint8, photo string) ([]uint8, error)
 	return call.Id, nil
 }
 
-func (ti *TiDb) UpdateEvCallNote(callId []uint8, note schema.CleanText) error {
+func (ti *TiDbTx) UpdateEvCallNote(callId []uint8, note schema.CleanText) error {
 	if len(callId) != schema.ID_LEN {
 		return errors.New("unexpected call id length")
 	}

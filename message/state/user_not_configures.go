@@ -2,6 +2,7 @@ package state
 
 import (
 	"fmt"
+	"nippo/database"
 	"nippo/log"
 	"nippo/message/property"
 	"nippo/message/reply"
@@ -30,13 +31,14 @@ func (s StUserNotConfigured) Run(
 		return err
 	case webhook.PostbackEvent:
 		if strings.Compare(e.Postback.Data, reply.USER_SETTING_ACT_DATA) == 0 {
-			db := props.Db()
-			id, err := db.CreateUser(props.OrgId(), user.LineId)
-			if err != nil {
-				return err
-			}
+			err := props.Db().Tx(func(tx database.Transaction) error {
+				id, err := tx.CreateUser(props.OrgId(), user.LineId)
+				if err != nil {
+					return err
+				}
 
-			err = db.UpdateUserNextState(id, ST_USER_SET_NAME)
+				return tx.UpdateUserNextState(id, ST_USER_SET_NAME)
+			})
 			if err != nil {
 				return err
 			}

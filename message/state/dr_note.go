@@ -3,6 +3,7 @@ package state
 import (
 	"errors"
 	"fmt"
+	"nippo/database"
 	"nippo/input"
 	"nippo/log"
 	"nippo/message/property"
@@ -35,20 +36,20 @@ func (s StDrNote) Run(
 				return errors.New("user does not have current duty")
 			}
 
-			db := props.Db()
 			text := input.Clean(t.Text)
+			err := props.Db().Tx(func(tx database.Transaction) error {
+				err := tx.UpdateDReportNote(user.CurrentDuty, text)
+				if err != nil {
+					return err
+				}
 
-			err := db.UpdateDReportNote(user.CurrentDuty, text)
-			if err != nil {
-				return err
-			}
+				err = tx.UpdateUserCurrentDuty(user.Id, nil)
+				if err != nil {
+					return err
+				}
 
-			err = db.UpdateUserNextState(user.Id, ST_NONE)
-			if err != nil {
-				return err
-			}
-
-			err = db.UpdateUserCurrentDuty(user.Id, nil)
+				return tx.UpdateUserNextState(user.Id, ST_NONE)
+			})
 			if err != nil {
 				return err
 			}

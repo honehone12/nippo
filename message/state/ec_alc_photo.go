@@ -2,6 +2,7 @@ package state
 
 import (
 	"errors"
+	"nippo/database"
 	"nippo/log"
 	"nippo/message/property"
 	"nippo/message/reply"
@@ -44,23 +45,24 @@ func (s StEcAlcPhoto) Run(
 					return err
 				}
 
-				db := props.Db()
-				callId, err := db.CreateEveningCall(user.Id, photo)
-				if err != nil {
-					return err
-				}
+				err = props.Db().Tx(func(tx database.Transaction) error {
+					callId, err := tx.CreateEveningCall(user.Id, photo)
+					if err != nil {
+						return err
+					}
 
-				err = db.UpdateUserCurrentOpe(user.Id, callId)
-				if err != nil {
-					return err
-				}
+					err = tx.UpdateUserCurrentOpe(user.Id, callId)
+					if err != nil {
+						return err
+					}
 
-				err = db.UpdateDReportEvCall(user.CurrentDuty, callId)
-				if err != nil {
-					return err
-				}
+					err = tx.UpdateDReportEvCall(user.CurrentDuty, callId)
+					if err != nil {
+						return err
+					}
 
-				err = db.UpdateUserNextState(user.Id, ST_EC_NOTE)
+					return tx.UpdateUserNextState(user.Id, ST_EC_NOTE)
+				})
 				if err != nil {
 					return err
 				}

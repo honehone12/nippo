@@ -2,6 +2,7 @@ package tidb
 
 import (
 	stdlog "log"
+	"nippo/database"
 	"nippo/schema"
 	"os"
 	"time"
@@ -12,6 +13,10 @@ import (
 )
 
 type TiDb struct {
+	orm *gorm.DB
+}
+
+type TiDbTx struct {
 	orm *gorm.DB
 }
 
@@ -39,6 +44,13 @@ func Open(tiUri string) (*TiDb, error) {
 	}
 
 	return &TiDb{orm}, nil
+}
+
+func (ti *TiDb) Tx(txf func(database.Transaction) error) error {
+	return ti.orm.Transaction(func(tx *gorm.DB) error {
+		tidbtx := TiDbTx{tx}
+		return txf(&tidbtx)
+	})
 }
 
 func (ti *TiDb) AutoMigrate() error {

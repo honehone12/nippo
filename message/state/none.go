@@ -2,6 +2,7 @@ package state
 
 import (
 	"fmt"
+	"nippo/database"
 	"nippo/log"
 	"nippo/message/property"
 	"nippo/message/reply"
@@ -30,7 +31,9 @@ func (s StNone) Run(
 		return err
 	case webhook.PostbackEvent:
 		if strings.Compare(e.Postback.Data, reply.START_DUTY_ACT_DATA) == 0 {
-			err := props.Db().UpdateUserNextState(user.Id, ST_MC_ALC_PHOTO)
+			err := props.Db().Tx(func(tx database.Transaction) error {
+				return tx.UpdateUserNextState(user.Id, ST_MC_ALC_PHOTO)
+			})
 			if err != nil {
 				return err
 			}
@@ -43,7 +46,9 @@ func (s StNone) Run(
 			_, err = props.Api().ReplyMessage(&req)
 			return err
 		} else if strings.Compare(e.Postback.Data, reply.USER_SETTING_ACT_DATA) == 0 {
-			err := props.Db().UpdateUserNextState(user.Id, ST_USER_SET_NAME)
+			err := props.Db().Tx(func(tx database.Transaction) error {
+				return tx.UpdateUserNextState(user.Id, ST_USER_SET_NAME)
+			})
 			if err != nil {
 				return err
 			}

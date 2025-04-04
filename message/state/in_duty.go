@@ -2,6 +2,7 @@ package state
 
 import (
 	"fmt"
+	"nippo/database"
 	"nippo/log"
 	"nippo/message/property"
 	"nippo/message/reply"
@@ -41,7 +42,9 @@ func (s StInDuty) Run(
 		case reply.START_RESTING_ACT_DATA:
 			panic("not implemented")
 		case reply.END_DUTY_ACT_DATA:
-			err := props.Db().UpdateUserNextState(user.Id, ST_EC_ALC_PHOTO)
+			err := props.Db().Tx(func(tx database.Transaction) error {
+				return tx.UpdateUserNextState(user.Id, ST_EC_ALC_PHOTO)
+			})
 			if err != nil {
 				return err
 			}

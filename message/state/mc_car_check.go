@@ -3,6 +3,7 @@ package state
 import (
 	"errors"
 	"fmt"
+	"nippo/database"
 	"nippo/log"
 	"nippo/message/property"
 	"nippo/message/reply"
@@ -35,13 +36,14 @@ func (s StMcCarCheck) Run(
 				return errors.New("user does not have current call")
 			}
 
-			db := props.Db()
-			err := db.UpdateMoCallCarCheck(user.CurrentOperation)
-			if err != nil {
-				return err
-			}
+			err := props.Db().Tx(func(tx database.Transaction) error {
+				err := tx.UpdateMoCallCarCheck(user.CurrentOperation)
+				if err != nil {
+					return err
+				}
 
-			err = db.UpdateUserNextState(user.Id, ST_MC_NOTE)
+				return tx.UpdateUserNextState(user.Id, ST_MC_NOTE)
+			})
 			if err != nil {
 				return err
 			}

@@ -3,6 +3,7 @@ package state
 import (
 	"errors"
 	"fmt"
+	"nippo/database"
 	"nippo/input"
 	"nippo/log"
 	"nippo/message/property"
@@ -35,30 +36,30 @@ func (s StMcNote) Run(
 				return errors.New("user does not have current call")
 			}
 
-			db := props.Db()
 			text := input.Clean(t.Text)
+			err := props.Db().Tx(func(tx database.Transaction) error {
+				err := tx.UpdateMoCallNote(user.CurrentOperation, text)
+				if err != nil {
+					return err
+				}
 
-			err := db.UpdateMoCallNote(user.CurrentOperation, text)
-			if err != nil {
-				return err
-			}
+				reportId, err := tx.CreateDailyReport(user.Id, user.CurrentOperation)
+				if err != nil {
+					return err
+				}
 
-			reportId, err := db.CreateDailyReport(user.Id, user.CurrentOperation)
-			if err != nil {
-				return err
-			}
+				err = tx.UpdateUserCurrentDuty(user.Id, reportId)
+				if err != nil {
+					return err
+				}
 
-			err = db.UpdateUserCurrentDuty(user.Id, reportId)
-			if err != nil {
-				return err
-			}
+				err = tx.UpdateUserCurrentOpe(user.Id, nil)
+				if err != nil {
+					return err
+				}
 
-			err = db.UpdateUserNextState(user.Id, ST_IN_DUTY)
-			if err != nil {
-				return err
-			}
-
-			err = db.UpdateUserCurrentOpe(user.Id, nil)
+				return tx.UpdateUserNextState(user.Id, ST_IN_DUTY)
+			})
 			if err != nil {
 				return err
 			}
