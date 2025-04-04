@@ -35,7 +35,7 @@ func ActionEvCallNote() messaging_api.PostbackAction {
 		Label:       "入力する",
 		Data:        IGNORE_TXT_TEMPLATE,
 		InputOption: "openKeyboard",
-		FillInText:  "【指示事項】\n\n【交替運転者に対する通告】\n\n【車両・道路及び運行の状況】\n",
+		FillInText:  "【指示事項】\n\n【交替運転者に対する通告】\n\n【車両・道路及び運行の状況】\n\n【その他】\n",
 	}
 }
 
@@ -65,7 +65,7 @@ func ActionDReportNote() messaging_api.PostbackAction {
 		Label:       "入力する",
 		Data:        IGNORE_TXT_TEMPLATE,
 		InputOption: "openKeyboard",
-		FillInText:  "【業務の交替がある場合】\n地点：　\n 時　分\n【その他】\n",
+		FillInText:  "【業務の交替がある場合】\n地点：　\n 時　分\n【高速利用】\n\n【その他】\n",
 	}
 }
 

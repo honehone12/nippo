@@ -96,7 +96,7 @@ func (ti *TiDb) UpdateUserCurrentOpe(id []uint8, callId []uint8) error {
 	}
 
 	user := schema.User{}
-	res := ti.orm.Model(&user).Where("id = ?", id).Update("current_call", callId)
+	res := ti.orm.Model(&user).Where("id = ?", id).Update("current_operation", callId)
 	return res.Error
 }
 
