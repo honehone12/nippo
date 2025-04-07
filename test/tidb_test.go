@@ -256,13 +256,7 @@ func TestResting(t *testing.T) {
 	var restId []uint8
 	err := db.Tx(func(tx database.Transaction) error {
 		var err error
-		restId, err = tx.CreateResting(
-			reportId,
-			"倉庫",
-			"東京都港区倉庫町９９－９９",
-			99.99,
-			88.88,
-		)
+		restId, err = tx.CreateResting(reportId)
 		if err != nil {
 			return err
 		}
@@ -272,7 +266,18 @@ func TestResting(t *testing.T) {
 			return err
 		}
 
-		return tx.UpdateLocNote(restId, "【睡眠】無し")
+		err = tx.UpdateRestLocation(
+			restId,
+			"倉庫",
+			"東京都港区倉庫町９９－９９",
+			99.99,
+			88.88,
+		)
+		if err != nil {
+			return err
+		}
+
+		return tx.UpdateRestNote(restId, "【睡眠】無し")
 	})
 	if err != nil {
 		t.Fatal(err)
