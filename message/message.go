@@ -25,7 +25,7 @@ func validateDst(props *property.MessagingProps, msg *webhook.CallbackRequest) e
 		return fmt.Errorf("org is not configured, %w", err)
 	}
 
-	cleanDst := input.CleanSql(msg.Destination)
+	cleanDst := input.Clean(msg.Destination)
 
 	if len(org.LineId) == 0 {
 		log.L.Warnf("updating org line id to: %s", cleanDst)
@@ -110,7 +110,7 @@ func processEvent(props *property.MessagingProps, event webhook.EventInterface) 
 		return nil
 	}
 
-	cleanSource := input.CleanSql(source)
+	cleanSource := input.Clean(source)
 	user, err := props.Db().ReadUser(cleanSource)
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		log.L.Warnf("user not configured: %s", err)
