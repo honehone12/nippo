@@ -50,6 +50,6 @@ func (ti TiDbTx) UpdateRestNote(restId []uint8, shortNote schema.CleanText) erro
 	}
 
 	rest := schema.Resting{Id: restId}
-	res := ti.orm.Model(&rest).Update("short_note", shortNote)
+	res := ti.orm.Model(&rest).Where("id = ?", restId).Update("short_note", shortNote)
 	return res.Error
 }

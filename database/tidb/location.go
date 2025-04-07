@@ -49,7 +49,7 @@ func (ti TiDbTx) UpdateLocNote(locId []uint8, shortNote schema.CleanText) error 
 		return errors.New("unexpected note length")
 	}
 
-	loc := schema.Location{Id: locId}
-	res := ti.orm.Model(&loc).Update("short_note", shortNote)
+	loc := schema.Location{}
+	res := ti.orm.Model(&loc).Where("id = ?", locId).Update("short_note", shortNote)
 	return res.Error
 }
