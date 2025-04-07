@@ -121,17 +121,17 @@ func TestMorningCall(t *testing.T) {
 			return err
 		}
 
-		err = tx.UpdateMoCallHealth(morningId)
+		err = tx.UpdateMCallHealth(morningId)
 		if err != nil {
 			return err
 		}
 
-		err = tx.UpdateMoCallCarCheck(morningId)
+		err = tx.UpdateMCallCarCheck(morningId)
 		if err != nil {
 			return err
 		}
 
-		return tx.UpdateMoCallNote(morningId, "【ラベル】\n無し\n【ラベル】\n無し")
+		return tx.UpdateMCallNote(morningId, "【ラベル】\n無し\n【ラベル】\n無し")
 	})
 	if err != nil {
 		t.Fatal(err)
@@ -202,7 +202,7 @@ func TestEveningCall(t *testing.T) {
 			return err
 		}
 
-		return tx.UpdateEvCallNote(eveningId, "【ラベル】\n無し\n【ラベル】\n無し")
+		return tx.UpdateECallNote(eveningId, "【ラベル】\n無し\n【ラベル】\n無し")
 	})
 	if err != nil {
 		t.Fatal(err)
