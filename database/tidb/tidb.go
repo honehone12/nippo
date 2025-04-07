@@ -48,14 +48,12 @@ func Open(tiUri string) (TiDb, error) {
 
 func (ti TiDb) Tx(txf func(database.Transaction) error) error {
 	return ti.orm.Transaction(func(tx *gorm.DB) error {
-		tidbtx := TiDbTx{tx}
-		return txf(tidbtx)
+		return txf(TiDbTx{tx})
 	})
 }
 
 func (ti TiDb) Once() database.Transaction {
-	orm := ti.orm
-	return TiDbTx{orm}
+	return TiDbTx(ti)
 }
 
 func (ti TiDb) AutoMigrate() error {
