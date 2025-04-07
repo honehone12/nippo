@@ -33,12 +33,8 @@ func (ti TiDbTx) CreateLocation(
 		Latitude:  latitude,
 		Longitude: longitude,
 	}
-	repo := schema.DailyReport{}
-	res := ti.orm.Select("id").Take(&repo, "id = ?", repoId)
-	if res.Error != nil {
-		return nil, res.Error
-	}
-	err = ti.orm.Model(&repo).Where("id = ?", repoId).Association("Locations").Append(&loc)
+	repo := schema.DailyReport{Id: repoId}
+	err = ti.orm.Model(&repo).Association("Locations").Append(&loc)
 	if err != nil {
 		return nil, err
 	}
@@ -54,7 +50,7 @@ func (ti TiDbTx) UpdateLocNote(locId []uint8, shortNote schema.CleanText) error 
 		return errors.New("unexpected note length")
 	}
 
-	loc := schema.Location{}
-	res := ti.orm.Model(&loc).Where("id = ?", locId).Update("short_note", shortNote)
+	loc := schema.Location{Id: locId}
+	res := ti.orm.Model(&loc).Update("short_note", shortNote)
 	return res.Error
 }

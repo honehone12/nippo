@@ -38,10 +38,6 @@ func (ti TiDbTx) CreateDailyReport(
 		CarNumber:     carNum,
 	}
 	user := schema.User{Id: userId}
-	res := ti.orm.Select("id").Take(&user, "id = ?", userId)
-	if res.Error != nil {
-		return nil, res.Error
-	}
 	err = ti.orm.Model(&user).Association("DailyReports").Append(&call)
 	if err != nil {
 		return nil, err
@@ -58,8 +54,8 @@ func (ti TiDbTx) UpdateDReportEvCall(repoId []uint8, eveningId []uint8) error {
 		return errors.New("unexpected call id length")
 	}
 
-	repo := schema.DailyReport{}
-	res := ti.orm.Model(&repo).Where("id = ?", repoId).Update("evening_call_id", eveningId)
+	repo := schema.DailyReport{Id: repoId}
+	res := ti.orm.Model(&repo).Update("evening_call_id", eveningId)
 	return res.Error
 }
 
@@ -71,8 +67,8 @@ func (ti TiDbTx) UpdateDReportMtrPhoto(repoId []uint8, photo string) error {
 		return errors.New("unexpected photo length")
 	}
 
-	repo := schema.DailyReport{}
-	res := ti.orm.Model(&repo).Where("id = ?", repoId).Update("meter_photo", photo)
+	repo := schema.DailyReport{Id: repoId}
+	res := ti.orm.Model(&repo).Update("meter_photo", photo)
 	return res.Error
 }
 
@@ -84,8 +80,8 @@ func (ti TiDbTx) UpdateDReportTrouble(repoId []uint8, trouble schema.CleanText) 
 		return errors.New("unexpected trouble length")
 	}
 
-	repo := schema.DailyReport{}
-	res := ti.orm.Model(&repo).Where("id = ?", repoId).Update("trouble", trouble)
+	repo := schema.DailyReport{Id: repoId}
+	res := ti.orm.Model(&repo).Update("trouble", trouble)
 	return res.Error
 }
 
@@ -97,7 +93,7 @@ func (ti TiDbTx) UpdateDReportNote(repoId []uint8, note schema.CleanText) error 
 		return errors.New("unexpected note length")
 	}
 
-	repo := schema.DailyReport{}
-	res := ti.orm.Model(&repo).Where("id = ?", repoId).Update("note", note)
+	repo := schema.DailyReport{Id: repoId}
+	res := ti.orm.Model(&repo).Update("note", note)
 	return res.Error
 }

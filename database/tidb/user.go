@@ -29,11 +29,7 @@ func (ti TiDbTx) CreateUser(orgIdStr string, lineId schema.CleanText) ([]uint8, 
 		Id:     id[:],
 		LineId: lineId,
 	}
-	org := schema.Org{}
-	res := ti.orm.Select("id").Take(&org, "id = ?", orgId[:])
-	if res.Error != nil {
-		return nil, res.Error
-	}
+	org := schema.Org{Id: orgId[:]}
 	err = ti.orm.Model(&org).Association("Users").Append(&user)
 	if err != nil {
 		return nil, err
@@ -63,8 +59,8 @@ func (ti TiDbTx) UpdateUserName(userId []uint8, name schema.CleanText) error {
 		return errors.New("unexpected name length")
 	}
 
-	user := schema.User{}
-	res := ti.orm.Model(&user).Where("id = ?", userId).Update("name", name)
+	user := schema.User{Id: userId}
+	res := ti.orm.Model(&user).Update("name", name)
 	return res.Error
 }
 
@@ -76,8 +72,8 @@ func (ti TiDbTx) UpdateUserCarNumber(userId []uint8, carNumber schema.CleanText)
 		return errors.New("unexpected car number length")
 	}
 
-	user := schema.User{}
-	res := ti.orm.Model(&user).Where("id = ?", userId).Update("car_number", carNumber)
+	user := schema.User{Id: userId}
+	res := ti.orm.Model(&user).Update("car_number", carNumber)
 	return res.Error
 }
 
@@ -86,8 +82,8 @@ func (ti TiDbTx) UpdateUserNextState(userId []uint8, nextState schema.StateIdx) 
 		return errors.New("unexpected id length")
 	}
 
-	user := schema.User{}
-	res := ti.orm.Model(&user).Where("id = ?", userId).Update("next_state", nextState)
+	user := schema.User{Id: userId}
+	res := ti.orm.Model(&user).Update("next_state", nextState)
 	return res.Error
 }
 
@@ -99,8 +95,8 @@ func (ti TiDbTx) UpdateUserCurrentOpe(userId []uint8, opeId []uint8) error {
 		return errors.New("unexpected call id length")
 	}
 
-	user := schema.User{}
-	res := ti.orm.Model(&user).Where("id = ?", userId).Update("current_operation", opeId)
+	user := schema.User{Id: userId}
+	res := ti.orm.Model(&user).Update("current_operation", opeId)
 	return res.Error
 }
 
@@ -112,7 +108,7 @@ func (ti TiDbTx) UpdateUserCurrentDuty(userId []uint8, repoId []uint8) error {
 		return errors.New("unexpected report id length")
 	}
 
-	user := schema.User{}
-	res := ti.orm.Model(&user).Where("id = ?", userId).Update("current_duty", repoId)
+	user := schema.User{Id: userId}
+	res := ti.orm.Model(&user).Update("current_duty", repoId)
 	return res.Error
 }

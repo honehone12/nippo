@@ -41,11 +41,7 @@ func (ti TiDbTx) CreateMorningCall(
 		AlcCheck:        true,
 		AlcPhoto:        photo,
 	}
-	user := schema.User{}
-	res := ti.orm.Select("id").Take(&user, "id = ?", userId)
-	if res.Error != nil {
-		return nil, res.Error
-	}
+	user := schema.User{Id: userId}
 	err = ti.orm.Model(&user).Association("MorningCalls").Append(&call)
 	if err != nil {
 		return nil, err
@@ -59,8 +55,8 @@ func (ti TiDbTx) UpdateMCallHealth(callId []uint8) error {
 		return errors.New("unexpected call id length")
 	}
 
-	call := schema.MorningCall{}
-	res := ti.orm.Model(&call).Where("id = ?", callId).Update("health_check", true)
+	call := schema.MorningCall{Id: callId}
+	res := ti.orm.Model(&call).Update("health_check", true)
 	return res.Error
 }
 
@@ -69,8 +65,8 @@ func (ti TiDbTx) UpdateMCallCarCheck(callId []uint8) error {
 		return errors.New("unexpected call id length")
 	}
 
-	call := schema.MorningCall{}
-	res := ti.orm.Model(&call).Where("id = ?", callId).Update("car_check", true)
+	call := schema.MorningCall{Id: callId}
+	res := ti.orm.Model(&call).Update("car_check", true)
 	return res.Error
 }
 
@@ -82,8 +78,8 @@ func (ti TiDbTx) UpdateMCallNote(callId []uint8, note schema.CleanText) error {
 		return errors.New("unexpected note length")
 	}
 
-	call := schema.MorningCall{}
-	res := ti.orm.Model(&call).Where("id = ?", callId).Update("note", note)
+	call := schema.MorningCall{Id: callId}
+	res := ti.orm.Model(&call).Update("note", note)
 	return res.Error
 }
 
@@ -121,11 +117,7 @@ func (ti TiDbTx) CreateEveningCall(
 		AlcCheck:        true,
 		AlcPhoto:        photo,
 	}
-	user := schema.User{}
-	res := ti.orm.Select("id").Take(&user, "id = ?", userId)
-	if res.Error != nil {
-		return nil, res.Error
-	}
+	user := schema.User{Id: userId}
 	err = ti.orm.Model(&user).Association("EveningCalls").Append(&call)
 	if err != nil {
 		return nil, err
@@ -142,7 +134,7 @@ func (ti TiDbTx) UpdateECallNote(callId []uint8, note schema.CleanText) error {
 		return errors.New("unexpected note length")
 	}
 
-	call := schema.EveningCall{}
-	res := ti.orm.Model(&call).Where("id = ?", callId).Update("note", note)
+	call := schema.EveningCall{Id: callId}
+	res := ti.orm.Model(&call).Update("note", note)
 	return res.Error
 }

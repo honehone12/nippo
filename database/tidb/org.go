@@ -35,8 +35,8 @@ func (ti TiDb) ReadOrg(idStr string) (*schema.Org, error) {
 		return nil, err
 	}
 
-	org := schema.Org{}
-	if res := ti.orm.Take(&org, "id = ?", id[:]); res.Error != nil {
+	org := schema.Org{Id: id[:]}
+	if res := ti.orm.Take(&org); res.Error != nil {
 		return nil, res.Error
 	}
 
@@ -53,7 +53,7 @@ func (ti TiDbTx) UpdateOrgLineId(idStr string, newLineId schema.CleanText) error
 		return err
 	}
 
-	org := schema.Org{}
-	res := ti.orm.Model(&org).Where("id = ?", id[:]).Update("line_id", newLineId)
+	org := schema.Org{Id: id[:]}
+	res := ti.orm.Model(&org).Update("line_id", newLineId)
 	return res.Error
 }
