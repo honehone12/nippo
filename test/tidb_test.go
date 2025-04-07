@@ -24,9 +24,7 @@ var db database.Database = tidb.TiDb{}
 var orgIdStr string
 var userId []uint8
 var morningId []uint8
-var eveningId []uint8
 var reportId []uint8
-var locId []uint8
 
 func TestOpenDb(t *testing.T) {
 	godotenv.Load("../bin/.env")
@@ -186,6 +184,7 @@ func TestDailyReport(t *testing.T) {
 }
 
 func TestEveningCall(t *testing.T) {
+	var eveningId []uint8
 	err := db.Tx(func(tx database.Transaction) error {
 		var err error
 		eveningId, err = tx.CreateEveningCall(userId, ALC_PHOTO)
@@ -219,6 +218,7 @@ func TestEveningCall(t *testing.T) {
 }
 
 func TestLocation(t *testing.T) {
+	var locId []uint8
 	err := db.Tx(func(tx database.Transaction) error {
 		var err error
 		locId, err = tx.CreateLocation(
@@ -248,6 +248,41 @@ func TestLocation(t *testing.T) {
 		t.Fatal(err)
 	}
 	if !bytes.Equal(readUser.CurrentOperation, locId) {
+		t.Fatal("read wrong user")
+	}
+}
+
+func TestResting(t *testing.T) {
+	var restId []uint8
+	err := db.Tx(func(tx database.Transaction) error {
+		var err error
+		restId, err = tx.CreateResting(
+			restId,
+			"倉庫",
+			"東京都港区倉庫町９９－９９",
+			99.99,
+			88.88,
+		)
+		if err != nil {
+			return err
+		}
+
+		err = tx.UpdateUserCurrentOpe(userId, restId)
+		if err != nil {
+			return err
+		}
+
+		return tx.UpdateLocNote(restId, "【睡眠】無し")
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	readUser, err := db.ReadUser(USER_LINE_ID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !bytes.Equal(readUser.CurrentOperation, restId) {
 		t.Fatal("read wrong user")
 	}
 }

@@ -49,7 +49,7 @@ func (ti TiDbTx) UpdateRestNote(restId []uint8, shortNote schema.CleanText) erro
 		return errors.New("unexpected note length")
 	}
 
-	rest := schema.Resting{}
-	res := ti.orm.Model(&rest).Where("id = ?", restId).Update("short_note", shortNote)
+	rest := schema.Resting{Id: restId}
+	res := ti.orm.Model(&rest).Update("short_note", shortNote)
 	return res.Error
 }
