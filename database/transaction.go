@@ -35,4 +35,13 @@ type Transaction interface {
 		longitude float64,
 	) ([]uint8, error)
 	UpdateLocNote(locId []uint8, shortNote schema.CleanText) error
+
+	CreateResting(
+		repoId []uint8,
+		label schema.CleanText,
+		address schema.CleanText,
+		latitude float64,
+		longitude float64,
+	) ([]uint8, error)
+	UpdateRestNote(restId []uint8, shortNote schema.CleanText) error
 }

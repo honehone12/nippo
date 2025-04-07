@@ -80,7 +80,7 @@ func ActionLocNote() messaging_api.PostbackAction {
 		Label:       "入力する",
 		Data:        IGNORE_TXT_TEMPLATE,
 		InputOption: "openKeyboard",
-		FillInText:  "【説明】\n",
+		FillInText:  "【説明】",
 	}
 }
 

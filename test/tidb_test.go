@@ -237,7 +237,7 @@ func TestLocation(t *testing.T) {
 			return err
 		}
 
-		return tx.UpdateLocNote(locId, "【説明】\n集荷")
+		return tx.UpdateLocNote(locId, "【説明】集荷")
 	})
 	if err != nil {
 		t.Fatal(err)
