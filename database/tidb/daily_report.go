@@ -38,6 +38,10 @@ func (ti TiDbTx) CreateDailyReport(
 		CarNumber:     carNum,
 	}
 	user := schema.User{Id: userId}
+	res := ti.orm.Select("id").Take(&user, "id = ?", userId)
+	if res.Error != nil {
+		return nil, res.Error
+	}
 	err = ti.orm.Model(&user).Association("DailyReports").Append(&call)
 	if err != nil {
 		return nil, err

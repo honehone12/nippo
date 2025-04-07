@@ -41,7 +41,11 @@ func (ti TiDbTx) CreateMorningCall(
 		AlcCheck:        true,
 		AlcPhoto:        photo,
 	}
-	user := schema.User{Id: userId}
+	user := schema.User{}
+	res := ti.orm.Select("id").Take(&user, "id = ?", userId)
+	if res.Error != nil {
+		return nil, res.Error
+	}
 	err = ti.orm.Model(&user).Association("MorningCalls").Append(&call)
 	if err != nil {
 		return nil, err
@@ -117,7 +121,11 @@ func (ti TiDbTx) CreateEveningCall(
 		AlcCheck:        true,
 		AlcPhoto:        photo,
 	}
-	user := schema.User{Id: userId}
+	user := schema.User{}
+	res := ti.orm.Select("id").Take(&user, "id = ?", userId)
+	if res.Error != nil {
+		return nil, res.Error
+	}
 	err = ti.orm.Model(&user).Association("EveningCalls").Append(&call)
 	if err != nil {
 		return nil, err

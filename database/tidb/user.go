@@ -29,7 +29,11 @@ func (ti TiDbTx) CreateUser(orgIdStr string, lineId schema.CleanText) ([]uint8, 
 		Id:     id[:],
 		LineId: lineId,
 	}
-	org := schema.Org{Id: orgId[:]}
+	org := schema.Org{}
+	res := ti.orm.Select("id").Take(&org, "id = ?", orgId[:])
+	if res.Error != nil {
+		return nil, res.Error
+	}
 	err = ti.orm.Model(&org).Association("Users").Append(&user)
 	if err != nil {
 		return nil, err

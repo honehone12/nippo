@@ -21,7 +21,7 @@ type Org struct {
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 
 	Name   CleanText `gorm:"not null;size:100"`
-	LineId CleanText `gorm:"type:char(33);index"`
+	LineId CleanText `gorm:"unique;type:char(33)"`
 	Users  []User    `gorm:"foreignKey:OrgId;references:Id"`
 }
 
@@ -34,7 +34,6 @@ type User struct {
 	Name             CleanText `gorm:"not null;size:100"`
 	LineId           CleanText `gorm:"unique;not null;type:char(33);index"`
 	CarNumber        CleanText `gorm:"size:100"`
-	OrgId            []uint8   `gorm:"not null;type:binary(16)"`
 	CurrentOperation []uint8   `gorm:"type:binary(16)"`
 	CurrentDuty      []uint8   `gorm:"type:binary(16)"`
 	NextState        StateIdx
@@ -42,6 +41,8 @@ type User struct {
 	MorningCalls []MorningCall `gorm:"foreignKey:UserId;references:Id"`
 	EveningCalls []EveningCall `gorm:"foreignKey:UserId;references:Id"`
 	DailyReports []DailyReport `gorm:"foreignKey:UserId;references:Id"`
+
+	OrgId []uint8 `gorm:"not null;type:binary(16)"`
 }
 
 type MorningCall struct {
