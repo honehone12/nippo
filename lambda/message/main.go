@@ -175,7 +175,7 @@ func handler(
 }
 
 func main() {
-	log.FmtDefault()
+	log.FmtPlain()
 
 	if err := collectEnv(); err != nil {
 		log.L.Fatal(err)
