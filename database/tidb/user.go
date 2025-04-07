@@ -7,7 +7,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func (ti *TiDbTx) CreateUser(orgIdStr string, lineId schema.CleanText) ([]uint8, error) {
+func (ti TiDbTx) CreateUser(orgIdStr string, lineId schema.CleanText) ([]uint8, error) {
 	if len(orgIdStr) != schema.ID_STR_LEN {
 		return nil, errors.New("unexpected id length")
 	}
@@ -38,7 +38,7 @@ func (ti *TiDbTx) CreateUser(orgIdStr string, lineId schema.CleanText) ([]uint8,
 	return user.Id, nil
 }
 
-func (ti *TiDb) ReadUser(lineId schema.CleanText) (*schema.User, error) {
+func (ti TiDb) ReadUser(lineId schema.CleanText) (*schema.User, error) {
 	if len(lineId) != schema.LINE_ID_LEN {
 		return nil, errors.New("unexpected line id length")
 	}
@@ -51,7 +51,7 @@ func (ti *TiDb) ReadUser(lineId schema.CleanText) (*schema.User, error) {
 	return &user, nil
 }
 
-func (ti *TiDbTx) UpdateUserName(id []uint8, name schema.CleanText) error {
+func (ti TiDbTx) UpdateUserName(id []uint8, name schema.CleanText) error {
 	if len(id) != schema.ID_LEN {
 		return errors.New("unexpected id length")
 	}
@@ -64,7 +64,7 @@ func (ti *TiDbTx) UpdateUserName(id []uint8, name schema.CleanText) error {
 	return res.Error
 }
 
-func (ti *TiDbTx) UpdateUserCarNumber(id []uint8, carNumber schema.CleanText) error {
+func (ti TiDbTx) UpdateUserCarNumber(id []uint8, carNumber schema.CleanText) error {
 	if len(id) != schema.ID_LEN {
 		return errors.New("unexpected id length")
 	}
@@ -77,7 +77,7 @@ func (ti *TiDbTx) UpdateUserCarNumber(id []uint8, carNumber schema.CleanText) er
 	return res.Error
 }
 
-func (ti *TiDbTx) UpdateUserNextState(id []uint8, nextState schema.StateIdx) error {
+func (ti TiDbTx) UpdateUserNextState(id []uint8, nextState schema.StateIdx) error {
 	if len(id) != schema.ID_LEN {
 		return errors.New("unexpected id length")
 	}
@@ -87,7 +87,7 @@ func (ti *TiDbTx) UpdateUserNextState(id []uint8, nextState schema.StateIdx) err
 	return res.Error
 }
 
-func (ti *TiDbTx) UpdateUserCurrentOpe(id []uint8, callId []uint8) error {
+func (ti TiDbTx) UpdateUserCurrentOpe(id []uint8, callId []uint8) error {
 	if len(id) != schema.ID_LEN {
 		return errors.New("unexpected id length")
 	}
@@ -100,7 +100,7 @@ func (ti *TiDbTx) UpdateUserCurrentOpe(id []uint8, callId []uint8) error {
 	return res.Error
 }
 
-func (ti *TiDbTx) UpdateUserCurrentDuty(id []uint8, reportId []uint8) error {
+func (ti TiDbTx) UpdateUserCurrentDuty(id []uint8, reportId []uint8) error {
 	if len(id) != schema.ID_LEN {
 		return errors.New("unexpected id length")
 	}

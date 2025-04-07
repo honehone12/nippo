@@ -7,7 +7,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func (ti *TiDbTx) CreateOrg(name schema.CleanText) ([]uint8, error) {
+func (ti TiDbTx) CreateOrg(name schema.CleanText) ([]uint8, error) {
 	if len(name) > schema.MAX_SHORT_TEXT_LEN {
 		return nil, errors.New("unexpected name length")
 	}
@@ -29,7 +29,7 @@ func (ti *TiDbTx) CreateOrg(name schema.CleanText) ([]uint8, error) {
 	return org.Id, nil
 }
 
-func (ti *TiDb) ReadOrg(idStr string) (*schema.Org, error) {
+func (ti TiDb) ReadOrg(idStr string) (*schema.Org, error) {
 	id, err := uuid.Parse(idStr)
 	if err != nil {
 		return nil, err
@@ -43,7 +43,7 @@ func (ti *TiDb) ReadOrg(idStr string) (*schema.Org, error) {
 	return &org, nil
 }
 
-func (ti *TiDbTx) UpdateOrgLineId(idStr string, newLineId schema.CleanText) error {
+func (ti TiDbTx) UpdateOrgLineId(idStr string, newLineId schema.CleanText) error {
 	if len(newLineId) != schema.LINE_ID_LEN {
 		return errors.New("unexpected line id length")
 	}

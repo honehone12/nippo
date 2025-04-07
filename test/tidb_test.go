@@ -20,7 +20,7 @@ const CAR_NUMBER = "て００９１２ー２３"
 const ALC_PHOTO = "user-id-009.jpg"
 const MTR_PHOTO = "user-id-018.jpg"
 
-var db database.Database = &tidb.TiDb{}
+var db database.Database = tidb.TiDb{}
 var orgIdStr string
 var userId []uint8
 var morningId []uint8

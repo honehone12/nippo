@@ -24,7 +24,7 @@ func now() time.Time {
 	return time.Now().UTC()
 }
 
-func Open(tiUri string) (*TiDb, error) {
+func Open(tiUri string) (TiDb, error) {
 	gormLogger := logger.New(
 		stdlog.New(os.Stdout, "\r\n", stdlog.LstdFlags),
 		logger.Config{
@@ -40,20 +40,20 @@ func Open(tiUri string) (*TiDb, error) {
 		NowFunc: now,
 	})
 	if err != nil {
-		return nil, err
+		return TiDb{nil}, err
 	}
 
-	return &TiDb{orm}, nil
+	return TiDb{orm}, nil
 }
 
-func (ti *TiDb) Tx(txf func(database.Transaction) error) error {
+func (ti TiDb) Tx(txf func(database.Transaction) error) error {
 	return ti.orm.Transaction(func(tx *gorm.DB) error {
 		tidbtx := TiDbTx{tx}
-		return txf(&tidbtx)
+		return txf(tidbtx)
 	})
 }
 
-func (ti *TiDb) AutoMigrate() error {
+func (ti TiDb) AutoMigrate() error {
 	return ti.orm.AutoMigrate(
 		&schema.Org{},
 		&schema.User{},
