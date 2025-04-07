@@ -16,7 +16,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func validateDst(props *property.MessagingProps, msg *webhook.CallbackRequest) error {
+func validateDst(props *property.MsgingProps, msg *webhook.CallbackRequest) error {
 	db := props.Db()
 	orgId := props.OrgId()
 
@@ -69,7 +69,7 @@ func getSource(event webhook.EventInterface) (string, error) {
 	return s.UserId, nil
 }
 
-func sendErrMsg(props *property.MessagingProps, event webhook.EventInterface) {
+func sendErrMsg(props *property.MsgingProps, event webhook.EventInterface) {
 	req := messaging_api.ReplyMessageRequest{}
 	switch e := event.(type) {
 	case webhook.MessageEvent:
@@ -89,7 +89,7 @@ func sendErrMsg(props *property.MessagingProps, event webhook.EventInterface) {
 }
 
 func onUnknownUser(
-	props *property.MessagingProps,
+	props *property.MsgingProps,
 	source schema.CleanText,
 	event webhook.EventInterface,
 ) error {
@@ -103,7 +103,7 @@ func onUnknownUser(
 	return nil
 }
 
-func processEvent(props *property.MessagingProps, event webhook.EventInterface) error {
+func processEvent(props *property.MsgingProps, event webhook.EventInterface) error {
 	source, err := getSource(event)
 	if err != nil {
 		log.L.Warn(err)
@@ -138,7 +138,7 @@ func processEvent(props *property.MessagingProps, event webhook.EventInterface) 
 	return nil
 }
 
-func MessageMain(props *property.MessagingProps, msg *webhook.CallbackRequest) {
+func MessageMain(props *property.MsgingProps, msg *webhook.CallbackRequest) {
 	if err := validateDst(props, msg); err != nil {
 		log.L.Error(err)
 		return

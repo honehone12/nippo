@@ -18,7 +18,7 @@ import (
 type StMCallNote struct{}
 
 func (s StMCallNote) Run(
-	props *property.MessagingProps,
+	props *property.MsgingProps,
 	user *schema.User,
 	event webhook.EventInterface,
 ) error {

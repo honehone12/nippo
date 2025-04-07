@@ -18,7 +18,7 @@ import (
 type StECallNote struct{}
 
 func (s StECallNote) Run(
-	props *property.MessagingProps,
+	props *property.MsgingProps,
 	user *schema.User,
 	event webhook.EventInterface,
 ) error {

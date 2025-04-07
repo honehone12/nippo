@@ -17,7 +17,7 @@ import (
 type StMCallHealth struct{}
 
 func (s StMCallHealth) Run(
-	props *property.MessagingProps,
+	props *property.MsgingProps,
 	user *schema.User,
 	event webhook.EventInterface,
 ) error {

@@ -16,7 +16,7 @@ import (
 type StUserNotConfigured struct{}
 
 func (s StUserNotConfigured) Run(
-	props *property.MessagingProps,
+	props *property.MsgingProps,
 	user *schema.User,
 	event webhook.EventInterface,
 ) error {

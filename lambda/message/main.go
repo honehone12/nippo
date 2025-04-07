@@ -15,6 +15,8 @@ import (
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
+	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/line/line-bot-sdk-go/v8/linebot/messaging_api"
 	"github.com/line/line-bot-sdk-go/v8/linebot/webhook"
 )
@@ -24,13 +26,15 @@ type variable struct {
 	lnChTkn  string
 	orgIdStr string
 	dbUri    string
+	bucket   string
 }
 
 var (
-	env     variable
-	db      database.Database
-	api     *messaging_api.MessagingApiAPI
-	blobApi *messaging_api.MessagingApiBlobAPI
+	env      variable
+	db       database.Database
+	api      *messaging_api.MessagingApiAPI
+	blobApi  *messaging_api.MessagingApiBlobAPI
+	s3Client *s3.Client
 )
 
 func collectEnv() error {
@@ -50,7 +54,7 @@ func collectEnv() error {
 		return errors.New("env for dbUri is not set")
 	}
 
-	if len(os.Getenv("BUCKET")) == 0 {
+	if env.bucket = os.Getenv("BUCKET"); len(env.bucket) == 0 {
 		return errors.New("env for bucket is not set")
 	}
 
@@ -75,6 +79,16 @@ func initApi() error {
 		return err
 	}
 
+	return nil
+}
+
+func awsConfig() error {
+	cfg, err := config.LoadDefaultConfig(context.Background())
+	if err != nil {
+		return err
+	}
+
+	s3Client = s3.NewFromConfig(cfg)
 	return nil
 }
 
@@ -146,7 +160,15 @@ func handler(
 		return response.BadRequest(), nil
 	}
 
-	props := property.NewMessagingProps(ctx, env.orgIdStr, db, api, blobApi)
+	props := property.NewMessagingProps(
+		ctx,
+		env.bucket,
+		env.orgIdStr,
+		db,
+		api,
+		blobApi,
+		s3Client,
+	)
 	message.MessageMain(props, &msg)
 
 	return response.Ok(), nil
@@ -164,6 +186,10 @@ func main() {
 	}
 
 	if err := initApi(); err != nil {
+		log.L.Fatal(err)
+	}
+
+	if err := awsConfig(); err != nil {
 		log.L.Fatal(err)
 	}
 

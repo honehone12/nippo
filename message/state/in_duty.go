@@ -15,7 +15,7 @@ import (
 type StInDuty struct{}
 
 func (s StInDuty) Run(
-	props *property.MessagingProps,
+	props *property.MsgingProps,
 	user *schema.User,
 	event webhook.EventInterface,
 ) error {

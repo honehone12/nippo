@@ -17,7 +17,7 @@ import (
 type StDRepoMtrPhoto struct{}
 
 func (s StDRepoMtrPhoto) Run(
-	props *property.MessagingProps,
+	props *property.MsgingProps,
 	user *schema.User,
 	event webhook.EventInterface,
 ) error {
@@ -40,7 +40,7 @@ func (s StDRepoMtrPhoto) Run(
 					return errors.New("unsupported iamge type")
 				}
 
-				photo, err := sss.PutJpg(props.Ctx(), user.Id, res.Body, res.ContentLength)
+				photo, err := sss.PutJpg(props, user.Id, res.Body, res.ContentLength)
 				if err != nil {
 					return err
 				}

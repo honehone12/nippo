@@ -17,7 +17,7 @@ import (
 type StMCallCarCheck struct{}
 
 func (s StMCallCarCheck) Run(
-	props *property.MessagingProps,
+	props *property.MsgingProps,
 	user *schema.User,
 	event webhook.EventInterface,
 ) error {

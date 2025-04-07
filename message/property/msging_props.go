@@ -4,49 +4,64 @@ import (
 	"context"
 	"nippo/database"
 
+	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/line/line-bot-sdk-go/v8/linebot/messaging_api"
 )
 
-type MessagingProps struct {
+type MsgingProps struct {
 	ctx      context.Context
+	bucket   string
 	orgIdStr string
 	db       database.Database
 	api      *messaging_api.MessagingApiAPI
 	blobApi  *messaging_api.MessagingApiBlobAPI
+	s3       *s3.Client
 }
 
 func NewMessagingProps(
 	ctx context.Context,
+	bucket string,
 	orgIdStr string,
 	db database.Database,
 	api *messaging_api.MessagingApiAPI,
 	blobApi *messaging_api.MessagingApiBlobAPI,
-) *MessagingProps {
-	return &MessagingProps{
+	s3 *s3.Client,
+) *MsgingProps {
+	return &MsgingProps{
 		ctx,
+		bucket,
 		orgIdStr,
 		db,
 		api,
 		blobApi,
+		s3,
 	}
 }
 
-func (p *MessagingProps) Ctx() context.Context {
+func (p *MsgingProps) Ctx() context.Context {
 	return p.ctx
 }
 
-func (p *MessagingProps) OrgId() string {
+func (p *MsgingProps) Bucket() *string {
+	return &p.bucket
+}
+
+func (p *MsgingProps) OrgId() string {
 	return p.orgIdStr
 }
 
-func (p *MessagingProps) Db() database.Database {
+func (p *MsgingProps) Db() database.Database {
 	return p.db
 }
 
-func (p *MessagingProps) Api() *messaging_api.MessagingApiAPI {
+func (p *MsgingProps) Api() *messaging_api.MessagingApiAPI {
 	return p.api
 }
 
-func (p *MessagingProps) BlobApi() *messaging_api.MessagingApiBlobAPI {
+func (p *MsgingProps) BlobApi() *messaging_api.MessagingApiBlobAPI {
 	return p.blobApi
+}
+
+func (p *MsgingProps) S3() *s3.Client {
+	return p.s3
 }
