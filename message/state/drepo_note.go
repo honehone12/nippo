@@ -25,6 +25,8 @@ func (s StDRepoNote) Run(
 	switch e := event.(type) {
 	case webhook.PostbackEvent:
 		if strings.Compare(e.Postback.Data, reply.IGNORE_TXT_TEMPLATE) == 0 {
+			log.L.Warn("ignoring postback data, means shorcut does not work")
+			log.L.Warn("ignoring postback data, means shorcut does not work")
 			return nil
 		} else {
 			return fmt.Errorf("unexpected postback data: %s", e.Postback.Data)
