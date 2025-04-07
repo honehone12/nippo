@@ -50,6 +50,9 @@ func checkBasicContent(event webhook.EventInterface) (string, string, error) {
 		source = e.Source
 		repTkn = e.ReplyToken
 	case webhook.PostbackEvent:
+		// add quit now logic here
+		// https://github.com/honehone12/nippo/issues/14
+
 		if strings.Compare(e.Postback.Data, reply.IGNORE_TXT_TEMPLATE) == 0 {
 			return "", "", nil
 		}
@@ -58,8 +61,9 @@ func checkBasicContent(event webhook.EventInterface) (string, string, error) {
 	default:
 		return "", "", fmt.Errorf("unsupported event: %s", event.GetType())
 	}
-	if source == nil {
-		return "", "", errors.New("nil source")
+
+	if source == nil || len(repTkn) == 0 {
+		return "", "", errors.New("nil souce or empty reply token")
 	}
 
 	s, ok := source.(webhook.UserSource)
@@ -67,7 +71,7 @@ func checkBasicContent(event webhook.EventInterface) (string, string, error) {
 		return "", "", fmt.Errorf("unsupported source: %s", source.GetType())
 	}
 	if len(s.UserId) == 0 {
-		return "", "", errors.New("empty source")
+		return "", "", errors.New("source has empty user id")
 	}
 
 	return s.UserId, repTkn, nil
@@ -111,9 +115,6 @@ func processEvent(props *property.MsgingProps, event webhook.EventInterface) err
 		sendErrMsg(props, repTkn)
 		return err
 	}
-
-	// add quit now logic here
-	// https://github.com/honehone12/nippo/issues/14
 
 	st, err := state.FromIdx(user.NextState)
 	if err != nil {
