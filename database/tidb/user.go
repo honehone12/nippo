@@ -51,8 +51,8 @@ func (ti TiDb) ReadUser(lineId schema.CleanText) (*schema.User, error) {
 	return &user, nil
 }
 
-func (ti TiDbTx) UpdateUserName(id []uint8, name schema.CleanText) error {
-	if len(id) != schema.ID_LEN {
+func (ti TiDbTx) UpdateUserName(userId []uint8, name schema.CleanText) error {
+	if len(userId) != schema.ID_LEN {
 		return errors.New("unexpected id length")
 	}
 	if len(name) > schema.MAX_SHORT_TEXT_LEN {
@@ -60,12 +60,12 @@ func (ti TiDbTx) UpdateUserName(id []uint8, name schema.CleanText) error {
 	}
 
 	user := schema.User{}
-	res := ti.orm.Model(&user).Where("id = ?", id).Update("name", name)
+	res := ti.orm.Model(&user).Where("id = ?", userId).Update("name", name)
 	return res.Error
 }
 
-func (ti TiDbTx) UpdateUserCarNumber(id []uint8, carNumber schema.CleanText) error {
-	if len(id) != schema.ID_LEN {
+func (ti TiDbTx) UpdateUserCarNumber(userId []uint8, carNumber schema.CleanText) error {
+	if len(userId) != schema.ID_LEN {
 		return errors.New("unexpected id length")
 	}
 	if len(carNumber) > schema.MAX_SHORT_TEXT_LEN {
@@ -73,42 +73,42 @@ func (ti TiDbTx) UpdateUserCarNumber(id []uint8, carNumber schema.CleanText) err
 	}
 
 	user := schema.User{}
-	res := ti.orm.Model(&user).Where("id = ?", id).Update("car_number", carNumber)
+	res := ti.orm.Model(&user).Where("id = ?", userId).Update("car_number", carNumber)
 	return res.Error
 }
 
-func (ti TiDbTx) UpdateUserNextState(id []uint8, nextState schema.StateIdx) error {
-	if len(id) != schema.ID_LEN {
+func (ti TiDbTx) UpdateUserNextState(userId []uint8, nextState schema.StateIdx) error {
+	if len(userId) != schema.ID_LEN {
 		return errors.New("unexpected id length")
 	}
 
 	user := schema.User{}
-	res := ti.orm.Model(&user).Where("id = ?", id).Update("next_state", nextState)
+	res := ti.orm.Model(&user).Where("id = ?", userId).Update("next_state", nextState)
 	return res.Error
 }
 
-func (ti TiDbTx) UpdateUserCurrentOpe(id []uint8, callId []uint8) error {
-	if len(id) != schema.ID_LEN {
+func (ti TiDbTx) UpdateUserCurrentOpe(userId []uint8, opeId []uint8) error {
+	if len(userId) != schema.ID_LEN {
 		return errors.New("unexpected id length")
 	}
-	if callId != nil && len(callId) != schema.ID_LEN {
+	if opeId != nil && len(opeId) != schema.ID_LEN {
 		return errors.New("unexpected call id length")
 	}
 
 	user := schema.User{}
-	res := ti.orm.Model(&user).Where("id = ?", id).Update("current_operation", callId)
+	res := ti.orm.Model(&user).Where("id = ?", userId).Update("current_operation", opeId)
 	return res.Error
 }
 
-func (ti TiDbTx) UpdateUserCurrentDuty(id []uint8, reportId []uint8) error {
-	if len(id) != schema.ID_LEN {
+func (ti TiDbTx) UpdateUserCurrentDuty(userId []uint8, repoId []uint8) error {
+	if len(userId) != schema.ID_LEN {
 		return errors.New("unexpected id length")
 	}
-	if reportId != nil && len(reportId) != schema.ID_LEN {
+	if repoId != nil && len(repoId) != schema.ID_LEN {
 		return errors.New("unexpected report id length")
 	}
 
 	user := schema.User{}
-	res := ti.orm.Model(&user).Where("id = ?", id).Update("current_duty", reportId)
+	res := ti.orm.Model(&user).Where("id = ?", userId).Update("current_duty", repoId)
 	return res.Error
 }

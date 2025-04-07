@@ -69,9 +69,18 @@ func ActionDReportNote() messaging_api.PostbackAction {
 	}
 }
 
-func ActionSendGps() messaging_api.LocationAction {
+func ActionSendLocation() messaging_api.LocationAction {
 	return messaging_api.LocationAction{
 		Label: "位置情報を登録する",
+	}
+}
+
+func ActionLocNote() messaging_api.PostbackAction {
+	return messaging_api.PostbackAction{
+		Label:       "入力する",
+		Data:        IGNORE_TXT_TEMPLATE,
+		InputOption: "openKeyboard",
+		FillInText:  "【説明】\n",
 	}
 }
 

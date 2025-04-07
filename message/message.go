@@ -9,6 +9,7 @@ import (
 	"nippo/message/reply"
 	"nippo/message/state"
 	"nippo/schema"
+	"strings"
 
 	"github.com/line/line-bot-sdk-go/v8/linebot/messaging_api"
 	"github.com/line/line-bot-sdk-go/v8/linebot/webhook"
@@ -41,69 +42,55 @@ func validateDst(props *property.MsgingProps, msg *webhook.CallbackRequest) erro
 	return nil
 }
 
-func getSource(event webhook.EventInterface) (string, error) {
+func checkBasicContent(event webhook.EventInterface) (string, string, error) {
 	var source webhook.SourceInterface
+	var repTkn string
 	switch e := event.(type) {
 	case webhook.MessageEvent:
 		source = e.Source
+		repTkn = e.ReplyToken
 	case webhook.PostbackEvent:
+		if strings.Compare(e.Postback.Data, reply.IGNORE_TXT_TEMPLATE) == 0 {
+			return "", "", nil
+		}
 		source = e.Source
+		repTkn = e.ReplyToken
 	default:
-		return "", fmt.Errorf("unsupported event: %s", event.GetType())
+		return "", "", fmt.Errorf("unsupported event: %s", event.GetType())
 	}
 	if source == nil {
-		return "", errors.New("nil source")
+		return "", "", errors.New("nil source")
 	}
 
 	s, ok := source.(webhook.UserSource)
 	if !ok {
-		return "", fmt.Errorf("unsupported source: %s", source.GetType())
+		return "", "", fmt.Errorf("unsupported source: %s", source.GetType())
 	}
 	if len(s.UserId) == 0 {
-		return "", errors.New("empty source")
+		return "", "", errors.New("empty source")
 	}
 
-	return s.UserId, nil
+	return s.UserId, repTkn, nil
 }
 
-func sendErrMsg(props *property.MsgingProps, event webhook.EventInterface) {
-	req := messaging_api.ReplyMessageRequest{}
-	switch e := event.(type) {
-	case webhook.MessageEvent:
-		req.ReplyToken = e.ReplyToken
-	case webhook.PostbackEvent:
-		req.ReplyToken = e.ReplyToken
-	default:
-		log.L.Warn("stop sending err msg as unexpected msg type")
-		return
+func sendErrMsg(props *property.MsgingProps, repTkn string) {
+	req := messaging_api.ReplyMessageRequest{
+		ReplyToken: repTkn,
+		Messages:   reply.ReplyErrMsg(),
 	}
-
-	req.Messages = reply.ReplyErrMsg()
 	_, err := props.Api().ReplyMessage(&req)
 	if err != nil {
 		log.L.Errorf("failed to send err msg: %s", err)
 	}
 }
 
-func onUnknownUser(
-	props *property.MsgingProps,
-	source schema.CleanText,
-	event webhook.EventInterface,
-) error {
-	st := state.StUserNotConfigured{}
-	err := st.Run(props, &schema.User{LineId: source}, event)
-	if err != nil {
-		sendErrMsg(props, event)
-		return err
-	}
-
-	return nil
-}
-
 func processEvent(props *property.MsgingProps, event webhook.EventInterface) error {
-	source, err := getSource(event)
+	source, repTkn, err := checkBasicContent(event)
 	if err != nil {
 		log.L.Warn(err)
+		return nil
+	}
+	if len(source) == 0 || len(repTkn) == 0 {
 		return nil
 	}
 
@@ -111,9 +98,17 @@ func processEvent(props *property.MsgingProps, event webhook.EventInterface) err
 	user, err := props.Db().ReadUser(cleanSource)
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		log.L.Warnf("user not configured: %s", err)
-		return onUnknownUser(props, cleanSource, event)
+		st := state.StUserNotConfigured{}
+		unknown := schema.User{LineId: cleanSource}
+		err := st.Run(props, &unknown, event)
+		if err != nil {
+			sendErrMsg(props, repTkn)
+			return err
+		}
+
+		return nil
 	} else if err != nil {
-		sendErrMsg(props, event)
+		sendErrMsg(props, repTkn)
 		return err
 	}
 
@@ -122,13 +117,13 @@ func processEvent(props *property.MsgingProps, event webhook.EventInterface) err
 
 	st, err := state.FromIdx(user.NextState)
 	if err != nil {
-		sendErrMsg(props, event)
+		sendErrMsg(props, repTkn)
 		return err
 	}
 
 	err = st.Run(props, user, event)
 	if err != nil {
-		sendErrMsg(props, event)
+		sendErrMsg(props, repTkn)
 		return err
 	}
 

@@ -1,7 +1,10 @@
 package state
 
 import (
+	"errors"
 	"fmt"
+	"nippo/database"
+	"nippo/input"
 	"nippo/log"
 	"nippo/message/property"
 	"nippo/message/reply"
@@ -20,9 +23,44 @@ func (s StInDuty) Run(
 ) error {
 	switch e := event.(type) {
 	case webhook.MessageEvent:
-		_, ok := e.Message.(webhook.LocationMessageContent)
+		l, ok := e.Message.(webhook.LocationMessageContent)
 		if ok {
-			panic("not implemented")
+			if len(user.CurrentDuty) == 0 {
+				return errors.New("user does not have current duty")
+			}
+
+			label := input.Clean(l.Title)
+			addr := input.Clean(l.Address)
+			err := props.Db().Tx(func(tx database.Transaction) error {
+				locId, err := tx.CreateLocation(
+					user.CurrentDuty,
+					label,
+					addr,
+					l.Latitude,
+					l.Longitude,
+				)
+				if err != nil {
+					return err
+				}
+
+				err = tx.UpdateUserCurrentOpe(user.Id, locId)
+				if err != nil {
+					return err
+				}
+
+				return tx.UpdateUserNextState(user.Id, ST_LOC_NOTE)
+			})
+			if err != nil {
+				return err
+			}
+
+			req := messaging_api.ReplyMessageRequest{
+				ReplyToken: e.ReplyToken,
+				Messages:   reply.ReplyLocNote(),
+			}
+
+			_, err = props.Api().ReplyMessage(&req)
+			return err
 		} else {
 			req := messaging_api.ReplyMessageRequest{
 				ReplyToken: e.ReplyToken,

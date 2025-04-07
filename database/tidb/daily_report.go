@@ -42,16 +42,16 @@ func (ti TiDbTx) CreateDailyReport(userId []uint8, morningId []uint8) ([]uint8, 
 	return call.Id, nil
 }
 
-func (ti TiDbTx) UpdateDReportEvCall(repoId []uint8, evId []uint8) error {
+func (ti TiDbTx) UpdateDReportEvCall(repoId []uint8, eveningId []uint8) error {
 	if len(repoId) != schema.ID_LEN {
 		return errors.New("unexpected report id length")
 	}
-	if len(evId) != schema.ID_LEN {
+	if len(eveningId) != schema.ID_LEN {
 		return errors.New("unexpected call id length")
 	}
 
 	repo := schema.DailyReport{}
-	res := ti.orm.Model(&repo).Where("id = ?", repoId).Update("evening_call_id", evId)
+	res := ti.orm.Model(&repo).Where("id = ?", repoId).Update("evening_call_id", eveningId)
 	return res.Error
 }
 

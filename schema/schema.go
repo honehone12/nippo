@@ -45,8 +45,9 @@ type User struct {
 }
 
 type MorningCall struct {
-	Id        []uint8        `gorm:"primaryKey;type:binary(16)"`
-	CreatedAt time.Time      `gorm:"not null;index"`
+	Id        []uint8   `gorm:"primaryKey;type:binary(16)"`
+	CreatedAt time.Time `gorm:"not null;index"`
+	UpdatedAt time.Time
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 
 	Caller          CleanText `gorm:"size:100"`
@@ -64,8 +65,9 @@ type MorningCall struct {
 }
 
 type EveningCall struct {
-	Id        []uint8        `gorm:"primaryKey;type:binary(16)"`
-	CreatedAt time.Time      `gorm:"not null;index"`
+	Id        []uint8   `gorm:"primaryKey;type:binary(16)"`
+	CreatedAt time.Time `gorm:"not null;index"`
+	UpdatedAt time.Time
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 
 	Caller          CleanText `gorm:"size:100"`
@@ -114,7 +116,7 @@ type Location struct {
 	Address   CleanText `gorm:"size:100"`
 	Latitude  float64
 	Longitude float64
-	Note      CleanText `gorm:"size:5000"`
+	ShortNote CleanText `gorm:"size:100"`
 
 	DailyReportId []uint8 `gorm:"not null;type:binary(16)"`
 }
@@ -160,7 +162,7 @@ type Resting struct {
 	Address   CleanText `gorm:"size:100"`
 	Latitude  float64
 	Longitude float64
-	Note      CleanText `gorm:"size:5000"`
+	ShortNote CleanText `gorm:"size:100"`
 
 	DailyReportId []uint8 `gorm:"not null;type:binary(16)"`
 }

@@ -99,10 +99,19 @@ func ReplyDReportNote() []messaging_api.MessageInterface {
 	}
 }
 
+func ReplyLocNote() []messaging_api.MessageInterface {
+	return []messaging_api.MessageInterface{
+		messaging_api.TextMessage{
+			Text:       "その他追加する事項を入力してください",
+			QuickReply: QuickRepLocNote(),
+		},
+	}
+}
+
 func ReplyInDuty() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
-			Text:       "業務に入りました",
+			Text:       "業務中です",
 			QuickReply: QuickRepInDuty(),
 		},
 	}

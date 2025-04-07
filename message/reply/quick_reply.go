@@ -59,10 +59,18 @@ func QuickRepDReportNote() *messaging_api.QuickReply {
 	}
 }
 
+func QuickRepLocNote() *messaging_api.QuickReply {
+	return &messaging_api.QuickReply{
+		Items: []messaging_api.QuickReplyItem{
+			{Action: ActionLocNote()},
+		},
+	}
+}
+
 func QuickRepInDuty() *messaging_api.QuickReply {
 	return &messaging_api.QuickReply{
 		Items: []messaging_api.QuickReplyItem{
-			{Action: ActionSendGps()},
+			{Action: ActionSendLocation()},
 			{Action: ActionStartResting()},
 			{Action: ActionStartWaiting()},
 			{Action: ActionStartLoading()},

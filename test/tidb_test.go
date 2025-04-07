@@ -26,6 +26,7 @@ var userId []uint8
 var morningId []uint8
 var eveningId []uint8
 var reportId []uint8
+var locId []uint8
 
 func TestOpenDb(t *testing.T) {
 	godotenv.Load("../bin/.env")
@@ -213,6 +214,40 @@ func TestEveningCall(t *testing.T) {
 		t.Fatal(err)
 	}
 	if !bytes.Equal(readUser.CurrentOperation, eveningId) {
+		t.Fatal("read wrong user")
+	}
+}
+
+func TestLocation(t *testing.T) {
+	err := db.Tx(func(tx database.Transaction) error {
+		var err error
+		locId, err = tx.CreateLocation(
+			reportId,
+			"倉庫",
+			"東京都港区倉庫町９９－９９",
+			99.99,
+			88.88,
+		)
+		if err != nil {
+			return err
+		}
+
+		err = tx.UpdateUserCurrentOpe(userId, locId)
+		if err != nil {
+			return err
+		}
+
+		return tx.UpdateLocNote(locId, "【説明】\n集荷")
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	readUser, err := db.ReadUser(USER_LINE_ID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !bytes.Equal(readUser.CurrentOperation, locId) {
 		t.Fatal("read wrong user")
 	}
 }
