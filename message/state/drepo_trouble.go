@@ -15,9 +15,9 @@ import (
 	"github.com/line/line-bot-sdk-go/v8/linebot/webhook"
 )
 
-type StDrNote struct{}
+type StDRepoTrouble struct{}
 
-func (s StDrNote) Run(
+func (s StDRepoTrouble) Run(
 	props *property.MessagingProps,
 	user *schema.User,
 	event webhook.EventInterface,
@@ -38,17 +38,12 @@ func (s StDrNote) Run(
 
 			text := input.Clean(t.Text)
 			err := props.Db().Tx(func(tx database.Transaction) error {
-				err := tx.UpdateDReportNote(user.CurrentDuty, text)
+				err := tx.UpdateDReportTrouble(user.CurrentDuty, text)
 				if err != nil {
 					return err
 				}
 
-				err = tx.UpdateUserCurrentDuty(user.Id, nil)
-				if err != nil {
-					return err
-				}
-
-				return tx.UpdateUserNextState(user.Id, ST_NONE)
+				return tx.UpdateUserNextState(user.Id, ST_DREPO_NOTE)
 			})
 			if err != nil {
 				return err
@@ -56,7 +51,7 @@ func (s StDrNote) Run(
 
 			req := messaging_api.ReplyMessageRequest{
 				ReplyToken: e.ReplyToken,
-				Messages:   reply.ReplyDone(),
+				Messages:   reply.ReplyDReportNote(),
 			}
 
 			_, err = props.Api().ReplyMessage(&req)
@@ -64,7 +59,7 @@ func (s StDrNote) Run(
 		} else {
 			req := messaging_api.ReplyMessageRequest{
 				ReplyToken: e.ReplyToken,
-				Messages:   reply.ReplyDReportNote(),
+				Messages:   reply.ReplyDReportTrouble(),
 			}
 
 			_, err := props.Api().ReplyMessage(&req)

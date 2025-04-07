@@ -15,9 +15,9 @@ import (
 	"github.com/line/line-bot-sdk-go/v8/linebot/webhook"
 )
 
-type StEcNote struct{}
+type StECallNote struct{}
 
-func (s StEcNote) Run(
+func (s StECallNote) Run(
 	props *property.MessagingProps,
 	user *schema.User,
 	event webhook.EventInterface,
@@ -38,7 +38,7 @@ func (s StEcNote) Run(
 
 			text := input.Clean(t.Text)
 			err := props.Db().Tx(func(tx database.Transaction) error {
-				err := tx.UpdateEvCallNote(user.CurrentOperation, text)
+				err := tx.UpdateECallNote(user.CurrentOperation, text)
 				if err != nil {
 					return err
 				}
@@ -48,7 +48,7 @@ func (s StEcNote) Run(
 					return err
 				}
 
-				return tx.UpdateUserNextState(user.Id, ST_DR_MTR_PHOTO)
+				return tx.UpdateUserNextState(user.Id, ST_DREPO_MTR_PHOTO)
 			})
 			if err != nil {
 				return err
@@ -64,7 +64,7 @@ func (s StEcNote) Run(
 		} else {
 			req := messaging_api.ReplyMessageRequest{
 				ReplyToken: e.ReplyToken,
-				Messages:   reply.ReplyEvCallNote(),
+				Messages:   reply.ReplyECallNote(),
 			}
 
 			_, err := props.Api().ReplyMessage(&req)

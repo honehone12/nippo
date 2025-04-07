@@ -15,9 +15,9 @@ import (
 	"github.com/line/line-bot-sdk-go/v8/linebot/webhook"
 )
 
-type StMcNote struct{}
+type StDRepoNote struct{}
 
-func (s StMcNote) Run(
+func (s StDRepoNote) Run(
 	props *property.MessagingProps,
 	user *schema.User,
 	event webhook.EventInterface,
@@ -32,33 +32,23 @@ func (s StMcNote) Run(
 	case webhook.MessageEvent:
 		t, ok := e.Message.(webhook.TextMessageContent)
 		if ok {
-			if len(user.CurrentOperation) == 0 {
-				return errors.New("user does not have current call")
+			if len(user.CurrentDuty) == 0 {
+				return errors.New("user does not have current duty")
 			}
 
 			text := input.Clean(t.Text)
 			err := props.Db().Tx(func(tx database.Transaction) error {
-				err := tx.UpdateMoCallNote(user.CurrentOperation, text)
+				err := tx.UpdateDReportNote(user.CurrentDuty, text)
 				if err != nil {
 					return err
 				}
 
-				reportId, err := tx.CreateDailyReport(user.Id, user.CurrentOperation)
+				err = tx.UpdateUserCurrentDuty(user.Id, nil)
 				if err != nil {
 					return err
 				}
 
-				err = tx.UpdateUserCurrentDuty(user.Id, reportId)
-				if err != nil {
-					return err
-				}
-
-				err = tx.UpdateUserCurrentOpe(user.Id, nil)
-				if err != nil {
-					return err
-				}
-
-				return tx.UpdateUserNextState(user.Id, ST_IN_DUTY)
+				return tx.UpdateUserNextState(user.Id, ST_NONE)
 			})
 			if err != nil {
 				return err
@@ -66,7 +56,7 @@ func (s StMcNote) Run(
 
 			req := messaging_api.ReplyMessageRequest{
 				ReplyToken: e.ReplyToken,
-				Messages:   reply.ReplyInDuty(),
+				Messages:   reply.ReplyDone(),
 			}
 
 			_, err = props.Api().ReplyMessage(&req)
@@ -74,7 +64,7 @@ func (s StMcNote) Run(
 		} else {
 			req := messaging_api.ReplyMessageRequest{
 				ReplyToken: e.ReplyToken,
-				Messages:   reply.ReplyMoCallNote(),
+				Messages:   reply.ReplyDReportNote(),
 			}
 
 			_, err := props.Api().ReplyMessage(&req)

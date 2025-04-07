@@ -14,12 +14,12 @@ type Transaction interface {
 	UpdateUserNextState(id []uint8, nextState schema.StateIdx) error
 
 	CreateMorningCall(userId []uint8, photo string) ([]uint8, error)
-	UpdateMoCallHealth(callId []uint8) error
-	UpdateMoCallCarCheck(CallId []uint8) error
-	UpdateMoCallNote(callId []uint8, note schema.CleanText) error
+	UpdateMCallHealth(callId []uint8) error
+	UpdateMCallCarCheck(CallId []uint8) error
+	UpdateMCallNote(callId []uint8, note schema.CleanText) error
 
 	CreateEveningCall(userId []uint8, photo string) ([]uint8, error)
-	UpdateEvCallNote(callId []uint8, note schema.CleanText) error
+	UpdateECallNote(callId []uint8, note schema.CleanText) error
 
 	CreateDailyReport(userId []uint8, morningId []uint8) ([]uint8, error)
 	UpdateDReportEvCall(repoId []uint8, evId []uint8) error

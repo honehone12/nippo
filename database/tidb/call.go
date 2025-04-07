@@ -46,7 +46,7 @@ func (ti TiDbTx) CreateMorningCall(userId []uint8, photo string) ([]uint8, error
 	return call.Id, nil
 }
 
-func (ti TiDbTx) UpdateMoCallHealth(callId []uint8) error {
+func (ti TiDbTx) UpdateMCallHealth(callId []uint8) error {
 	if len(callId) != schema.ID_LEN {
 		return errors.New("unexpected call id length")
 	}
@@ -56,7 +56,7 @@ func (ti TiDbTx) UpdateMoCallHealth(callId []uint8) error {
 	return res.Error
 }
 
-func (ti TiDbTx) UpdateMoCallCarCheck(callId []uint8) error {
+func (ti TiDbTx) UpdateMCallCarCheck(callId []uint8) error {
 	if len(callId) != schema.ID_LEN {
 		return errors.New("unexpected call id length")
 	}
@@ -66,7 +66,7 @@ func (ti TiDbTx) UpdateMoCallCarCheck(callId []uint8) error {
 	return res.Error
 }
 
-func (ti TiDbTx) UpdateMoCallNote(callId []uint8, note schema.CleanText) error {
+func (ti TiDbTx) UpdateMCallNote(callId []uint8, note schema.CleanText) error {
 	if len(callId) != schema.ID_LEN {
 		return errors.New("unexpected call id length")
 	}
@@ -118,7 +118,7 @@ func (ti TiDbTx) CreateEveningCall(userId []uint8, photo string) ([]uint8, error
 	return call.Id, nil
 }
 
-func (ti TiDbTx) UpdateEvCallNote(callId []uint8, note schema.CleanText) error {
+func (ti TiDbTx) UpdateECallNote(callId []uint8, note schema.CleanText) error {
 	if len(callId) != schema.ID_LEN {
 		return errors.New("unexpected call id length")
 	}

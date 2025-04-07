@@ -14,9 +14,9 @@ import (
 	"github.com/line/line-bot-sdk-go/v8/linebot/webhook"
 )
 
-type StMcAlcPhoto struct{}
+type StECallAlcPhoto struct{}
 
-func (s StMcAlcPhoto) Run(
+func (s StECallAlcPhoto) Run(
 	props *property.MessagingProps,
 	user *schema.User,
 	event webhook.EventInterface,
@@ -26,6 +26,10 @@ func (s StMcAlcPhoto) Run(
 		img, ok := e.Message.(webhook.ImageMessageContent)
 		if ok {
 			if img.ContentProvider.Type == webhook.ContentProviderTYPE_LINE {
+				if len(user.CurrentDuty) == 0 {
+					return errors.New("user does not have current duty")
+				}
+
 				res, err := props.BlobApi().GetMessageContent(img.Id)
 				if err != nil {
 					return err
@@ -42,7 +46,7 @@ func (s StMcAlcPhoto) Run(
 				}
 
 				err = props.Db().Tx(func(tx database.Transaction) error {
-					callId, err := tx.CreateMorningCall(user.Id, photo)
+					callId, err := tx.CreateEveningCall(user.Id, photo)
 					if err != nil {
 						return err
 					}
@@ -52,7 +56,12 @@ func (s StMcAlcPhoto) Run(
 						return err
 					}
 
-					return tx.UpdateUserNextState(user.Id, ST_MC_HEALTH)
+					err = tx.UpdateDReportEvCall(user.CurrentDuty, callId)
+					if err != nil {
+						return err
+					}
+
+					return tx.UpdateUserNextState(user.Id, ST_ECALL_NOTE)
 				})
 				if err != nil {
 					return err
@@ -60,7 +69,7 @@ func (s StMcAlcPhoto) Run(
 
 				req := messaging_api.ReplyMessageRequest{
 					ReplyToken: e.ReplyToken,
-					Messages:   reply.ReplyMoCallHealth(),
+					Messages:   reply.ReplyECallNote(),
 				}
 
 				_, err = props.Api().ReplyMessage(&req)

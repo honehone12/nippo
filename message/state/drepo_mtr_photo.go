@@ -14,9 +14,9 @@ import (
 	"github.com/line/line-bot-sdk-go/v8/linebot/webhook"
 )
 
-type StEcAlcPhoto struct{}
+type StDRepoMtrPhoto struct{}
 
-func (s StEcAlcPhoto) Run(
+func (s StDRepoMtrPhoto) Run(
 	props *property.MessagingProps,
 	user *schema.User,
 	event webhook.EventInterface,
@@ -46,22 +46,12 @@ func (s StEcAlcPhoto) Run(
 				}
 
 				err = props.Db().Tx(func(tx database.Transaction) error {
-					callId, err := tx.CreateEveningCall(user.Id, photo)
+					err := tx.UpdateDReportMtrPhoto(user.CurrentDuty, photo)
 					if err != nil {
 						return err
 					}
 
-					err = tx.UpdateUserCurrentOpe(user.Id, callId)
-					if err != nil {
-						return err
-					}
-
-					err = tx.UpdateDReportEvCall(user.CurrentDuty, callId)
-					if err != nil {
-						return err
-					}
-
-					return tx.UpdateUserNextState(user.Id, ST_EC_NOTE)
+					return tx.UpdateUserNextState(user.Id, ST_DREPO_TROUBLE)
 				})
 				if err != nil {
 					return err
@@ -69,7 +59,7 @@ func (s StEcAlcPhoto) Run(
 
 				req := messaging_api.ReplyMessageRequest{
 					ReplyToken: e.ReplyToken,
-					Messages:   reply.ReplyEvCallNote(),
+					Messages:   reply.ReplyDReportTrouble(),
 				}
 
 				_, err = props.Api().ReplyMessage(&req)
@@ -79,7 +69,7 @@ func (s StEcAlcPhoto) Run(
 
 		req := messaging_api.ReplyMessageRequest{
 			ReplyToken: e.ReplyToken,
-			Messages:   reply.ReplySendAlcPhoto(),
+			Messages:   reply.ReplySendMtrPhoto(),
 		}
 
 		_, err := props.Api().ReplyMessage(&req)

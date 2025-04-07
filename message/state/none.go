@@ -32,7 +32,7 @@ func (s StNone) Run(
 	case webhook.PostbackEvent:
 		if strings.Compare(e.Postback.Data, reply.START_DUTY_ACT_DATA) == 0 {
 			err := props.Db().Tx(func(tx database.Transaction) error {
-				return tx.UpdateUserNextState(user.Id, ST_MC_ALC_PHOTO)
+				return tx.UpdateUserNextState(user.Id, ST_MCALL_ALC_PHOTO)
 			})
 			if err != nil {
 				return err

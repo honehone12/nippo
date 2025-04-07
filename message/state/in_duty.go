@@ -43,7 +43,7 @@ func (s StInDuty) Run(
 			panic("not implemented")
 		case reply.END_DUTY_ACT_DATA:
 			err := props.Db().Tx(func(tx database.Transaction) error {
-				return tx.UpdateUserNextState(user.Id, ST_EC_ALC_PHOTO)
+				return tx.UpdateUserNextState(user.Id, ST_ECALL_ALC_PHOTO)
 			})
 			if err != nil {
 				return err

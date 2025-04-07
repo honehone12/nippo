@@ -14,9 +14,9 @@ import (
 	"github.com/line/line-bot-sdk-go/v8/linebot/webhook"
 )
 
-type StDrMtrPhoto struct{}
+type StMCallAlcPhoto struct{}
 
-func (s StDrMtrPhoto) Run(
+func (s StMCallAlcPhoto) Run(
 	props *property.MessagingProps,
 	user *schema.User,
 	event webhook.EventInterface,
@@ -26,10 +26,6 @@ func (s StDrMtrPhoto) Run(
 		img, ok := e.Message.(webhook.ImageMessageContent)
 		if ok {
 			if img.ContentProvider.Type == webhook.ContentProviderTYPE_LINE {
-				if len(user.CurrentDuty) == 0 {
-					return errors.New("user does not have current duty")
-				}
-
 				res, err := props.BlobApi().GetMessageContent(img.Id)
 				if err != nil {
 					return err
@@ -46,12 +42,17 @@ func (s StDrMtrPhoto) Run(
 				}
 
 				err = props.Db().Tx(func(tx database.Transaction) error {
-					err := tx.UpdateDReportMtrPhoto(user.CurrentDuty, photo)
+					callId, err := tx.CreateMorningCall(user.Id, photo)
 					if err != nil {
 						return err
 					}
 
-					return tx.UpdateUserNextState(user.Id, ST_DR_TROUBLE)
+					err = tx.UpdateUserCurrentOpe(user.Id, callId)
+					if err != nil {
+						return err
+					}
+
+					return tx.UpdateUserNextState(user.Id, ST_MCALL_HEALTH)
 				})
 				if err != nil {
 					return err
@@ -59,7 +60,7 @@ func (s StDrMtrPhoto) Run(
 
 				req := messaging_api.ReplyMessageRequest{
 					ReplyToken: e.ReplyToken,
-					Messages:   reply.ReplyDReportTrouble(),
+					Messages:   reply.ReplyMoCallHealth(),
 				}
 
 				_, err = props.Api().ReplyMessage(&req)
@@ -69,7 +70,7 @@ func (s StDrMtrPhoto) Run(
 
 		req := messaging_api.ReplyMessageRequest{
 			ReplyToken: e.ReplyToken,
-			Messages:   reply.ReplySendMtrPhoto(),
+			Messages:   reply.ReplySendAlcPhoto(),
 		}
 
 		_, err := props.Api().ReplyMessage(&req)

@@ -14,9 +14,9 @@ import (
 	"github.com/line/line-bot-sdk-go/v8/linebot/webhook"
 )
 
-type StMcHealth struct{}
+type StMCallCarCheck struct{}
 
-func (s StMcHealth) Run(
+func (s StMCallCarCheck) Run(
 	props *property.MessagingProps,
 	user *schema.User,
 	event webhook.EventInterface,
@@ -25,7 +25,7 @@ func (s StMcHealth) Run(
 	case webhook.MessageEvent:
 		req := messaging_api.ReplyMessageRequest{
 			ReplyToken: e.ReplyToken,
-			Messages:   reply.ReplyMoCallHealth(),
+			Messages:   reply.ReplyMCallCarCk(),
 		}
 
 		_, err := props.Api().ReplyMessage(&req)
@@ -37,20 +37,20 @@ func (s StMcHealth) Run(
 			}
 
 			err := props.Db().Tx(func(tx database.Transaction) error {
-				err := tx.UpdateMoCallHealth(user.CurrentOperation)
+				err := tx.UpdateMCallCarCheck(user.CurrentOperation)
 				if err != nil {
 					return err
 				}
 
-				return tx.UpdateUserNextState(user.Id, ST_MC_CAR_CHECK)
+				return tx.UpdateUserNextState(user.Id, ST_MCALL_NOTE)
 			})
 			if err != nil {
-				return nil
+				return err
 			}
 
 			req := messaging_api.ReplyMessageRequest{
 				ReplyToken: e.ReplyToken,
-				Messages:   reply.ReplyMoCallCarCk(),
+				Messages:   reply.ReplyMCallNote(),
 			}
 
 			_, err = props.Api().ReplyMessage(&req)

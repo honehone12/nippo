@@ -45,7 +45,7 @@ func ReplyMoCallHealth() []messaging_api.MessageInterface {
 	}
 }
 
-func ReplyMoCallCarCk() []messaging_api.MessageInterface {
+func ReplyMCallCarCk() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
 			Text:       "車両の日常点検は良好でしたか？",
@@ -54,20 +54,20 @@ func ReplyMoCallCarCk() []messaging_api.MessageInterface {
 	}
 }
 
-func ReplyMoCallNote() []messaging_api.MessageInterface {
+func ReplyMCallNote() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
 			Text:       "指示事項、その他必要な事項を入力してください",
-			QuickReply: QuickRepMoCallNote(),
+			QuickReply: QuickRepMCallNote(),
 		},
 	}
 }
 
-func ReplyEvCallNote() []messaging_api.MessageInterface {
+func ReplyECallNote() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
 			Text:       "その他必要な事項を入力してください",
-			QuickReply: QuickRepEvCallNote(),
+			QuickReply: QuickRepECallNote(),
 		},
 	}
 }

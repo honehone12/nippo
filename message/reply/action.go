@@ -21,7 +21,7 @@ func ActionUserSetting() messaging_api.PostbackAction {
 	}
 }
 
-func ActionMoCallNote() messaging_api.PostbackAction {
+func ActionMCallNote() messaging_api.PostbackAction {
 	return messaging_api.PostbackAction{
 		Label:       "入力する",
 		Data:        IGNORE_TXT_TEMPLATE,
@@ -30,7 +30,7 @@ func ActionMoCallNote() messaging_api.PostbackAction {
 	}
 }
 
-func ActionEvCallNote() messaging_api.PostbackAction {
+func ActionECallNote() messaging_api.PostbackAction {
 	return messaging_api.PostbackAction{
 		Label:       "入力する",
 		Data:        IGNORE_TXT_TEMPLATE,

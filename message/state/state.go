@@ -14,17 +14,17 @@ const (
 	ST_USER_SET_NAME
 	ST_USER_SET_CAR
 
-	ST_MC_ALC_PHOTO
-	ST_MC_HEALTH
-	ST_MC_CAR_CHECK
-	ST_MC_NOTE
+	ST_MCALL_ALC_PHOTO
+	ST_MCALL_HEALTH
+	ST_MCALL_CAR_CHECK
+	ST_MCALL_NOTE
 
-	ST_EC_ALC_PHOTO
-	ST_EC_NOTE
+	ST_ECALL_ALC_PHOTO
+	ST_ECALL_NOTE
 
-	ST_DR_MTR_PHOTO
-	ST_DR_TROUBLE
-	ST_DR_NOTE
+	ST_DREPO_MTR_PHOTO
+	ST_DREPO_TROUBLE
+	ST_DREPO_NOTE
 
 	ST_IN_DUTY
 	ST_NONE
@@ -47,24 +47,24 @@ func FromIdx(idx schema.StateIdx) (State, error) {
 		return StUserSetName{}, nil
 	case ST_USER_SET_CAR:
 		return StUserSetCar{}, nil
-	case ST_MC_ALC_PHOTO:
-		return StMcAlcPhoto{}, nil
-	case ST_MC_HEALTH:
-		return StMcHealth{}, nil
-	case ST_MC_CAR_CHECK:
-		return StMcCarCheck{}, nil
-	case ST_MC_NOTE:
-		return StMcNote{}, nil
-	case ST_EC_ALC_PHOTO:
-		return StEcAlcPhoto{}, nil
-	case ST_EC_NOTE:
-		return StEcNote{}, nil
-	case ST_DR_MTR_PHOTO:
-		return StDrMtrPhoto{}, nil
-	case ST_DR_TROUBLE:
-		return StDrTrouble{}, nil
-	case ST_DR_NOTE:
-		return StDrNote{}, nil
+	case ST_MCALL_ALC_PHOTO:
+		return StMCallAlcPhoto{}, nil
+	case ST_MCALL_HEALTH:
+		return StMCallHealth{}, nil
+	case ST_MCALL_CAR_CHECK:
+		return StMCallCarCheck{}, nil
+	case ST_MCALL_NOTE:
+		return StMCallNote{}, nil
+	case ST_ECALL_ALC_PHOTO:
+		return StECallAlcPhoto{}, nil
+	case ST_ECALL_NOTE:
+		return StECallNote{}, nil
+	case ST_DREPO_MTR_PHOTO:
+		return StDRepoMtrPhoto{}, nil
+	case ST_DREPO_TROUBLE:
+		return StDRepoTrouble{}, nil
+	case ST_DREPO_NOTE:
+		return StDRepoNote{}, nil
 
 	case ST_IN_DUTY:
 		return StInDuty{}, nil
