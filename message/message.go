@@ -3,7 +3,6 @@ package message
 import (
 	"errors"
 	"fmt"
-	"nippo/database"
 	"nippo/input"
 	"nippo/log"
 	"nippo/message/property"
@@ -29,9 +28,7 @@ func validateDst(props *property.MsgingProps, msg *webhook.CallbackRequest) erro
 
 	if len(org.LineId) == 0 {
 		log.L.Warnf("updating org line id to: %s", cleanDst)
-		return db.Tx(func(tx database.Transaction) error {
-			return tx.UpdateOrgLineId(orgId, cleanDst)
-		})
+		return db.Once().UpdateOrgLineId(orgId, cleanDst)
 	}
 
 	if org.LineId != cleanDst {

@@ -53,6 +53,11 @@ func (ti TiDb) Tx(txf func(database.Transaction) error) error {
 	})
 }
 
+func (ti TiDb) Once() database.Transaction {
+	orm := ti.orm
+	return TiDbTx{orm}
+}
+
 func (ti TiDb) AutoMigrate() error {
 	return ti.orm.AutoMigrate(
 		&schema.Org{},

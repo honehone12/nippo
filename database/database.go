@@ -7,4 +7,5 @@ type Database interface {
 	ReadUser(lineId schema.CleanText) (*schema.User, error)
 
 	Tx(txf func(Transaction) error) error
+	Once() Transaction
 }
