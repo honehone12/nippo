@@ -8,7 +8,7 @@ import (
 )
 
 func (ti TiDbTx) CreateOrg(name schema.CleanText) ([]uint8, error) {
-	if len(name) > schema.MAX_SHORT_TEXT_LEN {
+	if len(name) <= 1 || len(name) > schema.MAX_SHORT_TEXT_LEN {
 		return nil, errors.New("unexpected name length")
 	}
 

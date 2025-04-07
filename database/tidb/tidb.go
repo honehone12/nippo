@@ -66,5 +66,6 @@ func (ti TiDb) AutoMigrate() error {
 		&schema.Location{},
 		&schema.Waiting{},
 		&schema.Loading{},
+		&schema.Resting{},
 	)
 }

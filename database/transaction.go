@@ -13,15 +13,30 @@ type Transaction interface {
 	UpdateUserCurrentDuty(userId []uint8, repoId []uint8) error
 	UpdateUserNextState(userId []uint8, nextState schema.StateIdx) error
 
-	CreateMorningCall(userId []uint8, photo string) ([]uint8, error)
+	CreateMorningCall(
+		userId []uint8,
+		name schema.CleanText,
+		carNum schema.CleanText,
+		photo string,
+	) ([]uint8, error)
 	UpdateMCallHealth(callId []uint8) error
 	UpdateMCallCarCheck(CallId []uint8) error
 	UpdateMCallNote(callId []uint8, note schema.CleanText) error
 
-	CreateEveningCall(userId []uint8, photo string) ([]uint8, error)
+	CreateEveningCall(
+		userId []uint8,
+		name schema.CleanText,
+		carNum schema.CleanText,
+		photo string,
+	) ([]uint8, error)
 	UpdateECallNote(callId []uint8, note schema.CleanText) error
 
-	CreateDailyReport(userId []uint8, morningId []uint8) ([]uint8, error)
+	CreateDailyReport(
+		userId []uint8,
+		name schema.CleanText,
+		carNum schema.CleanText,
+		morningId []uint8,
+	) ([]uint8, error)
 	UpdateDReportEvCall(repoId []uint8, eveningId []uint8) error
 	UpdateDReportMtrPhoto(repoId []uint8, photo string) error
 	UpdateDReportTrouble(repoId []uint8, trouble schema.CleanText) error

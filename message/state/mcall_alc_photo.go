@@ -26,6 +26,13 @@ func (s StMCallAlcPhoto) Run(
 		img, ok := e.Message.(webhook.ImageMessageContent)
 		if ok {
 			if img.ContentProvider.Type == webhook.ContentProviderTYPE_LINE {
+				if len(user.Name) <= 1 {
+					return errors.New("user does not have name")
+				}
+				if len(user.CarNumber) == 0 {
+					return errors.New("user does not have car number")
+				}
+
 				res, err := props.BlobApi().GetMessageContent(img.Id)
 				if err != nil {
 					return err
@@ -42,7 +49,12 @@ func (s StMCallAlcPhoto) Run(
 				}
 
 				err = props.Db().Tx(func(tx database.Transaction) error {
-					callId, err := tx.CreateMorningCall(user.Id, photo)
+					callId, err := tx.CreateMorningCall(
+						user.Id,
+						user.Name,
+						user.CarNumber,
+						photo,
+					)
 					if err != nil {
 						return err
 					}

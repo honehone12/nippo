@@ -29,9 +29,9 @@ func (ti TiDbTx) CreateUser(orgIdStr string, lineId schema.CleanText) ([]uint8, 
 		Id:     id[:],
 		LineId: lineId,
 	}
-	if err := ti.orm.Model(&schema.Org{
-		Id: orgId[:],
-	}).Association("Users").Append(&user); err != nil {
+	org := schema.Org{Id: orgId[:]}
+	err = ti.orm.Model(&org).Association("Users").Append(&user)
+	if err != nil {
 		return nil, err
 	}
 
@@ -55,7 +55,7 @@ func (ti TiDbTx) UpdateUserName(userId []uint8, name schema.CleanText) error {
 	if len(userId) != schema.ID_LEN {
 		return errors.New("unexpected id length")
 	}
-	if len(name) > schema.MAX_SHORT_TEXT_LEN {
+	if len(name) <= 1 || len(name) > schema.MAX_SHORT_TEXT_LEN {
 		return errors.New("unexpected name length")
 	}
 
@@ -68,7 +68,7 @@ func (ti TiDbTx) UpdateUserCarNumber(userId []uint8, carNumber schema.CleanText)
 	if len(userId) != schema.ID_LEN {
 		return errors.New("unexpected id length")
 	}
-	if len(carNumber) > schema.MAX_SHORT_TEXT_LEN {
+	if len(carNumber) == 0 || len(carNumber) > schema.MAX_SHORT_TEXT_LEN {
 		return errors.New("unexpected car number length")
 	}
 

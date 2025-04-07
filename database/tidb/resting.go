@@ -26,7 +26,6 @@ func (ti TiDbTx) CreateResting(
 		return nil, err
 	}
 
-	repo := schema.DailyReport{Id: repoId}
 	rest := schema.Resting{
 		Id:        id[:],
 		Label:     label,
@@ -34,7 +33,9 @@ func (ti TiDbTx) CreateResting(
 		Latitude:  latitude,
 		Longitude: longitude,
 	}
-	if err := ti.orm.Model(&repo).Association("Restings").Append(&rest); err != nil {
+	repo := schema.DailyReport{Id: repoId}
+	err = ti.orm.Model(&repo).Association("Restings").Append(&rest)
+	if err != nil {
 		return nil, err
 	}
 

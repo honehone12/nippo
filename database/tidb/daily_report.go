@@ -7,21 +7,23 @@ import (
 	"github.com/google/uuid"
 )
 
-func (ti TiDbTx) CreateDailyReport(userId []uint8, morningId []uint8) ([]uint8, error) {
+func (ti TiDbTx) CreateDailyReport(
+	userId []uint8,
+	name schema.CleanText,
+	carNum schema.CleanText,
+	morningId []uint8,
+) ([]uint8, error) {
 	if len(userId) != schema.ID_LEN {
 		return nil, errors.New("unexpected user id length")
 	}
 	if len(morningId) != schema.ID_LEN {
 		return nil, errors.New("unexpected morning id len")
 	}
-
-	user := schema.User{}
-	if res := ti.orm.Select(
-		"id",
-		"name",
-		"car_number",
-	).Take(&user, "id = ?", userId); res.Error != nil {
-		return nil, res.Error
+	if len(name) <= 1 || len(name) > schema.MAX_SHORT_TEXT_LEN {
+		return nil, errors.New("unexpected name length")
+	}
+	if len(carNum) == 0 || len(carNum) > schema.MAX_SHORT_TEXT_LEN {
+		return nil, errors.New("unexpected car number length")
 	}
 
 	id, err := uuid.NewRandom()
@@ -32,10 +34,12 @@ func (ti TiDbTx) CreateDailyReport(userId []uint8, morningId []uint8) ([]uint8, 
 	call := schema.DailyReport{
 		Id:            id[:],
 		MorningCallId: morningId,
-		Name:          user.Name,
-		CarNumber:     user.CarNumber,
+		Name:          name,
+		CarNumber:     carNum,
 	}
-	if err := ti.orm.Model(&user).Association("DailyReports").Append(&call); err != nil {
+	user := schema.User{Id: userId}
+	err = ti.orm.Model(&user).Association("DailyReports").Append(&call)
+	if err != nil {
 		return nil, err
 	}
 

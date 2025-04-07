@@ -26,7 +26,6 @@ func (ti TiDbTx) CreateLocation(
 		return nil, err
 	}
 
-	repo := schema.DailyReport{Id: repoId}
 	loc := schema.Location{
 		Id:        id[:],
 		Label:     label,
@@ -34,7 +33,9 @@ func (ti TiDbTx) CreateLocation(
 		Latitude:  latitude,
 		Longitude: longitude,
 	}
-	if err := ti.orm.Model(&repo).Association("Locations").Append(&loc); err != nil {
+	repo := schema.DailyReport{Id: repoId}
+	err = ti.orm.Model(&repo).Where("id = ?", repoId).Association("Locations").Append(&loc)
+	if err != nil {
 		return nil, err
 	}
 

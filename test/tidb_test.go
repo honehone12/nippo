@@ -110,7 +110,7 @@ func ReadOrgAndUser(t *testing.T) {
 func TestMorningCall(t *testing.T) {
 	err := db.Tx(func(tx database.Transaction) error {
 		var err error
-		morningId, err = tx.CreateMorningCall(userId, ALC_PHOTO)
+		morningId, err = tx.CreateMorningCall(userId, USER_NAME, CAR_NUMBER, ALC_PHOTO)
 		if err != nil {
 			return err
 		}
@@ -148,7 +148,7 @@ func TestMorningCall(t *testing.T) {
 func TestDailyReport(t *testing.T) {
 	err := db.Tx(func(tx database.Transaction) error {
 		var err error
-		reportId, err = tx.CreateDailyReport(userId, morningId)
+		reportId, err = tx.CreateDailyReport(userId, USER_NAME, CAR_NUMBER, morningId)
 		if err != nil {
 			return err
 		}
@@ -187,7 +187,7 @@ func TestEveningCall(t *testing.T) {
 	var eveningId []uint8
 	err := db.Tx(func(tx database.Transaction) error {
 		var err error
-		eveningId, err = tx.CreateEveningCall(userId, ALC_PHOTO)
+		eveningId, err = tx.CreateEveningCall(userId, USER_NAME, CAR_NUMBER, ALC_PHOTO)
 		if err != nil {
 			return err
 		}
@@ -257,7 +257,7 @@ func TestResting(t *testing.T) {
 	err := db.Tx(func(tx database.Transaction) error {
 		var err error
 		restId, err = tx.CreateResting(
-			restId,
+			reportId,
 			"倉庫",
 			"東京都港区倉庫町９９－９９",
 			99.99,

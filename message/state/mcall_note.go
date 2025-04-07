@@ -36,6 +36,12 @@ func (s StMCallNote) Run(
 			if len(user.CurrentOperation) == 0 {
 				return errors.New("user does not have current call")
 			}
+			if len(user.Name) <= 1 {
+				return errors.New("user does not have name")
+			}
+			if len(user.CarNumber) == 0 {
+				return errors.New("user does not have car number")
+			}
 
 			text := input.Clean(t.Text)
 			err := props.Db().Tx(func(tx database.Transaction) error {
@@ -44,7 +50,12 @@ func (s StMCallNote) Run(
 					return err
 				}
 
-				reportId, err := tx.CreateDailyReport(user.Id, user.CurrentOperation)
+				reportId, err := tx.CreateDailyReport(
+					user.Id,
+					user.Name,
+					user.CarNumber,
+					user.CurrentOperation,
+				)
 				if err != nil {
 					return err
 				}
