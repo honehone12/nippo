@@ -84,6 +84,14 @@ func QuickRepLoadShipCheck() *messaging_api.QuickReply {
 	}
 }
 
+func QuickRepLoadNote() *messaging_api.QuickReply {
+	return &messaging_api.QuickReply{
+		Items: []messaging_api.QuickReplyItem{
+			{Action: ActionLoadNote()},
+		},
+	}
+}
+
 func QuickRepEndResting() *messaging_api.QuickReply {
 	return &messaging_api.QuickReply{
 		Items: []messaging_api.QuickReplyItem{

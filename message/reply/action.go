@@ -10,6 +10,7 @@ const START_LOADING_ACT_DATA = "START_LOADING"
 const START_RESTING_ACT_DATA = "START_RESTING"
 const END_DUTY_ACT_DATA = "END_DUTY"
 const FLAG_TRUE_ACT_DATA = "FLAG_TRUE"
+const FLAG_FALSE_ACT_DATA = "FLAG_FALSE"
 const RESET_ACT_DATA = "RESET"
 
 func ActionUserSetting() messaging_api.PostbackAction {
@@ -26,7 +27,7 @@ func ActionMCallNote() messaging_api.PostbackAction {
 		Label:       "入力する",
 		Data:        IGNORE_TXT_TEMPLATE,
 		InputOption: "openKeyboard",
-		FillInText:  "【指示事項】\n\n【天気】\n",
+		FillInText:  "【指示事項】\n\n【天気】\n\n【その他】",
 	}
 }
 
@@ -65,7 +66,7 @@ func ActionDReportNote() messaging_api.PostbackAction {
 		Label:       "入力する",
 		Data:        IGNORE_TXT_TEMPLATE,
 		InputOption: "openKeyboard",
-		FillInText:  "【業務の交替がある場合】\n地点：　\n 時　分\n【高速利用】\n\n【その他】\n",
+		FillInText:  "【業務の交替がある場合】\n地点：　\n　時　分\n【高速利用】\n\n【その他】\n",
 	}
 }
 
@@ -106,6 +107,15 @@ func ActionEndLoading() messaging_api.LocationAction {
 	}
 }
 
+func ActionLoadNote() messaging_api.PostbackAction {
+	return messaging_api.PostbackAction{
+		Label:       "入力する",
+		Data:        IGNORE_TXT_TEMPLATE,
+		InputOption: "openKeyboard",
+		FillInText:  "【作業内容】\n\n【その他】\n",
+	}
+}
+
 func ActionStartResting() messaging_api.PostbackAction {
 	return messaging_api.PostbackAction{
 		Label:       "休憩を開始する",
@@ -140,7 +150,7 @@ func ActionWaitNote() messaging_api.PostbackAction {
 		Label:       "入力する",
 		Data:        IGNORE_TXT_TEMPLATE,
 		InputOption: "openKeyboard",
-		FillInText:  "【荷主指定時刻】\n 時　分\n【その他】\n",
+		FillInText:  "【荷主指定時刻】\n　時　分\n【その他】\n",
 	}
 }
 
@@ -155,7 +165,7 @@ func ActionFlagTrue() messaging_api.PostbackAction {
 func ActionFlagFalse() messaging_api.PostbackAction {
 	return messaging_api.PostbackAction{
 		Label:       "不明",
-		Data:        FLAG_TRUE_ACT_DATA,
+		Data:        FLAG_FALSE_ACT_DATA,
 		DisplayText: "不明",
 	}
 }

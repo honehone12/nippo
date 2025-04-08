@@ -126,6 +126,15 @@ func ReplyLoadShipCheck() []messaging_api.MessageInterface {
 	}
 }
 
+func ReplyLoadNote() []messaging_api.MessageInterface {
+	return []messaging_api.MessageInterface{
+		messaging_api.TextMessage{
+			Text:       "その他追加する事項を入力してください",
+			QuickReply: QuickRepLoadNote(),
+		},
+	}
+}
+
 func ReplyResting() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
