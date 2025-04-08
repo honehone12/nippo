@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"fmt"
-	"nippo/database"
 	"nippo/database/tidb"
 	"nippo/input"
 	"os"
@@ -13,9 +12,7 @@ import (
 )
 
 func main() {
-	name := flag.String("name", "", "name")
-	cName := input.Clean(*name)
-
+	name := flag.String("name", "", "org's name")
 	flag.Parse()
 	if len(*name) == 0 {
 		fmt.Println("name is empty")
@@ -29,20 +26,16 @@ func main() {
 		return
 	}
 
-	var db database.Database
-	var err error
-	db, err = tidb.Open(dbUri)
+	db, err := tidb.Open(dbUri)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
-	var bId []uint8
-	err = db.Tx(func(tx database.Transaction) error {
-		var err error
-		bId, err = tx.CreateOrg(cName)
-		return err
-	})
+	cName := input.Clean(*name)
+	fmt.Printf("creating org with name '%s'\n", cName)
+
+	bId, err := db.Once().CreateOrg(cName)
 	if err != nil {
 		fmt.Println(err)
 		return
