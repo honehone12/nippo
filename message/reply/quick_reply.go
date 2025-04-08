@@ -21,7 +21,7 @@ func QuickRepMCallNote() *messaging_api.QuickReply {
 func QuickRepECallNote() *messaging_api.QuickReply {
 	return &messaging_api.QuickReply{
 		Items: []messaging_api.QuickReplyItem{
-			{Action: ActionMCallNote()},
+			{Action: ActionECallNote()},
 		},
 	}
 }

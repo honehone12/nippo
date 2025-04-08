@@ -103,7 +103,7 @@ func ActionStartLoading() messaging_api.PostbackAction {
 
 func ActionEndLoading() messaging_api.LocationAction {
 	return messaging_api.LocationAction{
-		Label: "荷役（附帯）作業を終了する（位置情報を送信）",
+		Label: "作業を終了する（位置情報を送信）",
 	}
 }
 
