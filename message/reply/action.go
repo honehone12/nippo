@@ -27,7 +27,7 @@ func ActionMCallNote() messaging_api.PostbackAction {
 		Label:       "入力する",
 		Data:        IGNORE_TXT_TEMPLATE,
 		InputOption: "openKeyboard",
-		FillInText:  "【指示事項】\n\n【天気】\n\n【その他】",
+		FillInText:  "【指示事項】\n【天気】\n【その他】",
 	}
 }
 
@@ -36,7 +36,7 @@ func ActionECallNote() messaging_api.PostbackAction {
 		Label:       "入力する",
 		Data:        IGNORE_TXT_TEMPLATE,
 		InputOption: "openKeyboard",
-		FillInText:  "【指示事項】\n\n【交替運転者に対する通告】\n\n【車両・道路及び運行の状況】\n\n【その他】\n",
+		FillInText:  "【指示事項】\n【交替運転者に対する通告】\n【車両・道路及び運行の状況】\n【その他】",
 	}
 }
 
@@ -57,7 +57,7 @@ func ActionDReportTrouble() messaging_api.PostbackAction {
 		Label:       "入力する",
 		Data:        IGNORE_TXT_TEMPLATE,
 		InputOption: "openKeyboard",
-		FillInText:  "【事故】\n\n【著しい遅延】\n\n【その他の異常】\n",
+		FillInText:  "【事故】\n【著しい遅延】\n【その他の異常】",
 	}
 }
 
@@ -66,7 +66,7 @@ func ActionDReportNote() messaging_api.PostbackAction {
 		Label:       "入力する",
 		Data:        IGNORE_TXT_TEMPLATE,
 		InputOption: "openKeyboard",
-		FillInText:  "【業務の交替がある場合】\n地点：　\n　時　分\n【高速利用】\n\n【その他】\n",
+		FillInText:  "【業務の交替がある場合】時間：　場所：　\n【高速利用】\n【その他】",
 	}
 }
 
@@ -112,7 +112,7 @@ func ActionLoadNote() messaging_api.PostbackAction {
 		Label:       "入力する",
 		Data:        IGNORE_TXT_TEMPLATE,
 		InputOption: "openKeyboard",
-		FillInText:  "【作業内容】\n\n【その他】\n",
+		FillInText:  "【作業内容】\n【その他】",
 	}
 }
 
@@ -150,7 +150,7 @@ func ActionWaitNote() messaging_api.PostbackAction {
 		Label:       "入力する",
 		Data:        IGNORE_TXT_TEMPLATE,
 		InputOption: "openKeyboard",
-		FillInText:  "【荷主指定時刻】\n　時　分\n【その他】\n",
+		FillInText:  "【荷主指定時刻】\n【その他】",
 	}
 }
 
