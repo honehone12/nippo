@@ -112,7 +112,7 @@ func ReplyResting() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
 			Text:       "休憩に入りました\n休憩終了時に位置情報を送信してください",
-			QuickReply: QuickRepLocEndResting(),
+			QuickReply: QuickRepEndResting(),
 		},
 	}
 }
@@ -130,7 +130,16 @@ func ReplyWaiting() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
 			Text:       "待機に入りました\n待機終了時に位置情報を送信してください",
-			QuickReply: QuickRepLocEndWaiting(),
+			QuickReply: QuickRepEndWaiting(),
+		},
+	}
+}
+
+func ReplyWaitNote() []messaging_api.MessageInterface {
+	return []messaging_api.MessageInterface{
+		messaging_api.TextMessage{
+			Text:       "その他追加する事項を入力してください",
+			QuickReply: QuickRepWaitNote(),
 		},
 	}
 }

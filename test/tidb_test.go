@@ -307,7 +307,7 @@ func TestWaiting(t *testing.T) {
 			return err
 		}
 
-		return tx.UpdateRestNote(waitId, "")
+		return tx.UpdateWaitNote(waitId, "【荷主指定時刻】１５時\n【備考】無し\n")
 	})
 	if err != nil {
 		t.Fatal(err)

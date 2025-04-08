@@ -129,6 +129,15 @@ func ActionEndWaiting() messaging_api.LocationAction {
 	}
 }
 
+func ActionWaitNote() messaging_api.PostbackAction {
+	return messaging_api.PostbackAction{
+		Label:       "入力する",
+		Data:        IGNORE_TXT_TEMPLATE,
+		InputOption: "openKeyboard",
+		FillInText:  "【荷主指定時刻】\n 時　分\n【その他】\n",
+	}
+}
+
 func ActionFlagTrue() messaging_api.PostbackAction {
 	return messaging_api.PostbackAction{
 		Label:       "良好",

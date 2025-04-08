@@ -42,15 +42,15 @@ func (ti TiDbTx) CreateWaiting(
 	return rest.Id, nil
 }
 
-func (ti TiDbTx) UpdateWaitNote(waitId []uint8, shortNote schema.CleanText) error {
+func (ti TiDbTx) UpdateWaitNote(waitId []uint8, note schema.CleanText) error {
 	if len(waitId) != schema.ID_LEN {
 		return errors.New("unexpected wait id length")
 	}
-	if len(shortNote) > schema.MAX_SHORT_TEXT_LEN {
+	if len(note) > schema.MAX_LONG_TEXT_LEN {
 		return errors.New("unexpected note length")
 	}
 
 	wait := schema.Waiting{Id: waitId}
-	res := ti.orm.Model(&wait).Update("short_note", shortNote)
+	res := ti.orm.Model(&wait).Update("note", note)
 	return res.Error
 }
