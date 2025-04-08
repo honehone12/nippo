@@ -67,7 +67,7 @@ func (s StECallAlcPhoto) Run(
 						return err
 					}
 
-					err = tx.UpdateDReportEvCall(user.CurrentDuty, callId)
+					err = tx.UpdateDReportECall(user.CurrentDuty, callId)
 					if err != nil {
 						return err
 					}

@@ -94,9 +94,15 @@ func ActionStartWaiting() messaging_api.PostbackAction {
 
 func ActionStartLoading() messaging_api.PostbackAction {
 	return messaging_api.PostbackAction{
-		Label:       "荷役作業を開始する",
+		Label:       "荷役（附帯）作業を開始する",
 		Data:        START_LOADING_ACT_DATA,
-		DisplayText: "荷役作業を開始する",
+		DisplayText: "荷役（附帯）作業を開始する",
+	}
+}
+
+func ActionEndLoading() messaging_api.LocationAction {
+	return messaging_api.LocationAction{
+		Label: "荷役（附帯）作業を終了する（位置情報を送信）",
 	}
 }
 
@@ -140,9 +146,17 @@ func ActionWaitNote() messaging_api.PostbackAction {
 
 func ActionFlagTrue() messaging_api.PostbackAction {
 	return messaging_api.PostbackAction{
-		Label:       "良好",
+		Label:       "良い",
 		Data:        FLAG_TRUE_ACT_DATA,
-		DisplayText: "良好",
+		DisplayText: "良い",
+	}
+}
+
+func ActionFlagFalse() messaging_api.PostbackAction {
+	return messaging_api.PostbackAction{
+		Label:       "不明",
+		Data:        FLAG_TRUE_ACT_DATA,
+		DisplayText: "不明",
 	}
 }
 

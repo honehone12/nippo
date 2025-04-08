@@ -197,7 +197,7 @@ func TestEveningCall(t *testing.T) {
 			return err
 		}
 
-		err = tx.UpdateDReportEvCall(reportId, eveningId)
+		err = tx.UpdateDReportECall(reportId, eveningId)
 		if err != nil {
 			return err
 		}
@@ -318,6 +318,46 @@ func TestWaiting(t *testing.T) {
 		t.Fatal(err)
 	}
 	if !bytes.Equal(readUser.CurrentOperation, waitId) {
+		t.Fatal("read wrong user")
+	}
+}
+
+func TestLoading(t *testing.T) {
+	var loadId []uint8
+	err := db.Tx(func(tx database.Transaction) error {
+		var err error
+		loadId, err = tx.CreateLoading(
+			reportId,
+			"倉庫",
+			"東京都港区倉庫町９９－９９",
+			99.99,
+			88.88,
+		)
+		if err != nil {
+			return err
+		}
+
+		err = tx.UpdateUserCurrentOpe(userId, loadId)
+		if err != nil {
+			return err
+		}
+
+		err = tx.UpdateLoadShipCheck(loadId, true)
+		if err != nil {
+			return err
+		}
+
+		return tx.UpdateLoadNote(loadId, "【内容】積み込み\n【備考】無し\n")
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	readUser, err := db.ReadUser(USER_LINE_ID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !bytes.Equal(readUser.CurrentOperation, loadId) {
 		t.Fatal("read wrong user")
 	}
 }

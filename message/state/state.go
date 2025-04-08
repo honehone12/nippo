@@ -34,6 +34,10 @@ const (
 	ST_WAITING
 	ST_WAIT_NOTE
 
+	ST_LOADING
+	ST_LOAD_SHIP_CHECK
+	ST_LOAD_NOTE
+
 	ST_IN_DUTY
 	ST_NONE
 )
@@ -83,6 +87,12 @@ func FromIdx(idx schema.StateIdx) (State, error) {
 		return StWaiting{}, nil
 	case ST_WAIT_NOTE:
 		return StWaitNote{}, nil
+	case ST_LOADING:
+		return StLoading{}, nil
+	case ST_LOAD_SHIP_CHECK:
+		return StLoadShipCheck{}, nil
+	case ST_LOAD_NOTE:
+		return StLoadNote{}, nil
 
 	case ST_IN_DUTY:
 		return StInDuty{}, nil

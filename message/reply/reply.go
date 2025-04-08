@@ -45,7 +45,7 @@ func ReplyMoCallHealth() []messaging_api.MessageInterface {
 	}
 }
 
-func ReplyMCallCarCk() []messaging_api.MessageInterface {
+func ReplyMCallCarCheck() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
 			Text:       "車両の日常点検は良好でしたか？",
@@ -108,10 +108,28 @@ func ReplyLocNote() []messaging_api.MessageInterface {
 	}
 }
 
+func ReplyLoading() []messaging_api.MessageInterface {
+	return []messaging_api.MessageInterface{
+		messaging_api.TextMessage{
+			Text:       "荷役（附帯）作業に入りました\n終了時に位置情報を送信してください",
+			QuickReply: QuickRepEndLoading(),
+		},
+	}
+}
+
+func ReplyLoadShipCheck() []messaging_api.MessageInterface {
+	return []messaging_api.MessageInterface{
+		messaging_api.TextMessage{
+			Text:       "作業に関して荷主の確認は得られましたか？",
+			QuickReply: QuickRepLoadShipCheck(),
+		},
+	}
+}
+
 func ReplyResting() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
-			Text:       "休憩に入りました\n休憩終了時に位置情報を送信してください",
+			Text:       "休憩に入りました\n終了時に位置情報を送信してください",
 			QuickReply: QuickRepEndResting(),
 		},
 	}
@@ -129,7 +147,7 @@ func ReplyRestNote() []messaging_api.MessageInterface {
 func ReplyWaiting() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
-			Text:       "待機に入りました\n待機終了時に位置情報を送信してください",
+			Text:       "待機に入りました\n終了時に位置情報を送信してください",
 			QuickReply: QuickRepEndWaiting(),
 		},
 	}

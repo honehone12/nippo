@@ -67,6 +67,23 @@ func QuickRepLocNote() *messaging_api.QuickReply {
 	}
 }
 
+func QuickRepEndLoading() *messaging_api.QuickReply {
+	return &messaging_api.QuickReply{
+		Items: []messaging_api.QuickReplyItem{
+			{Action: ActionEndLoading()},
+		},
+	}
+}
+
+func QuickRepLoadShipCheck() *messaging_api.QuickReply {
+	return &messaging_api.QuickReply{
+		Items: []messaging_api.QuickReplyItem{
+			{Action: ActionFlagTrue()},
+			{Action: ActionFlagFalse()},
+		},
+	}
+}
+
 func QuickRepEndResting() *messaging_api.QuickReply {
 	return &messaging_api.QuickReply{
 		Items: []messaging_api.QuickReplyItem{

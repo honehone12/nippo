@@ -25,7 +25,7 @@ func (s StMCallCarCheck) Run(
 	case webhook.MessageEvent:
 		req := messaging_api.ReplyMessageRequest{
 			ReplyToken: e.ReplyToken,
-			Messages:   reply.ReplyMCallCarCk(),
+			Messages:   reply.ReplyMCallCarCheck(),
 		}
 
 		_, err := props.Api().ReplyMessage(&req)

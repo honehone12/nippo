@@ -46,7 +46,7 @@ func (ti TiDbTx) CreateDailyReport(
 	return call.Id, nil
 }
 
-func (ti TiDbTx) UpdateDReportEvCall(repoId []uint8, eveningId []uint8) error {
+func (ti TiDbTx) UpdateDReportECall(repoId []uint8, eveningId []uint8) error {
 	if len(repoId) != schema.ID_LEN {
 		return errors.New("unexpected report id length")
 	}

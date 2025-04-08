@@ -86,7 +86,18 @@ func (s StInDuty) Run(
 			_, err = props.Api().ReplyMessage(&req)
 			return err
 		case reply.START_LOADING_ACT_DATA:
-			panic("not implemented")
+			err := props.Db().Once().UpdateUserNextState(user.Id, ST_LOADING)
+			if err != nil {
+				return err
+			}
+
+			req := messaging_api.ReplyMessageRequest{
+				ReplyToken: e.ReplyToken,
+				Messages:   reply.ReplyLoading(),
+			}
+
+			_, err = props.Api().ReplyMessage(&req)
+			return err
 		case reply.START_RESTING_ACT_DATA:
 			err := props.Db().Once().UpdateUserNextState(user.Id, ST_RESTING)
 			if err != nil {

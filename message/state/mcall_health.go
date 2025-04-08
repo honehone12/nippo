@@ -50,7 +50,7 @@ func (s StMCallHealth) Run(
 
 			req := messaging_api.ReplyMessageRequest{
 				ReplyToken: e.ReplyToken,
-				Messages:   reply.ReplyMCallCarCk(),
+				Messages:   reply.ReplyMCallCarCheck(),
 			}
 
 			_, err = props.Api().ReplyMessage(&req)

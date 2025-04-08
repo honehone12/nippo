@@ -37,7 +37,7 @@ type Transaction interface {
 		carNum schema.CleanText,
 		morningId []uint8,
 	) ([]uint8, error)
-	UpdateDReportEvCall(repoId []uint8, eveningId []uint8) error
+	UpdateDReportECall(repoId []uint8, eveningId []uint8) error
 	UpdateDReportMtrPhoto(repoId []uint8, photo string) error
 	UpdateDReportTrouble(repoId []uint8, trouble schema.CleanText) error
 	UpdateDReportNote(repoId []uint8, note schema.CleanText) error
@@ -68,4 +68,14 @@ type Transaction interface {
 		longitude float64,
 	) ([]uint8, error)
 	UpdateWaitNote(waitId []uint8, shortNote schema.CleanText) error
+
+	CreateLoading(
+		repoId []uint8,
+		label schema.CleanText,
+		address schema.CleanText,
+		latitude float64,
+		longitude float64,
+	) ([]uint8, error)
+	UpdateLoadShipCheck(loadId []uint8, check bool) error
+	UpdateLoadNote(loadId []uint8, shortNote schema.CleanText) error
 }
