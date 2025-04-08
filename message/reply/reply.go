@@ -183,7 +183,7 @@ func ReplyInDuty() []messaging_api.MessageInterface {
 func ReplyDone() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
-			Text:       "完了しました",
+			Text:       "完了しました\nおつかれさまです！(^o^)丿",
 			QuickReply: QuickRepStartMenu(),
 		},
 	}
