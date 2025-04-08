@@ -51,13 +51,21 @@ type Transaction interface {
 	) ([]uint8, error)
 	UpdateLocNote(locId []uint8, shortNote schema.CleanText) error
 
-	CreateResting(repoId []uint8) ([]uint8, error)
-	UpdateRestLocation(
-		restId []uint8,
+	CreateResting(
+		repoId []uint8,
 		label schema.CleanText,
 		address schema.CleanText,
 		latitude float64,
 		longitude float64,
-	) error
+	) ([]uint8, error)
 	UpdateRestNote(restId []uint8, shortNote schema.CleanText) error
+
+	CreateWaiting(
+		repoId []uint8,
+		label schema.CleanText,
+		address schema.CleanText,
+		latitude float64,
+		longitude float64,
+	) ([]uint8, error)
+	UpdateWaitNote(waitId []uint8, shortNote schema.CleanText) error
 }

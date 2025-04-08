@@ -73,11 +73,33 @@ func (s StInDuty) Run(
 	case webhook.PostbackEvent:
 		switch e.Postback.Data {
 		case reply.START_WAITING_ACT_DATA:
-			panic("not implemented")
+			err := props.Db().Once().UpdateUserNextState(user.Id, ST_WAITING)
+			if err != nil {
+				return err
+			}
+
+			req := messaging_api.ReplyMessageRequest{
+				ReplyToken: e.ReplyToken,
+				Messages:   reply.ReplyWaiting(),
+			}
+
+			_, err = props.Api().ReplyMessage(&req)
+			return err
 		case reply.START_LOADING_ACT_DATA:
 			panic("not implemented")
 		case reply.START_RESTING_ACT_DATA:
-			panic("not implemented")
+			err := props.Db().Once().UpdateUserNextState(user.Id, ST_RESTING)
+			if err != nil {
+				return err
+			}
+
+			req := messaging_api.ReplyMessageRequest{
+				ReplyToken: e.ReplyToken,
+				Messages:   reply.ReplyResting(),
+			}
+
+			_, err = props.Api().ReplyMessage(&req)
+			return err
 		case reply.END_DUTY_ACT_DATA:
 			err := props.Db().Once().UpdateUserNextState(user.Id, ST_ECALL_ALC_PHOTO)
 			if err != nil {

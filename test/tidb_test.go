@@ -256,23 +256,18 @@ func TestResting(t *testing.T) {
 	var restId []uint8
 	err := db.Tx(func(tx database.Transaction) error {
 		var err error
-		restId, err = tx.CreateResting(reportId)
-		if err != nil {
-			return err
-		}
-
-		err = tx.UpdateUserCurrentOpe(userId, restId)
-		if err != nil {
-			return err
-		}
-
-		err = tx.UpdateRestLocation(
-			restId,
+		restId, err = tx.CreateResting(
+			reportId,
 			"倉庫",
 			"東京都港区倉庫町９９－９９",
 			99.99,
 			88.88,
 		)
+		if err != nil {
+			return err
+		}
+
+		err = tx.UpdateUserCurrentOpe(userId, restId)
 		if err != nil {
 			return err
 		}
@@ -288,6 +283,41 @@ func TestResting(t *testing.T) {
 		t.Fatal(err)
 	}
 	if !bytes.Equal(readUser.CurrentOperation, restId) {
+		t.Fatal("read wrong user")
+	}
+}
+
+func TestWaiting(t *testing.T) {
+	var waitId []uint8
+	err := db.Tx(func(tx database.Transaction) error {
+		var err error
+		waitId, err = tx.CreateWaiting(
+			reportId,
+			"倉庫",
+			"東京都港区倉庫町９９－９９",
+			99.99,
+			88.88,
+		)
+		if err != nil {
+			return err
+		}
+
+		err = tx.UpdateUserCurrentOpe(userId, waitId)
+		if err != nil {
+			return err
+		}
+
+		return tx.UpdateRestNote(waitId, "")
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	readUser, err := db.ReadUser(USER_LINE_ID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !bytes.Equal(readUser.CurrentOperation, waitId) {
 		t.Fatal("read wrong user")
 	}
 }

@@ -108,6 +108,27 @@ func ActionStartResting() messaging_api.PostbackAction {
 	}
 }
 
+func ActionEndResting() messaging_api.LocationAction {
+	return messaging_api.LocationAction{
+		Label: "休憩を終了する（位置情報を送信）",
+	}
+}
+
+func ActionRestNote() messaging_api.PostbackAction {
+	return messaging_api.PostbackAction{
+		Label:       "入力する",
+		Data:        IGNORE_TXT_TEMPLATE,
+		InputOption: "openKeyboard",
+		FillInText:  "【睡眠】",
+	}
+}
+
+func ActionEndWaiting() messaging_api.LocationAction {
+	return messaging_api.LocationAction{
+		Label: "待機を終了する（位置情報を送信）",
+	}
+}
+
 func ActionFlagTrue() messaging_api.PostbackAction {
 	return messaging_api.PostbackAction{
 		Label:       "良好",
