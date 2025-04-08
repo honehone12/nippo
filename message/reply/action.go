@@ -66,7 +66,7 @@ func ActionDReportNote() messaging_api.PostbackAction {
 		Label:       "入力する",
 		Data:        IGNORE_TXT_TEMPLATE,
 		InputOption: "openKeyboard",
-		FillInText:  "【業務の交替がある場合】時間：　場所：　\n【高速利用】\n【その他】",
+		FillInText:  "【業務の交替がある場合】時間：　場所：　\n【件数】集荷：　配達：　\n【高速利用】\n【その他】",
 	}
 }
 
