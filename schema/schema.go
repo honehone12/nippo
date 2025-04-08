@@ -42,7 +42,7 @@ type User struct {
 	EveningCalls []EveningCall `gorm:"foreignKey:UserId;references:Id"`
 	DailyReports []DailyReport `gorm:"foreignKey:UserId;references:Id"`
 
-	OrgId []uint8 `gorm:"not null;type:binary(16)"`
+	OrgId []uint8 `gorm:"not null;type:binary(16)"` // ;index
 }
 
 type MorningCall struct {
@@ -62,7 +62,7 @@ type MorningCall struct {
 	CarCheck        bool
 	Note            CleanText `gorm:"size:5000"`
 
-	UserId []uint8 `gorm:"not null;type:binary(16)"`
+	UserId []uint8 `gorm:"not null;type:binary(16)"` // ;index
 }
 
 type EveningCall struct {
@@ -80,7 +80,7 @@ type EveningCall struct {
 	AlcPhoto        string    `gorm:"size:100"`
 	Note            CleanText `gorm:"size:5000"`
 
-	UserId []uint8 `gorm:"not null;type:binary(16)"`
+	UserId []uint8 `gorm:"not null;type:binary(16)"` // ;index
 }
 
 type DailyReport struct {
@@ -104,7 +104,7 @@ type DailyReport struct {
 	Loadings  []Loading  `gorm:"foreignKey:DailyReportId;references:Id"`
 	Restings  []Resting  `gorm:"foreignKey:DailyReportId;references:Id"`
 
-	UserId []uint8 `gorm:"not null;type:binary(16)"`
+	UserId []uint8 `gorm:"not null;type:binary(16)"` // ;index
 }
 
 type Location struct {
@@ -119,7 +119,7 @@ type Location struct {
 	Longitude float64
 	ShortNote CleanText `gorm:"size:100"`
 
-	DailyReportId []uint8 `gorm:"not null;type:binary(16)"`
+	DailyReportId []uint8 `gorm:"not null;type:binary(16)"` // ;index
 }
 
 type Waiting struct {
@@ -134,7 +134,7 @@ type Waiting struct {
 	Longitude float64
 	Note      CleanText `gorm:"size:5000"`
 
-	DailyReportId []uint8 `gorm:"not null;type:binary(16)"`
+	DailyReportId []uint8 `gorm:"not null;type:binary(16)"` // ;index
 }
 
 type Loading struct {
@@ -150,7 +150,7 @@ type Loading struct {
 	ShippingCheck bool
 	Note          CleanText `gorm:"size:5000"`
 
-	DailyReportId []uint8 `gorm:"not null;type:binary(16)"`
+	DailyReportId []uint8 `gorm:"not null;type:binary(16)"` // ;index
 }
 
 type Resting struct {
@@ -165,5 +165,5 @@ type Resting struct {
 	Longitude float64
 	ShortNote CleanText `gorm:"size:100"`
 
-	DailyReportId []uint8 `gorm:"not null;type:binary(16)"`
+	DailyReportId []uint8 `gorm:"not null;type:binary(16)"` // ;index
 }
