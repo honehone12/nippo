@@ -1,13 +1,15 @@
 package q
 
 import (
+	"nippo/schema"
 	"nippo/view/viewprops"
 	"time"
 )
 
 type QCalls struct {
-	year  int
-	month time.Month
+	userIdStr schema.CleanText
+	year      int
+	month     time.Month
 }
 
 func (q QCalls) Query(props *viewprops.Props) ([]byte, error) {

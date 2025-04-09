@@ -2,6 +2,7 @@ package q
 
 import (
 	"errors"
+	"nippo/input"
 	"nippo/timeconv"
 	"nippo/view/viewprops"
 )
@@ -32,8 +33,13 @@ func FromParams(params map[string]string) (Q, error) {
 		if err != nil {
 			return nil, err
 		}
+		user, ok := params["user"]
+		if !ok {
+			return nil, errors.New("unexpected params")
+		}
+		userIdStr := input.Clean(user)
 
-		return QCalls{year, month}, nil
+		return QCalls{userIdStr, year, month}, nil
 	case "reports":
 		y, ok := params["y"]
 		if !ok {
@@ -47,12 +53,29 @@ func FromParams(params map[string]string) (Q, error) {
 		if err != nil {
 			return nil, err
 		}
+		user, ok := params["user"]
+		if !ok {
+			return nil, errors.New("unexpected params")
+		}
+		userIdStr := input.Clean(user)
 
-		return QReports{year, month}, nil
+		return QReports{userIdStr, year, month}, nil
 	case "print":
-		panic("not implemented")
+		report, ok := params["report"]
+		if !ok {
+			return nil, errors.New("unexpected params")
+		}
+		repoIdStr := input.Clean(report)
+
+		return QPrint{repoIdStr}, nil
 	case "download":
-		panic("not implemented")
+		report, ok := params["report"]
+		if !ok {
+			return nil, errors.New("unexpected params")
+		}
+		repoIdStr := input.Clean(report)
+
+		return QDownload{repoIdStr}, nil
 	default:
 		return nil, errors.New("unexpected q string")
 	}
