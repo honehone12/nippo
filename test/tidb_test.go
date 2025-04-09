@@ -86,7 +86,7 @@ func TestUserSetting(t *testing.T) {
 	}
 }
 
-func ReadOrgAndUser(t *testing.T) {
+func TestReadOrgAndUser(t *testing.T) {
 	readOrg, err := db.ReadOrg(orgIdStr)
 	if err != nil {
 		t.Fatal(err)
@@ -102,8 +102,20 @@ func ReadOrgAndUser(t *testing.T) {
 	if !bytes.Equal(readUser.Id, userId) || readUser.Name != USER_NAME {
 		t.Fatal("read wrong user")
 	}
-	if readUser.CarNumber != CAR_NUMBER || readUser.NextState != 2 {
+	if readUser.CarNumber != CAR_NUMBER || readUser.NextState != 9 {
 		t.Fatal("read wrong user")
+	}
+
+	users, err := db.ReadUsers(orgIdStr)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if len(users) != 1 {
+		t.Fatal("read wrong users")
+	}
+	if !bytes.Equal(users[0].Id, userId) {
+		t.Fatal("read wrong users")
 	}
 }
 

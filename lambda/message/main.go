@@ -82,7 +82,7 @@ func initApi() error {
 	return nil
 }
 
-func awsConfig() error {
+func configAws() error {
 	cfg, err := config.LoadDefaultConfig(context.Background())
 	if err != nil {
 		return err
@@ -189,7 +189,7 @@ func main() {
 		log.L.Fatal(err)
 	}
 
-	if err := awsConfig(); err != nil {
+	if err := configAws(); err != nil {
 		log.L.Fatal(err)
 	}
 

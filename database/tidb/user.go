@@ -51,6 +51,25 @@ func (ti TiDb) ReadUser(lineId schema.CleanText) (*schema.User, error) {
 	return &user, nil
 }
 
+func (ti TiDb) ReadUsers(orgIdStr string) ([]schema.User, error) {
+	if len(orgIdStr) != schema.ID_STR_LEN {
+		return nil, errors.New("unexpected id length")
+	}
+
+	id, err := uuid.Parse(orgIdStr)
+	if err != nil {
+		return nil, err
+	}
+
+	org := schema.Org{Id: id[:]}
+	var users []schema.User
+	if err := ti.orm.Model(&org).Association("Users").Find(&users); err != nil {
+		return nil, err
+	}
+
+	return users, err
+}
+
 func (ti TiDbTx) UpdateUserName(userId []uint8, name schema.CleanText) error {
 	if len(userId) != schema.ID_LEN {
 		return errors.New("unexpected id length")
