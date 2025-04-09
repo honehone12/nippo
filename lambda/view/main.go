@@ -7,6 +7,7 @@ import (
 	"nippo/database/tidb"
 	"nippo/lambda/response"
 	"nippo/log"
+	"nippo/schema"
 	"nippo/view/q"
 	"nippo/view/viewprops"
 	"os"
@@ -75,7 +76,7 @@ func handler(
 	props := viewprops.NewProps(
 		ctx,
 		env.bucket,
-		env.orgIdStr,
+		schema.CleanText(env.orgIdStr),
 		db,
 		s3Client,
 	)

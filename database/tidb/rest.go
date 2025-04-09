@@ -42,12 +42,12 @@ func (ti TiDbTx) CreateResting(
 	return rest.Id, nil
 }
 
-func (ti TiDb) ReadRestings(repoIdStr string) ([]schema.Resting, error) {
+func (ti TiDb) ReadRestings(repoIdStr schema.CleanText) ([]schema.Resting, error) {
 	if len(repoIdStr) != schema.ID_STR_LEN {
 		return nil, errors.New("unexpected rest id length")
 	}
 
-	repoId, err := uuid.Parse(repoIdStr)
+	repoId, err := uuid.Parse(string(repoIdStr))
 	if err != nil {
 		return nil, err
 	}

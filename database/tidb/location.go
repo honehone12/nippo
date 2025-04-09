@@ -42,12 +42,12 @@ func (ti TiDbTx) CreateLocation(
 	return loc.Id, nil
 }
 
-func (ti TiDb) ReadLocations(repoIdStr string) ([]schema.Location, error) {
+func (ti TiDb) ReadLocations(repoIdStr schema.CleanText) ([]schema.Location, error) {
 	if len(repoIdStr) != schema.ID_STR_LEN {
 		return nil, errors.New("unexpected location id length")
 	}
 
-	repoId, err := uuid.Parse(repoIdStr)
+	repoId, err := uuid.Parse(string(repoIdStr))
 	if err != nil {
 		return nil, err
 	}

@@ -10,6 +10,7 @@ import (
 	"nippo/log"
 	"nippo/message"
 	"nippo/message/msgprops"
+	"nippo/schema"
 	"os"
 	"strings"
 
@@ -163,7 +164,7 @@ func handler(
 	props := msgprops.NewProps(
 		ctx,
 		env.bucket,
-		env.orgIdStr,
+		schema.CleanText(env.orgIdStr),
 		db,
 		api,
 		blobApi,

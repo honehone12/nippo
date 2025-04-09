@@ -52,7 +52,7 @@ func (ti TiDbTx) CreateMorningCall(
 }
 
 func (ti TiDb) ReadMorningCalls(
-	userIdStr string,
+	userIdStr schema.CleanText,
 	from time.Time,
 	to time.Time,
 ) ([]schema.MorningCall, error) {
@@ -60,7 +60,7 @@ func (ti TiDb) ReadMorningCalls(
 		return nil, errors.New("unexpected id length")
 	}
 
-	userId, err := uuid.Parse(userIdStr)
+	userId, err := uuid.Parse(string(userIdStr))
 	if err != nil {
 		return nil, err
 	}
@@ -156,7 +156,7 @@ func (ti TiDbTx) CreateEveningCall(
 }
 
 func (ti TiDb) ReadEveningCalls(
-	userIdStr string,
+	userIdStr schema.CleanText,
 	from time.Time,
 	to time.Time,
 ) ([]schema.EveningCall, error) {
@@ -164,7 +164,7 @@ func (ti TiDb) ReadEveningCalls(
 		return nil, errors.New("unexpected id length")
 	}
 
-	userId, err := uuid.Parse(userIdStr)
+	userId, err := uuid.Parse(string(userIdStr))
 	if err != nil {
 		return nil, err
 	}

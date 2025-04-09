@@ -42,12 +42,12 @@ func (ti TiDbTx) CreateLoading(
 	return rest.Id, nil
 }
 
-func (ti TiDb) ReadLoadings(repoIdStr string) ([]schema.Loading, error) {
+func (ti TiDb) ReadLoadings(repoIdStr schema.CleanText) ([]schema.Loading, error) {
 	if len(repoIdStr) != schema.ID_STR_LEN {
 		return nil, errors.New("unexpected load id length")
 	}
 
-	repoId, err := uuid.Parse(repoIdStr)
+	repoId, err := uuid.Parse(string(repoIdStr))
 	if err != nil {
 		return nil, err
 	}

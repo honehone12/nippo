@@ -7,7 +7,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func (ti TiDbTx) CreateUser(orgIdStr string, lineId schema.CleanText) ([]uint8, error) {
+func (ti TiDbTx) CreateUser(orgIdStr schema.CleanText, lineId schema.CleanText) ([]uint8, error) {
 	if len(orgIdStr) != schema.ID_STR_LEN {
 		return nil, errors.New("unexpected id length")
 	}
@@ -15,7 +15,7 @@ func (ti TiDbTx) CreateUser(orgIdStr string, lineId schema.CleanText) ([]uint8, 
 		return nil, errors.New("unexpected line id length")
 	}
 
-	orgId, err := uuid.Parse(orgIdStr)
+	orgId, err := uuid.Parse(string(orgIdStr))
 	if err != nil {
 		return nil, err
 	}
@@ -51,12 +51,12 @@ func (ti TiDb) ReadUser(lineId schema.CleanText) (*schema.User, error) {
 	return &user, nil
 }
 
-func (ti TiDb) ReadUsers(orgIdStr string) ([]schema.User, error) {
+func (ti TiDb) ReadUsers(orgIdStr schema.CleanText) ([]schema.User, error) {
 	if len(orgIdStr) != schema.ID_STR_LEN {
 		return nil, errors.New("unexpected id length")
 	}
 
-	id, err := uuid.Parse(orgIdStr)
+	id, err := uuid.Parse(string(orgIdStr))
 	if err != nil {
 		return nil, err
 	}

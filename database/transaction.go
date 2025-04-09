@@ -4,9 +4,9 @@ import "nippo/schema"
 
 type Transaction interface {
 	CreateOrg(name schema.CleanText) ([]uint8, error)
-	UpdateOrgLineId(idStr string, newLineId schema.CleanText) error
+	UpdateOrgLineId(idStr schema.CleanText, newLineId schema.CleanText) error
 
-	CreateUser(orgIdStr string, lineId schema.CleanText) ([]uint8, error)
+	CreateUser(orgIdStr schema.CleanText, lineId schema.CleanText) ([]uint8, error)
 	UpdateUserName(userId []uint8, name schema.CleanText) error
 	UpdateUserCarNumber(userId []uint8, carNumber schema.CleanText) error
 	UpdateUserCurrentOpe(userId []uint8, opeId []uint8) error

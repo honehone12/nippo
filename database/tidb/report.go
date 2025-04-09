@@ -48,7 +48,7 @@ func (ti TiDbTx) CreateDailyReport(
 }
 
 func (ti TiDb) ReadDailyReports(
-	userIdStr string,
+	userIdStr schema.CleanText,
 	from time.Time,
 	to time.Time,
 ) ([]schema.DailyReport, error) {
@@ -56,7 +56,7 @@ func (ti TiDb) ReadDailyReports(
 		return nil, errors.New("unexpected user id length")
 	}
 
-	userId, err := uuid.Parse(userIdStr)
+	userId, err := uuid.Parse(string(userIdStr))
 	if err != nil {
 		return nil, err
 	}

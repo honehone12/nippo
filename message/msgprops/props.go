@@ -3,6 +3,7 @@ package msgprops
 import (
 	"context"
 	"nippo/database"
+	"nippo/schema"
 
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/line/line-bot-sdk-go/v8/linebot/messaging_api"
@@ -11,7 +12,7 @@ import (
 type Props struct {
 	ctx      context.Context
 	bucket   string
-	orgIdStr string
+	orgIdStr schema.CleanText
 	db       database.Database
 	api      *messaging_api.MessagingApiAPI
 	blobApi  *messaging_api.MessagingApiBlobAPI
@@ -21,7 +22,7 @@ type Props struct {
 func NewProps(
 	ctx context.Context,
 	bucket string,
-	orgIdStr string,
+	orgIdStr schema.CleanText,
 	db database.Database,
 	api *messaging_api.MessagingApiAPI,
 	blobApi *messaging_api.MessagingApiBlobAPI,
@@ -38,7 +39,7 @@ func (p *Props) Bucket() *string {
 	return &p.bucket
 }
 
-func (p *Props) OrgId() string {
+func (p *Props) OrgId() schema.CleanText {
 	return p.orgIdStr
 }
 

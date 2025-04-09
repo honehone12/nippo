@@ -3,6 +3,7 @@ package viewprops
 import (
 	"context"
 	"nippo/database"
+	"nippo/schema"
 
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 )
@@ -10,7 +11,7 @@ import (
 type Props struct {
 	ctx      context.Context
 	bucket   string
-	orgIdStr string
+	orgIdStr schema.CleanText
 	db       database.Database
 	s3       *s3.Client
 }
@@ -18,7 +19,7 @@ type Props struct {
 func NewProps(
 	ctx context.Context,
 	bucket string,
-	orgIdStr string,
+	orgIdStr schema.CleanText,
 	db database.Database,
 	s3 *s3.Client,
 ) *Props {
@@ -33,7 +34,7 @@ func (p *Props) Bucket() *string {
 	return &p.bucket
 }
 
-func (p *Props) OrgId() string {
+func (p *Props) OrgId() schema.CleanText {
 	return p.orgIdStr
 }
 
