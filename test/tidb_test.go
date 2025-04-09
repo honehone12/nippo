@@ -28,6 +28,10 @@ var userId []uint8
 var morningId []uint8
 var reportId []uint8
 var eveningId []uint8
+var loadId []uint8
+var waitId []uint8
+var restId []uint8
+var locId []uint8
 
 func TestOpenDb(t *testing.T) {
 	godotenv.Load("../bin/.env")
@@ -199,7 +203,6 @@ func TestEveningCall(t *testing.T) {
 }
 
 func TestLocation(t *testing.T) {
-	var locId []uint8
 	err := db.Tx(func(tx database.Transaction) error {
 		var err error
 		locId, err = tx.CreateLocation(
@@ -234,7 +237,6 @@ func TestLocation(t *testing.T) {
 }
 
 func TestResting(t *testing.T) {
-	var restId []uint8
 	err := db.Tx(func(tx database.Transaction) error {
 		var err error
 		restId, err = tx.CreateResting(
@@ -269,7 +271,6 @@ func TestResting(t *testing.T) {
 }
 
 func TestWaiting(t *testing.T) {
-	var waitId []uint8
 	err := db.Tx(func(tx database.Transaction) error {
 		var err error
 		waitId, err = tx.CreateWaiting(
@@ -304,7 +305,6 @@ func TestWaiting(t *testing.T) {
 }
 
 func TestLoading(t *testing.T) {
-	var loadId []uint8
 	err := db.Tx(func(tx database.Transaction) error {
 		var err error
 		loadId, err = tx.CreateLoading(
@@ -343,7 +343,7 @@ func TestLoading(t *testing.T) {
 	}
 }
 
-func TestReadOrgAndUser(t *testing.T) {
+func TestReadFromOrg(t *testing.T) {
 	readOrg, err := db.ReadOrg(orgIdStr)
 	if err != nil {
 		t.Fatal(err)
@@ -418,6 +418,62 @@ func TestReadOrgAndUser(t *testing.T) {
 	}
 	if !bytes.Equal(reports[0].Id, reportId) {
 		t.Fatal("read wrong daily reports")
+	}
+}
+
+func TestReadFromReport(t *testing.T) {
+	repoUuid, err := uuid.FromBytes(reportId)
+	if err != nil {
+		t.Fatal(err)
+	}
+	repoIdStr := repoUuid.String()
+
+	locs, err := db.ReadLocations(repoIdStr)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if len(locs) != 1 {
+		t.Fatal("read wrong locations")
+	}
+	if !bytes.Equal(locs[0].Id, locId) {
+		t.Fatal("read wrong locations")
+	}
+
+	rests, err := db.ReadRestings(repoIdStr)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if len(rests) != 1 {
+		t.Fatal("read wrong restings")
+	}
+	if !bytes.Equal(rests[0].Id, restId) {
+		t.Fatal("read wrong restings")
+	}
+
+	waits, err := db.ReadWaitings(repoIdStr)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if len(waits) != 1 {
+		t.Fatal("read wrong waitings")
+	}
+	if !bytes.Equal(waits[0].Id, waitId) {
+		t.Fatal("read wrong waitings")
+	}
+
+	loads, err := db.ReadLoadings(repoIdStr)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if len(loads) != 1 {
+		t.Fatal("read wrong loadings")
+	}
+	if !bytes.Equal(loads[0].Id, loadId) {
+		t.Fatal("read wrong loadings")
 	}
 }
 

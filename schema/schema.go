@@ -109,7 +109,7 @@ type DailyReport struct {
 
 type Location struct {
 	Id        []uint8   `gorm:"primaryKey;type:binary(16)"`
-	CreatedAt time.Time `gorm:"not null;index"`
+	CreatedAt time.Time `gorm:"not null"`
 	UpdatedAt time.Time
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 
@@ -124,7 +124,7 @@ type Location struct {
 
 type Waiting struct {
 	Id        []uint8   `gorm:"primaryKey;type:binary(16)"`
-	CreatedAt time.Time `gorm:"not null;index"`
+	CreatedAt time.Time `gorm:"not null"`
 	UpdatedAt time.Time
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 
@@ -139,7 +139,7 @@ type Waiting struct {
 
 type Loading struct {
 	Id        []uint8   `gorm:"primaryKey;type:binary(16)"`
-	CreatedAt time.Time `gorm:"not null;index"`
+	CreatedAt time.Time `gorm:"not null"`
 	UpdatedAt time.Time
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 
@@ -155,7 +155,7 @@ type Loading struct {
 
 type Resting struct {
 	Id        []uint8   `gorm:"primaryKey;type:binary(16)"`
-	CreatedAt time.Time `gorm:"not null;index"`
+	CreatedAt time.Time `gorm:"not null"`
 	UpdatedAt time.Time
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 

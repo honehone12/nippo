@@ -24,6 +24,10 @@ type Database interface {
 		from time.Time,
 		to time.Time,
 	) ([]schema.DailyReport, error)
+	ReadLocations(repoIdStr string) ([]schema.Location, error)
+	ReadRestings(repoIdStr string) ([]schema.Resting, error)
+	ReadWaitings(repoIdStr string) ([]schema.Waiting, error)
+	ReadLoadings(repoIdStr string) ([]schema.Loading, error)
 
 	Tx(txf func(Transaction) error) error
 	Once() Transaction

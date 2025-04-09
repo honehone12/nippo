@@ -42,6 +42,26 @@ func (ti TiDbTx) CreateWaiting(
 	return rest.Id, nil
 }
 
+func (ti TiDb) ReadWaitings(repoIdStr string) ([]schema.Waiting, error) {
+	if len(repoIdStr) != schema.ID_STR_LEN {
+		return nil, errors.New("unexpected wait id length")
+	}
+
+	repoId, err := uuid.Parse(repoIdStr)
+	if err != nil {
+		return nil, err
+	}
+
+	repo := schema.DailyReport{Id: repoId[:]}
+	var waits []schema.Waiting
+	err = ti.orm.Model(&repo).Association("Waitings").Find(&waits)
+	if err != nil {
+		return nil, err
+	}
+
+	return waits, nil
+}
+
 func (ti TiDbTx) UpdateWaitNote(waitId []uint8, note schema.CleanText) error {
 	if len(waitId) != schema.ID_LEN {
 		return errors.New("unexpected wait id length")

@@ -42,6 +42,26 @@ func (ti TiDbTx) CreateLoading(
 	return rest.Id, nil
 }
 
+func (ti TiDb) ReadLoadings(repoIdStr string) ([]schema.Loading, error) {
+	if len(repoIdStr) != schema.ID_STR_LEN {
+		return nil, errors.New("unexpected load id length")
+	}
+
+	repoId, err := uuid.Parse(repoIdStr)
+	if err != nil {
+		return nil, err
+	}
+
+	repo := schema.DailyReport{Id: repoId[:]}
+	var loads []schema.Loading
+	err = ti.orm.Model(&repo).Association("Loadings").Find(&loads)
+	if err != nil {
+		return nil, err
+	}
+
+	return loads, nil
+}
+
 func (ti TiDbTx) UpdateLoadShipCheck(loadId []uint8, check bool) error {
 	if len(loadId) != schema.ID_LEN {
 		return errors.New("unexpected wait id length")
