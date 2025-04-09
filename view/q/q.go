@@ -2,6 +2,7 @@ package q
 
 import (
 	"errors"
+	"nippo/timeconv"
 	"nippo/view/viewprops"
 )
 
@@ -17,12 +18,38 @@ func FromParams(params map[string]string) (Q, error) {
 
 	switch q {
 	case "users":
-		panic("not implemented")
-	case "reports":
-		panic("not implemented")
-	case "print":
-		panic("not implemented")
+		return QUsers{}, nil
 	case "calls":
+		y, ok := params["y"]
+		if !ok {
+			return nil, errors.New("unexpected params")
+		}
+		m, ok := params["m"]
+		if !ok {
+			return nil, errors.New("unexpected params")
+		}
+		year, month, err := timeconv.AToYM(y, m)
+		if err != nil {
+			return nil, err
+		}
+
+		return QCalls{year, month}, nil
+	case "reports":
+		y, ok := params["y"]
+		if !ok {
+			return nil, errors.New("unexpected params")
+		}
+		m, ok := params["m"]
+		if !ok {
+			return nil, errors.New("unexpected params")
+		}
+		year, month, err := timeconv.AToYM(y, m)
+		if err != nil {
+			return nil, err
+		}
+
+		return QReports{year, month}, nil
+	case "print":
 		panic("not implemented")
 	case "download":
 		panic("not implemented")
