@@ -27,15 +27,7 @@ func NewProps(
 	blobApi *messaging_api.MessagingApiBlobAPI,
 	s3 *s3.Client,
 ) *Props {
-	return &Props{
-		ctx,
-		bucket,
-		orgIdStr,
-		db,
-		api,
-		blobApi,
-		s3,
-	}
+	return &Props{ctx, bucket, orgIdStr, db, api, blobApi, s3}
 }
 
 func (p *Props) Ctx() context.Context {
