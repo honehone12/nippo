@@ -3,7 +3,7 @@ package state
 import (
 	"fmt"
 	"nippo/log"
-	"nippo/message/property"
+	"nippo/message/msgprops"
 	"nippo/message/reply"
 	"nippo/schema"
 	"strings"
@@ -15,7 +15,7 @@ import (
 type StNone struct{}
 
 func (s StNone) Run(
-	props *property.MsgingProps,
+	props *msgprops.Props,
 	user *schema.User,
 	event webhook.EventInterface,
 ) error {

@@ -4,7 +4,7 @@ import (
 	"errors"
 	"nippo/database"
 	"nippo/log"
-	"nippo/message/property"
+	"nippo/message/msgprops"
 	"nippo/message/reply"
 	"nippo/schema"
 	"nippo/sss"
@@ -17,7 +17,7 @@ import (
 type StDRepoMtrPhoto struct{}
 
 func (s StDRepoMtrPhoto) Run(
-	props *property.MsgingProps,
+	props *msgprops.Props,
 	user *schema.User,
 	event webhook.EventInterface,
 ) error {

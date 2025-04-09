@@ -2,7 +2,7 @@ package state
 
 import (
 	"errors"
-	"nippo/message/property"
+	"nippo/message/msgprops"
 	"nippo/schema"
 
 	"github.com/line/line-bot-sdk-go/v8/linebot/webhook"
@@ -44,7 +44,7 @@ const (
 
 type State interface {
 	Run(
-		props *property.MsgingProps,
+		props *msgprops.Props,
 		user *schema.User,
 		event webhook.EventInterface,
 	) error

@@ -6,7 +6,7 @@ import (
 	"nippo/database"
 	"nippo/input"
 	"nippo/log"
-	"nippo/message/property"
+	"nippo/message/msgprops"
 	"nippo/message/reply"
 	"nippo/schema"
 	"strings"
@@ -18,7 +18,7 @@ import (
 type StLoadNote struct{}
 
 func (s StLoadNote) Run(
-	props *property.MsgingProps,
+	props *msgprops.Props,
 	user *schema.User,
 	event webhook.EventInterface,
 ) error {

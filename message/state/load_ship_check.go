@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"nippo/database"
 	"nippo/log"
-	"nippo/message/property"
+	"nippo/message/msgprops"
 	"nippo/message/reply"
 	"nippo/schema"
 
@@ -16,7 +16,7 @@ import (
 type StLoadShipCheck struct{}
 
 func (s StLoadShipCheck) Run(
-	props *property.MsgingProps,
+	props *msgprops.Props,
 	user *schema.User,
 	event webhook.EventInterface,
 ) error {

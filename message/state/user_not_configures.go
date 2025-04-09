@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"nippo/database"
 	"nippo/log"
-	"nippo/message/property"
+	"nippo/message/msgprops"
 	"nippo/message/reply"
 	"nippo/schema"
 	"strings"
@@ -16,7 +16,7 @@ import (
 type StUserNotConfigured struct{}
 
 func (s StUserNotConfigured) Run(
-	props *property.MsgingProps,
+	props *msgprops.Props,
 	user *schema.User,
 	event webhook.EventInterface,
 ) error {

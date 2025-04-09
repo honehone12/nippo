@@ -9,7 +9,7 @@ import (
 	"nippo/lambda/response"
 	"nippo/log"
 	"nippo/message"
-	"nippo/message/property"
+	"nippo/message/msgprops"
 	"os"
 	"strings"
 
@@ -160,7 +160,7 @@ func handler(
 		return response.BadRequest(), nil
 	}
 
-	props := property.NewMessagingProps(
+	props := msgprops.NewMessagingProps(
 		ctx,
 		env.bucket,
 		env.orgIdStr,

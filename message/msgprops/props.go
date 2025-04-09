@@ -1,4 +1,4 @@
-package property
+package msgprops
 
 import (
 	"context"
@@ -8,7 +8,7 @@ import (
 	"github.com/line/line-bot-sdk-go/v8/linebot/messaging_api"
 )
 
-type MsgingProps struct {
+type Props struct {
 	ctx      context.Context
 	bucket   string
 	orgIdStr string
@@ -26,8 +26,8 @@ func NewMessagingProps(
 	api *messaging_api.MessagingApiAPI,
 	blobApi *messaging_api.MessagingApiBlobAPI,
 	s3 *s3.Client,
-) *MsgingProps {
-	return &MsgingProps{
+) *Props {
+	return &Props{
 		ctx,
 		bucket,
 		orgIdStr,
@@ -38,30 +38,30 @@ func NewMessagingProps(
 	}
 }
 
-func (p *MsgingProps) Ctx() context.Context {
+func (p *Props) Ctx() context.Context {
 	return p.ctx
 }
 
-func (p *MsgingProps) Bucket() *string {
+func (p *Props) Bucket() *string {
 	return &p.bucket
 }
 
-func (p *MsgingProps) OrgId() string {
+func (p *Props) OrgId() string {
 	return p.orgIdStr
 }
 
-func (p *MsgingProps) Db() database.Database {
+func (p *Props) Db() database.Database {
 	return p.db
 }
 
-func (p *MsgingProps) Api() *messaging_api.MessagingApiAPI {
+func (p *Props) Api() *messaging_api.MessagingApiAPI {
 	return p.api
 }
 
-func (p *MsgingProps) BlobApi() *messaging_api.MessagingApiBlobAPI {
+func (p *Props) BlobApi() *messaging_api.MessagingApiBlobAPI {
 	return p.blobApi
 }
 
-func (p *MsgingProps) S3() *s3.Client {
+func (p *Props) S3() *s3.Client {
 	return p.s3
 }

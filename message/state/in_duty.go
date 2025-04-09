@@ -6,7 +6,7 @@ import (
 	"nippo/database"
 	"nippo/input"
 	"nippo/log"
-	"nippo/message/property"
+	"nippo/message/msgprops"
 	"nippo/message/reply"
 	"nippo/schema"
 
@@ -17,7 +17,7 @@ import (
 type StInDuty struct{}
 
 func (s StInDuty) Run(
-	props *property.MsgingProps,
+	props *msgprops.Props,
 	user *schema.User,
 	event webhook.EventInterface,
 ) error {

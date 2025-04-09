@@ -3,7 +3,7 @@ package sss
 import (
 	"fmt"
 	"io"
-	"nippo/message/property"
+	"nippo/message/msgprops"
 	"time"
 
 	"github.com/aws/aws-sdk-go-v2/service/s3"
@@ -21,7 +21,7 @@ func JpgKey(userId []uint8) (*string, error) {
 }
 
 func PutJpg(
-	props *property.MsgingProps,
+	props *msgprops.Props,
 	userId []uint8,
 	body io.Reader,
 	length int64,

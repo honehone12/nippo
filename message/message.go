@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"nippo/input"
 	"nippo/log"
-	"nippo/message/property"
+	"nippo/message/msgprops"
 	"nippo/message/reply"
 	"nippo/message/state"
 	"nippo/schema"
@@ -16,7 +16,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func validateDst(props *property.MsgingProps, msg *webhook.CallbackRequest) error {
+func validateDst(props *msgprops.Props, msg *webhook.CallbackRequest) error {
 	db := props.Db()
 	orgId := props.OrgId()
 
@@ -77,7 +77,7 @@ func checkBasicContent(event webhook.EventInterface) (string, string, error) {
 	return s.UserId, repTkn, nil
 }
 
-func sendErrMsg(props *property.MsgingProps, repTkn string) {
+func sendErrMsg(props *msgprops.Props, repTkn string) {
 	req := messaging_api.ReplyMessageRequest{
 		ReplyToken: repTkn,
 		Messages:   reply.ReplyErrMsg(),
@@ -88,7 +88,7 @@ func sendErrMsg(props *property.MsgingProps, repTkn string) {
 	}
 }
 
-func processEvent(props *property.MsgingProps, event webhook.EventInterface) error {
+func processEvent(props *msgprops.Props, event webhook.EventInterface) error {
 	source, repTkn, err := checkBasicContent(event)
 	if err != nil {
 		log.L.Warn(err)
@@ -131,7 +131,7 @@ func processEvent(props *property.MsgingProps, event webhook.EventInterface) err
 	return nil
 }
 
-func MessageMain(props *property.MsgingProps, msg *webhook.CallbackRequest) {
+func MessageMain(props *msgprops.Props, msg *webhook.CallbackRequest) {
 	if err := validateDst(props, msg); err != nil {
 		log.L.Error(err)
 		return
