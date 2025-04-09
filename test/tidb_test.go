@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"nippo/database"
 	"nippo/database/tidb"
+	"nippo/timeconv"
+	"time"
 
 	"os"
 	"testing"
@@ -25,6 +27,7 @@ var orgIdStr string
 var userId []uint8
 var morningId []uint8
 var reportId []uint8
+var eveningId []uint8
 
 func TestOpenDb(t *testing.T) {
 	godotenv.Load("../bin/.env")
@@ -83,39 +86,6 @@ func TestUserSetting(t *testing.T) {
 	})
 	if err != nil {
 		t.Fatal(err)
-	}
-}
-
-func TestReadOrgAndUser(t *testing.T) {
-	readOrg, err := db.ReadOrg(orgIdStr)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if readOrg.LineId != ORG_LINE_ID || readOrg.Name != ORG_NAME {
-		t.Fatal("read wrong data")
-	}
-
-	readUser, err := db.ReadUser(USER_LINE_ID)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if !bytes.Equal(readUser.Id, userId) || readUser.Name != USER_NAME {
-		t.Fatal("read wrong user")
-	}
-	if readUser.CarNumber != CAR_NUMBER || readUser.NextState != 9 {
-		t.Fatal("read wrong user")
-	}
-
-	users, err := db.ReadUsers(orgIdStr)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	if len(users) != 1 {
-		t.Fatal("read wrong users")
-	}
-	if !bytes.Equal(users[0].Id, userId) {
-		t.Fatal("read wrong users")
 	}
 }
 
@@ -196,7 +166,6 @@ func TestDailyReport(t *testing.T) {
 }
 
 func TestEveningCall(t *testing.T) {
-	var eveningId []uint8
 	err := db.Tx(func(tx database.Transaction) error {
 		var err error
 		eveningId, err = tx.CreateEveningCall(userId, USER_NAME, CAR_NUMBER, ALC_PHOTO)
@@ -371,6 +340,84 @@ func TestLoading(t *testing.T) {
 	}
 	if !bytes.Equal(readUser.CurrentOperation, loadId) {
 		t.Fatal("read wrong user")
+	}
+}
+
+func TestReadOrgAndUser(t *testing.T) {
+	readOrg, err := db.ReadOrg(orgIdStr)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if readOrg.LineId != ORG_LINE_ID || readOrg.Name != ORG_NAME {
+		t.Fatal("read wrong data")
+	}
+
+	readUser, err := db.ReadUser(USER_LINE_ID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !bytes.Equal(readUser.Id, userId) || readUser.Name != USER_NAME {
+		t.Fatal("read wrong user")
+	}
+	if readUser.CarNumber != CAR_NUMBER || readUser.NextState != 9 {
+		t.Fatal("read wrong user")
+	}
+
+	users, err := db.ReadUsers(orgIdStr)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if len(users) != 1 {
+		t.Fatal("read wrong users")
+	}
+	if !bytes.Equal(users[0].Id, userId) {
+		t.Fatal("read wrong users")
+	}
+
+	userUuid, err := uuid.FromBytes(userId)
+	if err != nil {
+		t.Fatal(err)
+	}
+	userIdStr := userUuid.String()
+
+	now := time.Now() // this code does not care TZs other than JST
+	from, to := timeconv.UtcRangeFromJstMonth(now.Year(), now.Month())
+
+	mCalls, err := db.ReadMorningCalls(userIdStr, from, to)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if len(mCalls) != 1 {
+		t.Fatal("read wrong morning calls")
+	}
+	if !bytes.Equal(mCalls[0].Id, morningId) {
+		t.Fatal("read wrong morning calls")
+	}
+
+	eCalls, err := db.ReadEveningCalls(userIdStr, from, to)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if len(eCalls) != 1 {
+		t.Fatal("read wrong evening calls")
+	}
+	if !bytes.Equal(eCalls[0].Id, eveningId) {
+		t.Fatal("read wrong evening calls")
+	}
+
+	reports, err := db.ReadDailyReports(userIdStr, from, to)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if len(reports) != 1 {
+		t.Fatal("read wrong daily reports")
+	}
+	if !bytes.Equal(reports[0].Id, reportId) {
+		t.Fatal("read wrong daily reports")
 	}
 }
 

@@ -3,6 +3,7 @@ package tidb
 import (
 	"errors"
 	"nippo/schema"
+	"time"
 
 	"github.com/google/uuid"
 )
@@ -44,6 +45,34 @@ func (ti TiDbTx) CreateDailyReport(
 	}
 
 	return call.Id, nil
+}
+
+func (ti TiDb) ReadDailyReports(
+	userIdStr string,
+	from time.Time,
+	to time.Time,
+) ([]schema.DailyReport, error) {
+	if len(userIdStr) != schema.ID_STR_LEN {
+		return nil, errors.New("unexpected user id length")
+	}
+
+	userId, err := uuid.Parse(userIdStr)
+	if err != nil {
+		return nil, err
+	}
+
+	user := schema.User{Id: userId[:]}
+	var reports []schema.DailyReport
+	err = ti.orm.Model(&user).Where(
+		"created_at >= ? AND created_at < ?",
+		from,
+		to,
+	).Association("DailyReports").Find(&reports)
+	if err != nil {
+		return nil, err
+	}
+
+	return reports, err
 }
 
 func (ti TiDbTx) UpdateDReportECall(repoId []uint8, eveningId []uint8) error {

@@ -52,11 +52,31 @@ func (ti TiDbTx) CreateMorningCall(
 }
 
 func (ti TiDb) ReadMorningCalls(
-	year int,
+	userIdStr string,
 	from time.Time,
 	to time.Time,
 ) ([]schema.MorningCall, error) {
-	panic("not implemented")
+	if len(userIdStr) != schema.ID_STR_LEN {
+		return nil, errors.New("unexpected id length")
+	}
+
+	userId, err := uuid.Parse(userIdStr)
+	if err != nil {
+		return nil, err
+	}
+
+	user := schema.User{Id: userId[:]}
+	var calls []schema.MorningCall
+	err = ti.orm.Model(&user).Where(
+		"created_at >= ? AND created_at < ?",
+		from,
+		to,
+	).Association("MorningCalls").Find(&calls)
+	if err != nil {
+		return nil, err
+	}
+
+	return calls, nil
 }
 
 func (ti TiDbTx) UpdateMCallHealth(callId []uint8) error {
@@ -136,11 +156,31 @@ func (ti TiDbTx) CreateEveningCall(
 }
 
 func (ti TiDb) ReadEveningCalls(
-	year int,
+	userIdStr string,
 	from time.Time,
 	to time.Time,
 ) ([]schema.EveningCall, error) {
-	panic("not implemented")
+	if len(userIdStr) != schema.ID_STR_LEN {
+		return nil, errors.New("unexpected id length")
+	}
+
+	userId, err := uuid.Parse(userIdStr)
+	if err != nil {
+		return nil, err
+	}
+
+	user := schema.User{Id: userId[:]}
+	var calls []schema.EveningCall
+	err = ti.orm.Model(&user).Where(
+		"created_at >= ? AND created_at < ?",
+		from,
+		to,
+	).Association("EveningCalls").Find(&calls)
+	if err != nil {
+		return nil, err
+	}
+
+	return calls, nil
 }
 
 func (ti TiDbTx) UpdateECallNote(callId []uint8, note schema.CleanText) error {
