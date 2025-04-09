@@ -7,6 +7,8 @@ import (
 	"nippo/database/tidb"
 	"nippo/lambda/response"
 	"nippo/log"
+	"nippo/view/q"
+	"nippo/view/viewprops"
 	"os"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -63,27 +65,28 @@ func handler(
 	ctx context.Context,
 	req events.APIGatewayProxyRequest,
 ) (events.APIGatewayProxyResponse, error) {
-	qParams := req.QueryStringParameters
+	params := req.QueryStringParameters
 
-	q, ok := qParams["q"]
-	if !ok {
+	q, err := q.FromParams(params)
+	if err != nil {
 		return response.BadRequest(), nil
 	}
 
-	switch q {
-	case "users":
-		panic("not implemented")
-	case "reports":
-		panic("not implemented")
-	case "print":
-		panic("not implemented")
-	case "calls":
-		panic("not implemented")
-	case "download":
-		panic("not implemented")
-	default:
-		return response.BadRequest(), nil
+	props := viewprops.NewProps(
+		ctx,
+		env.bucket,
+		env.orgIdStr,
+		db,
+		s3Client,
+	)
+
+	b, err := q.Query(props)
+	if err != nil {
+		log.L.Error(err)
+		return response.Internal(), nil
 	}
+
+	return response.Json(b), nil
 }
 
 func main() {

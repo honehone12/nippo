@@ -16,12 +16,32 @@ func BadRequest() events.APIGatewayProxyResponse {
 	}
 }
 
+func Internal() events.APIGatewayProxyResponse {
+	return events.APIGatewayProxyResponse{
+		StatusCode: http.StatusInternalServerError,
+		Body:       "internal server error",
+		Headers: map[string]string{
+			"Content-Type": "text/plain",
+		},
+	}
+}
+
 func Ok() events.APIGatewayProxyResponse {
 	return events.APIGatewayProxyResponse{
 		StatusCode: http.StatusOK,
 		Body:       "ok",
 		Headers: map[string]string{
 			"Content-Type": "text/plain",
+		},
+	}
+}
+
+func Json(b []byte) events.APIGatewayProxyResponse {
+	return events.APIGatewayProxyResponse{
+		StatusCode: http.StatusOK,
+		Body:       string(b),
+		Headers: map[string]string{
+			"Content-Type": "application/json",
 		},
 	}
 }
