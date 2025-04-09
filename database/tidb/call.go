@@ -3,6 +3,7 @@ package tidb
 import (
 	"errors"
 	"nippo/schema"
+	"time"
 
 	"github.com/google/uuid"
 )
@@ -48,6 +49,14 @@ func (ti TiDbTx) CreateMorningCall(
 	}
 
 	return call.Id, nil
+}
+
+func (ti TiDb) ReadMorningCalls(
+	year int,
+	from time.Time,
+	to time.Time,
+) ([]schema.MorningCall, error) {
+	panic("not implemented")
 }
 
 func (ti TiDbTx) UpdateMCallHealth(callId []uint8) error {
@@ -124,6 +133,14 @@ func (ti TiDbTx) CreateEveningCall(
 	}
 
 	return call.Id, nil
+}
+
+func (ti TiDb) ReadEveningCalls(
+	year int,
+	from time.Time,
+	to time.Time,
+) ([]schema.EveningCall, error) {
+	panic("not implemented")
 }
 
 func (ti TiDbTx) UpdateECallNote(callId []uint8, note schema.CleanText) error {
