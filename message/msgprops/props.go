@@ -18,7 +18,7 @@ type Props struct {
 	s3       *s3.Client
 }
 
-func NewMessagingProps(
+func NewProps(
 	ctx context.Context,
 	bucket string,
 	orgIdStr string,

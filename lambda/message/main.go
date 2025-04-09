@@ -160,7 +160,7 @@ func handler(
 		return response.BadRequest(), nil
 	}
 
-	props := msgprops.NewMessagingProps(
+	props := msgprops.NewProps(
 		ctx,
 		env.bucket,
 		env.orgIdStr,
