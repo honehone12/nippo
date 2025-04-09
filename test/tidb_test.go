@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"nippo/database"
 	"nippo/database/tidb"
+	"nippo/schema"
 	"nippo/timeconv"
 	"time"
 
@@ -61,7 +62,7 @@ func TestCreateOrg(t *testing.T) {
 		}
 		orgIdStr = orgId.String()
 
-		return tx.UpdateOrgLineId(orgIdStr, ORG_LINE_ID)
+		return tx.UpdateOrgLineId(schema.CleanText(orgIdStr), ORG_LINE_ID)
 	})
 	if err != nil {
 		t.Fatal(err)
@@ -71,7 +72,7 @@ func TestCreateOrg(t *testing.T) {
 func TestUserSetting(t *testing.T) {
 	err := db.Tx(func(tx database.Transaction) error {
 		var err error
-		userId, err = tx.CreateUser(orgIdStr, USER_LINE_ID)
+		userId, err = tx.CreateUser(schema.CleanText(orgIdStr), USER_LINE_ID)
 		if err != nil {
 			return err
 		}
@@ -344,7 +345,7 @@ func TestLoading(t *testing.T) {
 }
 
 func TestReadFromOrg(t *testing.T) {
-	readOrg, err := db.ReadOrg(orgIdStr)
+	readOrg, err := db.ReadOrg(schema.CleanText(orgIdStr))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -363,7 +364,7 @@ func TestReadFromOrg(t *testing.T) {
 		t.Fatal("read wrong user")
 	}
 
-	users, err := db.ReadUsers(orgIdStr)
+	users, err := db.ReadUsers(schema.CleanText(orgIdStr))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -384,7 +385,7 @@ func TestReadFromOrg(t *testing.T) {
 	now := time.Now() // this code does not care TZs other than JST
 	from, to := timeconv.UtcRangeFromJstMonth(now.Year(), now.Month())
 
-	mCalls, err := db.ReadMorningCalls(userIdStr, from, to)
+	mCalls, err := db.ReadMorningCalls(schema.CleanText(userIdStr), from, to)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -396,7 +397,7 @@ func TestReadFromOrg(t *testing.T) {
 		t.Fatal("read wrong morning calls")
 	}
 
-	eCalls, err := db.ReadEveningCalls(userIdStr, from, to)
+	eCalls, err := db.ReadEveningCalls(schema.CleanText(userIdStr), from, to)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -408,7 +409,7 @@ func TestReadFromOrg(t *testing.T) {
 		t.Fatal("read wrong evening calls")
 	}
 
-	reports, err := db.ReadDailyReports(userIdStr, from, to)
+	reports, err := db.ReadDailyReports(schema.CleanText(userIdStr), from, to)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -428,7 +429,7 @@ func TestReadFromReport(t *testing.T) {
 	}
 	repoIdStr := repoUuid.String()
 
-	locs, err := db.ReadLocations(repoIdStr)
+	locs, err := db.ReadLocations(schema.CleanText(repoIdStr))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -440,7 +441,7 @@ func TestReadFromReport(t *testing.T) {
 		t.Fatal("read wrong locations")
 	}
 
-	rests, err := db.ReadRestings(repoIdStr)
+	rests, err := db.ReadRestings(schema.CleanText(repoIdStr))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -452,7 +453,7 @@ func TestReadFromReport(t *testing.T) {
 		t.Fatal("read wrong restings")
 	}
 
-	waits, err := db.ReadWaitings(repoIdStr)
+	waits, err := db.ReadWaitings(schema.CleanText(repoIdStr))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -464,7 +465,7 @@ func TestReadFromReport(t *testing.T) {
 		t.Fatal("read wrong waitings")
 	}
 
-	loads, err := db.ReadLoadings(repoIdStr)
+	loads, err := db.ReadLoadings(schema.CleanText(repoIdStr))
 	if err != nil {
 		t.Fatal(err)
 	}
