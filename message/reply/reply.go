@@ -40,7 +40,7 @@ func ReplyMoCallHealth() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
 			Text:       "疾病、疲労、睡眠不足等はありますか？",
-			QuickReply: QuickRepFlagTrue(),
+			QuickReply: QuickRepFlag(),
 		},
 	}
 }
@@ -49,7 +49,7 @@ func ReplyMCallCarCheck() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
 			Text:       "車両の日常点検は良好でしたか？",
-			QuickReply: QuickRepFlagTrue(),
+			QuickReply: QuickRepFlag(),
 		},
 	}
 }
@@ -183,7 +183,7 @@ func ReplyInDuty() []messaging_api.MessageInterface {
 func ReplyDone() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
-			Text:       "完了しました\nおつかれさまです！(^o^)丿",
+			Text:       "完了しました",
 			QuickReply: QuickRepStartMenu(),
 		},
 	}

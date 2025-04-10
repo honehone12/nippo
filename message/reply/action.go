@@ -2,7 +2,7 @@ package reply
 
 import "github.com/line/line-bot-sdk-go/v8/linebot/messaging_api"
 
-const IGNORE_TXT_TEMPLATE = "IGNORE_TXT_TEMPLATE"
+const IGNORE_TXT_ACT_DATA = "IGNORE_TXT"
 const USER_SETTING_ACT_DATA = "USER_SETTING"
 const START_DUTY_ACT_DATA = "START_DUTY"
 const START_WAITING_ACT_DATA = "START_WAITING"
@@ -25,7 +25,7 @@ func ActionUserSetting() messaging_api.PostbackAction {
 func ActionMCallNote() messaging_api.PostbackAction {
 	return messaging_api.PostbackAction{
 		Label:       "入力する",
-		Data:        IGNORE_TXT_TEMPLATE,
+		Data:        IGNORE_TXT_ACT_DATA,
 		InputOption: "openKeyboard",
 		FillInText:  "【指示事項】\n【天気】\n【その他】",
 	}
@@ -34,7 +34,7 @@ func ActionMCallNote() messaging_api.PostbackAction {
 func ActionECallNote() messaging_api.PostbackAction {
 	return messaging_api.PostbackAction{
 		Label:       "入力する",
-		Data:        IGNORE_TXT_TEMPLATE,
+		Data:        IGNORE_TXT_ACT_DATA,
 		InputOption: "openKeyboard",
 		FillInText:  "【指示事項】\n【交替運転者に対する通告】\n【車両・道路及び運行の状況】\n【その他】",
 	}
@@ -55,7 +55,7 @@ func ActionSendMtrPhoto() messaging_api.CameraAction {
 func ActionDReportTrouble() messaging_api.PostbackAction {
 	return messaging_api.PostbackAction{
 		Label:       "入力する",
-		Data:        IGNORE_TXT_TEMPLATE,
+		Data:        IGNORE_TXT_ACT_DATA,
 		InputOption: "openKeyboard",
 		FillInText:  "【事故】\n【著しい遅延】\n【その他の異常】",
 	}
@@ -64,7 +64,7 @@ func ActionDReportTrouble() messaging_api.PostbackAction {
 func ActionDReportNote() messaging_api.PostbackAction {
 	return messaging_api.PostbackAction{
 		Label:       "入力する",
-		Data:        IGNORE_TXT_TEMPLATE,
+		Data:        IGNORE_TXT_ACT_DATA,
 		InputOption: "openKeyboard",
 		FillInText:  "【業務の交替がある場合】時間：　場所：　\n【件数】集荷：　配達：　\n【高速利用】\n【その他】",
 	}
@@ -79,7 +79,7 @@ func ActionSendLocation() messaging_api.LocationAction {
 func ActionLocNote() messaging_api.PostbackAction {
 	return messaging_api.PostbackAction{
 		Label:       "入力する",
-		Data:        IGNORE_TXT_TEMPLATE,
+		Data:        IGNORE_TXT_ACT_DATA,
 		InputOption: "openKeyboard",
 		FillInText:  "【説明】",
 	}
@@ -110,7 +110,7 @@ func ActionEndLoading() messaging_api.LocationAction {
 func ActionLoadNote() messaging_api.PostbackAction {
 	return messaging_api.PostbackAction{
 		Label:       "入力する",
-		Data:        IGNORE_TXT_TEMPLATE,
+		Data:        IGNORE_TXT_ACT_DATA,
 		InputOption: "openKeyboard",
 		FillInText:  "【作業内容】\n【その他】",
 	}
@@ -133,7 +133,7 @@ func ActionEndResting() messaging_api.LocationAction {
 func ActionRestNote() messaging_api.PostbackAction {
 	return messaging_api.PostbackAction{
 		Label:       "入力する",
-		Data:        IGNORE_TXT_TEMPLATE,
+		Data:        IGNORE_TXT_ACT_DATA,
 		InputOption: "openKeyboard",
 		FillInText:  "【睡眠】",
 	}
@@ -148,7 +148,7 @@ func ActionEndWaiting() messaging_api.LocationAction {
 func ActionWaitNote() messaging_api.PostbackAction {
 	return messaging_api.PostbackAction{
 		Label:       "入力する",
-		Data:        IGNORE_TXT_TEMPLATE,
+		Data:        IGNORE_TXT_ACT_DATA,
 		InputOption: "openKeyboard",
 		FillInText:  "【荷主指定時刻】\n【その他】",
 	}

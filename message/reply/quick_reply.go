@@ -30,7 +30,7 @@ func QuickRepSendAlcPhoto() *messaging_api.QuickReply {
 	return &messaging_api.QuickReply{
 		Items: []messaging_api.QuickReplyItem{
 			{Action: ActionSendAlcPhoto()},
-			// {Action: ActionReset()},
+			{Action: ActionReset()},
 		},
 	}
 }
@@ -136,11 +136,11 @@ func QuickRepInDuty() *messaging_api.QuickReply {
 	}
 }
 
-func QuickRepFlagTrue() *messaging_api.QuickReply {
+func QuickRepFlag() *messaging_api.QuickReply {
 	return &messaging_api.QuickReply{
 		Items: []messaging_api.QuickReplyItem{
 			{Action: ActionFlagTrue()},
-			// {Action: ActionReset()},
+			{Action: ActionReset()},
 		},
 	}
 }

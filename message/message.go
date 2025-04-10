@@ -9,12 +9,21 @@ import (
 	"nippo/message/reply"
 	"nippo/message/state"
 	"nippo/schema"
-	"strings"
 
 	"github.com/line/line-bot-sdk-go/v8/linebot/messaging_api"
 	"github.com/line/line-bot-sdk-go/v8/linebot/webhook"
 	"gorm.io/gorm"
 )
+
+type basicContent struct {
+	source     string
+	replyToken string
+	reset      bool
+}
+
+func (bc basicContent) ignore() bool {
+	return len(bc.source) == 0 || len(bc.replyToken) == 0
+}
 
 func validateDst(props *msgprops.Props, msg *webhook.CallbackRequest) error {
 	db := props.Db()
@@ -42,39 +51,43 @@ func validateDst(props *msgprops.Props, msg *webhook.CallbackRequest) error {
 	return nil
 }
 
-func checkBasicContent(event webhook.EventInterface) (string, string, error) {
+func checkBasicContent(event webhook.EventInterface) (*basicContent, error) {
 	var source webhook.SourceInterface
-	var repTkn string
+	var content basicContent
 	switch e := event.(type) {
 	case webhook.MessageEvent:
 		source = e.Source
-		repTkn = e.ReplyToken
+		content.replyToken = e.ReplyToken
 	case webhook.PostbackEvent:
-		// add quit now logic here
-		// https://github.com/honehone12/nippo/issues/14
-
-		if strings.Compare(e.Postback.Data, reply.IGNORE_TXT_TEMPLATE) == 0 {
-			return "", "", nil
+		switch e.Postback.Data {
+		case reply.IGNORE_TXT_ACT_DATA:
+			return &content, nil
+		case reply.RESET_ACT_DATA:
+			source = e.Source
+			content.replyToken = e.ReplyToken
+			content.reset = true
+		default:
+			source = e.Source
+			content.replyToken = e.ReplyToken
 		}
-		source = e.Source
-		repTkn = e.ReplyToken
 	default:
-		return "", "", fmt.Errorf("unsupported event: %s", event.GetType())
+		return nil, fmt.Errorf("unsupported event: %s", event.GetType())
 	}
 
-	if source == nil || len(repTkn) == 0 {
-		return "", "", errors.New("nil souce or empty reply token")
+	if source == nil || len(content.replyToken) == 0 {
+		return nil, errors.New("nil souce or empty reply token")
 	}
 
 	s, ok := source.(webhook.UserSource)
 	if !ok {
-		return "", "", fmt.Errorf("unsupported source: %s", source.GetType())
+		return nil, fmt.Errorf("unsupported source: %s", source.GetType())
 	}
 	if len(s.UserId) == 0 {
-		return "", "", errors.New("source has empty user id")
+		return nil, errors.New("source has empty user id")
 	}
 
-	return s.UserId, repTkn, nil
+	content.source = s.UserId
+	return &content, nil
 }
 
 func sendErrMsg(props *msgprops.Props, repTkn string) {
@@ -88,17 +101,17 @@ func sendErrMsg(props *msgprops.Props, repTkn string) {
 	}
 }
 
-func processEvent(props *msgprops.Props, event webhook.EventInterface) error {
-	source, repTkn, err := checkBasicContent(event)
+func processEvent(props *msgprops.Props, event webhook.EventInterface) (*basicContent, error) {
+	bc, err := checkBasicContent(event)
 	if err != nil {
 		log.L.Warn(err)
-		return nil
+		return nil, nil
 	}
-	if len(source) == 0 || len(repTkn) == 0 {
-		return nil
+	if bc.ignore() {
+		return nil, nil
 	}
 
-	cleanSource := input.Clean(source)
+	cleanSource := input.Clean(bc.source)
 	user, err := props.Db().ReadUser(cleanSource)
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		log.L.Warnf("user not configured: %s", err)
@@ -106,25 +119,38 @@ func processEvent(props *msgprops.Props, event webhook.EventInterface) error {
 		unknown := schema.User{LineId: cleanSource}
 		err := st.Run(props, &unknown, event)
 		if err != nil {
-			sendErrMsg(props, repTkn)
-			return err
+			return bc, err
 		}
 
-		return nil
+		return nil, nil
 	} else if err != nil {
-		sendErrMsg(props, repTkn)
-		return err
+		return bc, err
+	}
+
+	if bc.reset {
+		err := state.Reset(props, user, bc.replyToken)
+		if err != nil {
+			return bc, err
+		}
+		return nil, nil
 	}
 
 	st, err := state.FromIdx(user.NextState)
 	if err != nil {
-		sendErrMsg(props, repTkn)
-		return err
+		return bc, err
 	}
 
 	err = st.Run(props, user, event)
 	if err != nil {
-		sendErrMsg(props, repTkn)
+		return bc, err
+	}
+
+	return nil, nil
+}
+
+func eventMain(props *msgprops.Props, event webhook.EventInterface) error {
+	if c, err := processEvent(props, event); err != nil {
+		sendErrMsg(props, c.replyToken)
 		return err
 	}
 
@@ -138,7 +164,7 @@ func MessageMain(props *msgprops.Props, msg *webhook.CallbackRequest) {
 	}
 
 	for _, e := range msg.Events {
-		if err := processEvent(props, e); err != nil {
+		if err := eventMain(props, e); err != nil {
 			log.L.Error(err)
 		}
 	}
