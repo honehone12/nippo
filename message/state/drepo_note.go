@@ -57,7 +57,7 @@ func (s StDRepoNote) Run(
 
 			req := messaging_api.ReplyMessageRequest{
 				ReplyToken: e.ReplyToken,
-				Messages:   reply.ReplyDone(),
+				Messages:   reply.ReplyGoodJob(),
 			}
 
 			_, err = props.Api().ReplyMessage(&req)

@@ -189,6 +189,15 @@ func ReplyDone() []messaging_api.MessageInterface {
 	}
 }
 
+func ReplyGoodJob() []messaging_api.MessageInterface {
+	return []messaging_api.MessageInterface{
+		messaging_api.TextMessage{
+			Text:       "完了しました\nおつかれさまです！(^o^)丿",
+			QuickReply: QuickRepStartMenu(),
+		},
+	}
+}
+
 func ReplyNone() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
