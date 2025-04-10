@@ -3,6 +3,7 @@ package tidb
 import (
 	"errors"
 	"nippo/schema"
+	"strings"
 
 	"github.com/google/uuid"
 )
@@ -46,6 +47,9 @@ func (ti TiDb) ReadOrg(idStr schema.CleanText) (*schema.Org, error) {
 func (ti TiDbTx) UpdateOrgLineId(idStr schema.CleanText, newLineId schema.CleanText) error {
 	if len(newLineId) != schema.LINE_ID_LEN {
 		return errors.New("unexpected line id length")
+	}
+	if !strings.HasPrefix(string(newLineId), "U") {
+		return errors.New("unexpected line id")
 	}
 
 	id, err := uuid.Parse(string(idStr))

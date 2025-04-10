@@ -409,6 +409,18 @@ func TestReadFromOrg(t *testing.T) {
 		t.Fatal("read wrong evening calls")
 	}
 
+	repoUuid, err := uuid.FromBytes(reportId)
+	if err != nil {
+		t.Fatal(err)
+	}
+	report, err := db.ReadDailyReport(schema.CleanText(repoUuid.String()))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if report.MeterPhoto != MTR_PHOTO {
+		t.Fatal("read wrong dialy report")
+	}
+
 	reports, err := db.ReadDailyReports(schema.CleanText(userIdStr), from, to)
 	if err != nil {
 		t.Fatal(err)

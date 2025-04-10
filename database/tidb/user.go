@@ -3,6 +3,7 @@ package tidb
 import (
 	"errors"
 	"nippo/schema"
+	"strings"
 
 	"github.com/google/uuid"
 )
@@ -13,6 +14,9 @@ func (ti TiDbTx) CreateUser(orgIdStr schema.CleanText, lineId schema.CleanText) 
 	}
 	if len(lineId) != schema.LINE_ID_LEN {
 		return nil, errors.New("unexpected line id length")
+	}
+	if !strings.HasPrefix(string(lineId), "U") {
+		return nil, errors.New("unexpected line id")
 	}
 
 	orgId, err := uuid.Parse(string(orgIdStr))
@@ -41,6 +45,9 @@ func (ti TiDbTx) CreateUser(orgIdStr schema.CleanText, lineId schema.CleanText) 
 func (ti TiDb) ReadUser(lineId schema.CleanText) (*schema.User, error) {
 	if len(lineId) != schema.LINE_ID_LEN {
 		return nil, errors.New("unexpected line id length")
+	}
+	if !strings.HasPrefix(string(lineId), "U") {
+		return nil, errors.New("unexpected line id")
 	}
 
 	user := schema.User{}

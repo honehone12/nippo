@@ -47,6 +47,24 @@ func (ti TiDbTx) CreateDailyReport(
 	return call.Id, nil
 }
 
+func (ti TiDb) ReadDailyReport(repoIdStr schema.CleanText) (*schema.DailyReport, error) {
+	if len(repoIdStr) != schema.ID_STR_LEN {
+		return nil, errors.New("unexpected report id length")
+	}
+
+	id, err := uuid.Parse(string(repoIdStr))
+	if err != nil {
+		return nil, err
+	}
+
+	repo := schema.DailyReport{Id: id[:]}
+	if res := ti.orm.Take(&repo); res.Error != nil {
+		return nil, err
+	}
+
+	return &repo, nil
+}
+
 func (ti TiDb) ReadDailyReports(
 	userIdStr schema.CleanText,
 	from time.Time,

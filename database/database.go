@@ -19,6 +19,7 @@ type Database interface {
 		from time.Time,
 		to time.Time,
 	) ([]schema.EveningCall, error)
+	ReadDailyReport(repoIdStr schema.CleanText) (*schema.DailyReport, error)
 	ReadDailyReports(
 		userIdStr schema.CleanText,
 		from time.Time,
