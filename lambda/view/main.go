@@ -25,9 +25,10 @@ type variable struct {
 }
 
 var (
-	env      variable
-	db       database.Database
-	s3Client *s3.Client
+	env       variable
+	db        database.Database
+	s3Client  *s3.Client
+	s3Presign *s3.PresignClient
 )
 
 func collectEnv() error {
@@ -65,6 +66,7 @@ func configAws() error {
 	}
 
 	s3Client = s3.NewFromConfig(cfg)
+	s3Presign = s3.NewPresignClient(s3Client)
 	return nil
 }
 
@@ -85,6 +87,7 @@ func handler(
 		env.orgId,
 		db,
 		s3Client,
+		s3Presign,
 	)
 
 	b, err := q.Query(props)

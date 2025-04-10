@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"nippo/schema"
+	"nippo/sss"
 	"nippo/view/viewprops"
 
 	"github.com/google/uuid"
@@ -27,7 +28,10 @@ func (q QDownload) Query(props *viewprops.Props) ([]byte, error) {
 
 	var meter string
 	if len(report.MeterPhoto) > 0 {
-		meter = report.MeterPhoto
+		meter, err = sss.GetPresigned(props, report.MeterPhoto)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	var morningAlc string
@@ -36,7 +40,10 @@ func (q QDownload) Query(props *viewprops.Props) ([]byte, error) {
 		if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, err
 		} else if err == nil && len(mCall.AlcPhoto) > 0 {
-			morningAlc = mCall.AlcPhoto
+			morningAlc, err = sss.GetPresigned(props, mCall.AlcPhoto)
+			if err != nil {
+				return nil, err
+			}
 		}
 	}
 
@@ -46,7 +53,10 @@ func (q QDownload) Query(props *viewprops.Props) ([]byte, error) {
 		if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, err
 		} else if err == nil && len(eCall.AlcPhoto) > 0 {
-			eveningAlc = eCall.AlcPhoto
+			eveningAlc, err = sss.GetPresigned(props, eCall.AlcPhoto)
+			if err != nil {
+				return nil, err
+			}
 		}
 	}
 

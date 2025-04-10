@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"nippo/message/msgprops"
+	"nippo/view/viewprops"
 	"time"
 
 	"github.com/aws/aws-sdk-go-v2/service/s3"
@@ -31,65 +32,31 @@ func PutJpg(
 		return "", err
 	}
 
-	s3In := s3.PutObjectInput{
+	s3Put := s3.PutObjectInput{
 		Bucket:        props.Bucket(),
 		Key:           key,
 		Body:          body,
 		ContentLength: &length,
 	}
 
-	_, err = props.S3().PutObject(props.Ctx(), &s3In)
+	_, err = props.S3().PutObject(props.Ctx(), &s3Put)
 	return *key, err
 }
 
-/*
-package main
+func GetPresigned(props *viewprops.Props, key string) (string, error) {
+	s3Get := s3.GetObjectInput{
+		Bucket: props.Bucket(),
+		Key:    &key,
+	}
 
-import (
-    "context"
-    "fmt"
-    "time"
+	presigned, err := props.S3Presigne().PresignGetObject(
+		props.Ctx(),
+		&s3Get,
+		s3.WithPresignExpires(time.Minute*30),
+	)
+	if err != nil {
+		return "", err
+	}
 
-    "github.com/aws/aws-sdk-go-v2/aws"
-    "github.com/aws/aws-sdk-go-v2/config"
-    "github.com/aws/aws-sdk-go-v2/service/s3"
-    "github.com/aws/aws-sdk-go-v2/service/s3/types"
-)
-
-func main() {
-    // AWSセッションを作成
-    cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion("ap-northeast-1")) // 適切なリージョンを指定
-    if err != nil {
-        fmt.Println("Error loading configuration:", err)
-        return
-    }
-
-    // S3クライアントを作成
-    client := s3.NewFromConfig(cfg)
-
-    // Presignクライアントを作成
-    presignClient := s3.NewPresignClient(client)
-
-    // バケット名とオブジェクトキーを指定
-    bucketName := "your-bucket-name"
-    objectKey := "your-object-key"
-
-    // GetObjectInputを作成
-    getObjectInput := &s3.GetObjectInput{
-        Bucket: aws.String(bucketName),
-        Key:    aws.String(objectKey),
-    }
-
-    // 事前署名付きURLを生成（有効期限を設定）
-    presignedURL, err := presignClient.PresignGetObject(context.TODO(), getObjectInput, func(options *s3.PresignOptions) {
-        options.Expires = 15 * time.Minute // 有効期限15分
-    })
-    if err != nil {
-        fmt.Println("Error generating presigned URL:", err)
-        return
-    }
-
-    fmt.Println("Presigned URL:", presignedURL.URL)
+	return presigned.URL, nil
 }
-
-*/
