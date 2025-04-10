@@ -15,155 +15,155 @@ const (
 )
 
 type Org struct {
-	Id        []uint8   `gorm:"primaryKey;type:binary(16)"`
-	CreatedAt time.Time `gorm:"not null"`
-	UpdatedAt time.Time
-	DeletedAt gorm.DeletedAt `gorm:"index"`
+	Id        []uint8        `gorm:"primaryKey;type:binary(16)" json:"id"`
+	CreatedAt time.Time      `gorm:"not null" json:"created_at"`
+	UpdatedAt time.Time      `json:"updated_at"`
+	DeletedAt gorm.DeletedAt `gorm:"index" json:"deleted_at"`
 
-	Name   CleanText `gorm:"not null;size:100"`
-	LineId CleanText `gorm:"unique;type:char(33)"`
-	Users  []User    `gorm:"foreignKey:OrgId;references:Id"`
+	Name   CleanText `gorm:"not null;size:100" json:"name"`
+	LineId CleanText `gorm:"unique;type:char(33)" json:"line_id"`
+	Users  []User    `gorm:"foreignKey:OrgId;references:Id" json:"-"`
 }
 
 type User struct {
-	Id        []uint8   `gorm:"primaryKey;type:binary(16)"`
-	CreatedAt time.Time `gorm:"not null"`
-	UpdatedAt time.Time
-	DeletedAt gorm.DeletedAt `gorm:"index"`
+	Id        []uint8        `gorm:"primaryKey;type:binary(16)" json:"id"`
+	CreatedAt time.Time      `gorm:"not null" json:"created_at"`
+	UpdatedAt time.Time      `json:"updated_at"`
+	DeletedAt gorm.DeletedAt `gorm:"index" json:"deleted_at"`
 
-	Name             CleanText `gorm:"not null;size:100"`
-	LineId           CleanText `gorm:"unique;not null;type:char(33);index"`
-	CarNumber        CleanText `gorm:"size:100"`
-	CurrentOperation []uint8   `gorm:"type:binary(16)"`
-	CurrentDuty      []uint8   `gorm:"type:binary(16)"`
-	NextState        StateIdx
+	Name             CleanText `gorm:"not null;size:100" json:"name"`
+	LineId           CleanText `gorm:"unique;not null;type:char(33);index" json:"line_id"`
+	CarNumber        CleanText `gorm:"size:100" json:"car_number"`
+	CurrentOperation []uint8   `gorm:"type:binary(16)" json:"-"`
+	CurrentDuty      []uint8   `gorm:"type:binary(16)" json:"-"`
+	NextState        StateIdx  `json:"-"`
 
-	MorningCalls []MorningCall `gorm:"foreignKey:UserId;references:Id"`
-	EveningCalls []EveningCall `gorm:"foreignKey:UserId;references:Id"`
-	DailyReports []DailyReport `gorm:"foreignKey:UserId;references:Id"`
+	MorningCalls []MorningCall `gorm:"foreignKey:UserId;references:Id" json:"-"`
+	EveningCalls []EveningCall `gorm:"foreignKey:UserId;references:Id" json:"-"`
+	DailyReports []DailyReport `gorm:"foreignKey:UserId;references:Id" json:"-"`
 
-	OrgId []uint8 `gorm:"not null;type:binary(16)"` // ;index
+	OrgId []uint8 `gorm:"not null;type:binary(16)" json:"org_id"` // ;index
 }
 
 type MorningCall struct {
-	Id        []uint8   `gorm:"primaryKey;type:binary(16)"`
-	CreatedAt time.Time `gorm:"not null;index"`
-	UpdatedAt time.Time
-	DeletedAt gorm.DeletedAt `gorm:"index"`
+	Id        []uint8        `gorm:"primaryKey;type:binary(16)" json:"id"`
+	CreatedAt time.Time      `gorm:"not null;index" json:"created_at"`
+	UpdatedAt time.Time      `json:"updated_at"`
+	DeletedAt gorm.DeletedAt `gorm:"index" json:"deleted_at"`
 
-	Caller          CleanText `gorm:"size:100"`
-	Name            CleanText `gorm:"size:100"`
-	CarNumber       CleanText `gorm:"size:100"`
-	Method          CallMethod
-	UsingAlcChecker bool
-	AlcCheck        bool
-	AlcPhoto        string `gorm:"size:100"`
-	HealthCheck     bool
-	CarCheck        bool
-	Note            CleanText `gorm:"size:5000"`
+	Caller          CleanText  `gorm:"size:100" json:"caller"`
+	Name            CleanText  `gorm:"size:100" json:"name"`
+	CarNumber       CleanText  `gorm:"size:100" json:"car_number"`
+	Method          CallMethod `json:"method"`
+	UsingAlcChecker bool       `json:"using_alc_checker"`
+	AlcCheck        bool       `json:"alc_check"`
+	AlcPhoto        string     `gorm:"size:100" json:"alc_photo"`
+	HealthCheck     bool       `json:"health_check"`
+	CarCheck        bool       `json:"car_check"`
+	Note            CleanText  `gorm:"size:5000" json:"note"`
 
-	UserId []uint8 `gorm:"not null;type:binary(16)"` // ;index
+	UserId []uint8 `gorm:"not null;type:binary(16)" json:"user_id"` // ;index
 }
 
 type EveningCall struct {
-	Id        []uint8   `gorm:"primaryKey;type:binary(16)"`
-	CreatedAt time.Time `gorm:"not null;index"`
-	UpdatedAt time.Time
-	DeletedAt gorm.DeletedAt `gorm:"index"`
+	Id        []uint8        `gorm:"primaryKey;type:binary(16)" json:"id"`
+	CreatedAt time.Time      `gorm:"not null;index" json:"created_at"`
+	UpdatedAt time.Time      `json:"updated_at"`
+	DeletedAt gorm.DeletedAt `gorm:"index" json:"deleted_at"`
 
-	Caller          CleanText `gorm:"size:100"`
-	Name            CleanText `gorm:"size:100"`
-	CarNumber       CleanText `gorm:"size:100"`
-	Method          CallMethod
-	UsingAlcChecker bool
-	AlcCheck        bool
-	AlcPhoto        string    `gorm:"size:100"`
-	Note            CleanText `gorm:"size:5000"`
+	Caller          CleanText  `gorm:"size:100" json:"caller"`
+	Name            CleanText  `gorm:"size:100" json:"name"`
+	CarNumber       CleanText  `gorm:"size:100" json:"car_number"`
+	Method          CallMethod `json:"method"`
+	UsingAlcChecker bool       `json:"using_alc_checker"`
+	AlcCheck        bool       `json:"alc_check"`
+	AlcPhoto        string     `gorm:"size:100" json:"alc_photo"`
+	Note            CleanText  `gorm:"size:5000" json:"note"`
 
-	UserId []uint8 `gorm:"not null;type:binary(16)"` // ;index
+	UserId []uint8 `gorm:"not null;type:binary(16)" json:"user_id"` // ;index
 }
 
 type DailyReport struct {
-	Id        []uint8   `gorm:"primaryKey;type:binary(16)"`
-	CreatedAt time.Time `gorm:"not null;index"`
-	UpdatedAt time.Time
-	DeletedAt gorm.DeletedAt `gorm:"index"`
+	Id        []uint8        `gorm:"primaryKey;type:binary(16)" json:"id"`
+	CreatedAt time.Time      `gorm:"not null;index" json:"created_at"`
+	UpdatedAt time.Time      `json:"updated_at"`
+	DeletedAt gorm.DeletedAt `gorm:"index" json:"deleted_at"`
 
-	MorningCallId []uint8 `gorm:"not null;type:binary(16)"`
-	EveningCallId []uint8 `gorm:"type:binary(16)"`
+	MorningCallId []uint8 `gorm:"not null;type:binary(16)" json:"morning_call_id"`
+	EveningCallId []uint8 `gorm:"type:binary(16)" json:"evening_call_id"`
 
-	Name      CleanText `gorm:"size:100"`
-	CarNumber CleanText `gorm:"size:100"`
+	Name      CleanText `gorm:"size:100" json:"name"`
+	CarNumber CleanText `gorm:"size:100" json:"car_number"`
 
-	MeterPhoto string    `gorm:"size:100"`
-	Trouble    CleanText `gorm:"size:5000"`
-	Note       CleanText `gorm:"size:5000"`
+	MeterPhoto string    `gorm:"size:100" json:"meter_photo"`
+	Trouble    CleanText `gorm:"size:5000" json:"trouble"`
+	Note       CleanText `gorm:"size:5000" json:"note"`
 
-	Locations []Location `gorm:"foreignKey:DailyReportId;references:Id"`
-	Waitings  []Waiting  `gorm:"foreignKey:DailyReportId;references:Id"`
-	Loadings  []Loading  `gorm:"foreignKey:DailyReportId;references:Id"`
-	Restings  []Resting  `gorm:"foreignKey:DailyReportId;references:Id"`
+	Locations []Location `gorm:"foreignKey:DailyReportId;references:Id" json:"-"`
+	Waitings  []Waiting  `gorm:"foreignKey:DailyReportId;references:Id" json:"-"`
+	Loadings  []Loading  `gorm:"foreignKey:DailyReportId;references:Id" json:"-"`
+	Restings  []Resting  `gorm:"foreignKey:DailyReportId;references:Id" json:"-"`
 
-	UserId []uint8 `gorm:"not null;type:binary(16)"` // ;index
+	UserId []uint8 `gorm:"not null;type:binary(16)" json:"user_id"` // ;index
 }
 
 type Location struct {
-	Id        []uint8   `gorm:"primaryKey;type:binary(16)"`
-	CreatedAt time.Time `gorm:"not null"`
-	UpdatedAt time.Time
-	DeletedAt gorm.DeletedAt `gorm:"index"`
+	Id        []uint8        `gorm:"primaryKey;type:binary(16)" json:"id"`
+	CreatedAt time.Time      `gorm:"not null" json:"created_at"`
+	UpdatedAt time.Time      `json:"updated_at"`
+	DeletedAt gorm.DeletedAt `gorm:"index" json:"deleted_at"`
 
-	Label     CleanText `gorm:"size:100"`
-	Address   CleanText `gorm:"size:100"`
-	Latitude  float64
-	Longitude float64
-	ShortNote CleanText `gorm:"size:100"`
+	Label     CleanText `gorm:"size:100" json:"label"`
+	Address   CleanText `gorm:"size:100" json:"address"`
+	Latitude  float64   `json:"latitude"`
+	Longitude float64   `json:"longitude"`
+	ShortNote CleanText `gorm:"size:100" json:"short_note"`
 
-	DailyReportId []uint8 `gorm:"not null;type:binary(16)"` // ;index
+	DailyReportId []uint8 `gorm:"not null;type:binary(16)" json:"daily_report_id"` // ;index
 }
 
 type Waiting struct {
-	Id        []uint8   `gorm:"primaryKey;type:binary(16)"`
-	CreatedAt time.Time `gorm:"not null"`
-	UpdatedAt time.Time
-	DeletedAt gorm.DeletedAt `gorm:"index"`
+	Id        []uint8        `gorm:"primaryKey;type:binary(16)" json:"id"`
+	CreatedAt time.Time      `gorm:"not null" json:"created_at"`
+	UpdatedAt time.Time      `json:"updated_at"`
+	DeletedAt gorm.DeletedAt `gorm:"index" json:"deleted_at"`
 
-	Label     CleanText `gorm:"size:100"`
-	Address   CleanText `gorm:"size:100"`
-	Latitude  float64
-	Longitude float64
-	Note      CleanText `gorm:"size:5000"`
+	Label     CleanText `gorm:"size:100" json:"label"`
+	Address   CleanText `gorm:"size:100" json:"address"`
+	Latitude  float64   `json:"latitude"`
+	Longitude float64   `json:"longitude"`
+	Note      CleanText `gorm:"size:5000" json:"note"`
 
-	DailyReportId []uint8 `gorm:"not null;type:binary(16)"` // ;index
+	DailyReportId []uint8 `gorm:"not null;type:binary(16)" json:"daily_report_id"` // ;index
 }
 
 type Loading struct {
-	Id        []uint8   `gorm:"primaryKey;type:binary(16)"`
-	CreatedAt time.Time `gorm:"not null"`
-	UpdatedAt time.Time
-	DeletedAt gorm.DeletedAt `gorm:"index"`
+	Id        []uint8        `gorm:"primaryKey;type:binary(16)" json:"id"`
+	CreatedAt time.Time      `gorm:"not null" json:"created_at"`
+	UpdatedAt time.Time      `json:"updated_at"`
+	DeletedAt gorm.DeletedAt `gorm:"index" json:"deleted_at"`
 
-	Label         CleanText `gorm:"size:100"`
-	Address       CleanText `gorm:"size:100"`
-	Latitude      float64
-	Longitude     float64
-	ShippingCheck bool
-	Note          CleanText `gorm:"size:5000"`
+	Label         CleanText `gorm:"size:100" json:"label"`
+	Address       CleanText `gorm:"size:100" json:"address"`
+	Latitude      float64   `json:"latitude"`
+	Longitude     float64   `json:"longitude"`
+	ShippingCheck bool      `json:"shipping_check"`
+	Note          CleanText `gorm:"size:5000" json:"note"`
 
-	DailyReportId []uint8 `gorm:"not null;type:binary(16)"` // ;index
+	DailyReportId []uint8 `gorm:"not null;type:binary(16)" json:"daily_report_id"` // ;index
 }
 
 type Resting struct {
-	Id        []uint8   `gorm:"primaryKey;type:binary(16)"`
-	CreatedAt time.Time `gorm:"not null"`
-	UpdatedAt time.Time
-	DeletedAt gorm.DeletedAt `gorm:"index"`
+	Id        []uint8        `gorm:"primaryKey;type:binary(16)" json:"id"`
+	CreatedAt time.Time      `gorm:"not null" json:"create_at"`
+	UpdatedAt time.Time      `json:"updated_at"`
+	DeletedAt gorm.DeletedAt `gorm:"index" json:"deleted_at"`
 
-	Label     CleanText `gorm:"size:100"`
-	Address   CleanText `gorm:"size:100"`
-	Latitude  float64
-	Longitude float64
-	ShortNote CleanText `gorm:"size:100"`
+	Label     CleanText `gorm:"size:100" json:"label"`
+	Address   CleanText `gorm:"size:100" json:"address"`
+	Latitude  float64   `json:"latitude"`
+	Longitude float64   `json:"longitude"`
+	ShortNote CleanText `gorm:"size:100" json:"short_note"`
 
-	DailyReportId []uint8 `gorm:"not null;type:binary(16)"` // ;index
+	DailyReportId []uint8 `gorm:"not null;type:binary(16)" json:"daily_report_id"` // ;index
 }
