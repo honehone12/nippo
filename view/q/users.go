@@ -1,6 +1,9 @@
 package q
 
-import "nippo/view/viewprops"
+import (
+	"encoding/json"
+	"nippo/view/viewprops"
+)
 
 type QUsers struct{}
 
@@ -10,4 +13,5 @@ func (q QUsers) Query(props *viewprops.Props) ([]byte, error) {
 		return nil, err
 	}
 
+	return json.Marshal(users)
 }
