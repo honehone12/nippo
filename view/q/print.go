@@ -6,17 +6,19 @@ import (
 	"nippo/schema"
 	"nippo/view/viewprops"
 
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
 type QPrint struct {
-	repoIdStr schema.CleanText
+	repoId uuid.UUID
 }
 
 func (q QPrint) Query(props *viewprops.Props) ([]byte, error) {
 	db := props.Db()
+	repoId := q.repoId[:]
 
-	report, err := db.ReadDailyReport(q.repoIdStr)
+	report, err := db.ReadDailyReport(repoId)
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return json.Marshal(schema.DailyReportPrint{
 			Locations: []schema.Location{},
@@ -44,28 +46,28 @@ func (q QPrint) Query(props *viewprops.Props) ([]byte, error) {
 		}
 	}
 
-	locs, err := db.ReadLocations(q.repoIdStr)
+	locs, err := db.ReadLocations(repoId)
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		locs = []schema.Location{}
 	} else if err != nil {
 		return nil, err
 	}
 
-	waits, err := db.ReadWaitings(q.repoIdStr)
+	waits, err := db.ReadWaitings(repoId)
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		waits = []schema.Waiting{}
 	} else if err != nil {
 		return nil, err
 	}
 
-	loads, err := db.ReadLoadings(q.repoIdStr)
+	loads, err := db.ReadLoadings(repoId)
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		loads = []schema.Loading{}
 	} else if err != nil {
 		return nil, err
 	}
 
-	rests, err := db.ReadRestings(q.repoIdStr)
+	rests, err := db.ReadRestings(repoId)
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		rests = []schema.Resting{}
 	} else if err != nil {

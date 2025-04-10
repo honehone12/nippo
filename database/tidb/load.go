@@ -42,19 +42,14 @@ func (ti TiDbTx) CreateLoading(
 	return rest.Id, nil
 }
 
-func (ti TiDb) ReadLoadings(repoIdStr schema.CleanText) ([]schema.Loading, error) {
-	if len(repoIdStr) != schema.ID_STR_LEN {
-		return nil, errors.New("unexpected load id length")
+func (ti TiDb) ReadLoadings(repoId []uint8) ([]schema.Loading, error) {
+	if len(repoId) != schema.ID_LEN {
+		return nil, errors.New("unexpected report id length")
 	}
 
-	repoId, err := uuid.Parse(string(repoIdStr))
-	if err != nil {
-		return nil, err
-	}
-
-	repo := schema.DailyReport{Id: repoId[:]}
+	repo := schema.DailyReport{Id: repoId}
 	var loads []schema.Loading
-	err = ti.orm.Model(&repo).Association("Loadings").Find(&loads)
+	err := ti.orm.Model(&repo).Association("Loadings").Find(&loads)
 	if err != nil {
 		return nil, err
 	}

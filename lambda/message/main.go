@@ -10,7 +10,6 @@ import (
 	"nippo/log"
 	"nippo/message"
 	"nippo/message/msgprops"
-	"nippo/schema"
 	"os"
 	"strings"
 
@@ -18,16 +17,17 @@ import (
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
+	"github.com/google/uuid"
 	"github.com/line/line-bot-sdk-go/v8/linebot/messaging_api"
 	"github.com/line/line-bot-sdk-go/v8/linebot/webhook"
 )
 
 type variable struct {
-	lnChSec  string
-	lnChTkn  string
-	orgIdStr string
-	dbUri    string
-	bucket   string
+	lnChSec string
+	lnChTkn string
+	orgId   uuid.UUID
+	dbUri   string
+	bucket  string
 }
 
 var (
@@ -47,9 +47,15 @@ func collectEnv() error {
 		return errors.New("env for lnChTkn is not set")
 	}
 
-	if env.orgIdStr = os.Getenv("ORG_ID"); len(env.orgIdStr) == 0 {
+	orgIdStr := os.Getenv("ORG_ID")
+	if len(orgIdStr) == 0 {
 		return errors.New("env for orgIdStr is not set")
 	}
+	orgId, err := uuid.Parse(orgIdStr)
+	if err != nil {
+		return err
+	}
+	env.orgId = orgId
 
 	if env.dbUri = os.Getenv("DB_URI"); len(env.dbUri) == 0 {
 		return errors.New("env for dbUri is not set")
@@ -164,7 +170,7 @@ func handler(
 	props := msgprops.NewProps(
 		ctx,
 		env.bucket,
-		schema.CleanText(env.orgIdStr),
+		env.orgId,
 		db,
 		api,
 		blobApi,

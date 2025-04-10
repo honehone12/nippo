@@ -6,31 +6,31 @@ import (
 )
 
 type Database interface {
-	ReadOrg(idStr schema.CleanText) (*schema.Org, error)
+	ReadOrg(id []uint8) (*schema.Org, error)
 	ReadUser(lineId schema.CleanText) (*schema.User, error)
-	ReadUsers(orgIdStr schema.CleanText) ([]schema.User, error)
+	ReadUsers(orgId []uint8) ([]schema.User, error)
 	ReadMorningCall(id []uint8) (*schema.MorningCall, error)
 	ReadMorningCalls(
-		userIdStr schema.CleanText,
+		userId []uint8,
 		from time.Time,
 		to time.Time,
 	) ([]schema.MorningCall, error)
 	ReadEveningCall(id []uint8) (*schema.EveningCall, error)
 	ReadEveningCalls(
-		userIdStr schema.CleanText,
+		userId []uint8,
 		from time.Time,
 		to time.Time,
 	) ([]schema.EveningCall, error)
-	ReadDailyReport(repoIdStr schema.CleanText) (*schema.DailyReport, error)
+	ReadDailyReport(repoId []uint8) (*schema.DailyReport, error)
 	ReadDailyReports(
-		userIdStr schema.CleanText,
+		userId []uint8,
 		from time.Time,
 		to time.Time,
 	) ([]schema.DailyReport, error)
-	ReadLocations(repoIdStr schema.CleanText) ([]schema.Location, error)
-	ReadRestings(repoIdStr schema.CleanText) ([]schema.Resting, error)
-	ReadWaitings(repoIdStr schema.CleanText) ([]schema.Waiting, error)
-	ReadLoadings(repoIdStr schema.CleanText) ([]schema.Loading, error)
+	ReadLocations(repoId []uint8) ([]schema.Location, error)
+	ReadRestings(repoId []uint8) ([]schema.Resting, error)
+	ReadWaitings(repoId []uint8) ([]schema.Waiting, error)
+	ReadLoadings(repoId []uint8) ([]schema.Loading, error)
 
 	Tx(txf func(Transaction) error) error
 	Once() Transaction

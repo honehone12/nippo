@@ -5,6 +5,8 @@ import (
 	"nippo/input"
 	"nippo/timeconv"
 	"nippo/view/viewprops"
+
+	"github.com/google/uuid"
 )
 
 type Q interface {
@@ -38,8 +40,12 @@ func FromParams(params map[string]string) (Q, error) {
 			return nil, errors.New("unexpected params")
 		}
 		userIdStr := input.Clean(user)
+		userId, err := uuid.Parse(string(userIdStr))
+		if err != nil {
+			return nil, err
+		}
 
-		return QCalls{userIdStr, year, month}, nil
+		return QCalls{userId, year, month}, nil
 	case "reports":
 		y, ok := params["y"]
 		if !ok {
@@ -58,24 +64,36 @@ func FromParams(params map[string]string) (Q, error) {
 			return nil, errors.New("unexpected params")
 		}
 		userIdStr := input.Clean(user)
+		userId, err := uuid.Parse(string(userIdStr))
+		if err != nil {
+			return nil, err
+		}
 
-		return QReports{userIdStr, year, month}, nil
+		return QReports{userId, year, month}, nil
 	case "print":
 		report, ok := params["report"]
 		if !ok {
 			return nil, errors.New("unexpected params")
 		}
 		repoIdStr := input.Clean(report)
+		repoId, err := uuid.Parse(string(repoIdStr))
+		if err != nil {
+			return nil, err
+		}
 
-		return QPrint{repoIdStr}, nil
+		return QPrint{repoId}, nil
 	case "download":
 		report, ok := params["report"]
 		if !ok {
 			return nil, errors.New("unexpected params")
 		}
 		repoIdStr := input.Clean(report)
+		repoId, err := uuid.Parse(string(repoIdStr))
+		if err != nil {
+			return nil, err
+		}
 
-		return QDownload{repoIdStr}, nil
+		return QDownload{repoId}, nil
 	default:
 		return nil, errors.New("unexpected q string")
 	}

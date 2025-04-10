@@ -7,7 +7,6 @@ import (
 	"nippo/database/tidb"
 	"nippo/lambda/response"
 	"nippo/log"
-	"nippo/schema"
 	"nippo/view/q"
 	"nippo/view/viewprops"
 	"os"
@@ -16,12 +15,13 @@ import (
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
+	"github.com/google/uuid"
 )
 
 type variable struct {
-	orgIdStr string
-	dbUri    string
-	bucket   string
+	orgId  uuid.UUID
+	dbUri  string
+	bucket string
 }
 
 var (
@@ -31,9 +31,15 @@ var (
 )
 
 func collectEnv() error {
-	if env.orgIdStr = os.Getenv("ORG_ID"); len(env.orgIdStr) == 0 {
+	orgIdStr := os.Getenv("ORG_ID")
+	if len(orgIdStr) == 0 {
 		return errors.New("env for orgIdStr is not set")
 	}
+	orgId, err := uuid.Parse(orgIdStr)
+	if err != nil {
+		return err
+	}
+	env.orgId = orgId
 
 	if env.dbUri = os.Getenv("DB_URI"); len(env.dbUri) == 0 {
 		return errors.New("env for dbUri is not set")
@@ -76,7 +82,7 @@ func handler(
 	props := viewprops.NewProps(
 		ctx,
 		env.bucket,
-		schema.CleanText(env.orgIdStr),
+		env.orgId,
 		db,
 		s3Client,
 	)

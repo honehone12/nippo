@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"nippo/database"
 	"nippo/database/tidb"
-	"nippo/schema"
 	"nippo/timeconv"
 	"time"
 
@@ -24,7 +23,7 @@ const ALC_PHOTO = "user-id-009.jpg"
 const MTR_PHOTO = "user-id-018.jpg"
 
 var db database.Database = tidb.TiDb{}
-var orgIdStr string
+var orgId []uint8
 var userId []uint8
 var morningId []uint8
 var reportId []uint8
@@ -56,13 +55,13 @@ func TestCreateOrg(t *testing.T) {
 			return err
 		}
 
-		orgId, err := uuid.FromBytes(bId)
+		orgUuid, err := uuid.FromBytes(bId)
 		if err != nil {
 			return err
 		}
-		orgIdStr = orgId.String()
+		orgId = orgUuid[:]
 
-		return tx.UpdateOrgLineId(schema.CleanText(orgIdStr), ORG_LINE_ID)
+		return tx.UpdateOrgLineId(orgId, ORG_LINE_ID)
 	})
 	if err != nil {
 		t.Fatal(err)
@@ -72,7 +71,7 @@ func TestCreateOrg(t *testing.T) {
 func TestUserSetting(t *testing.T) {
 	err := db.Tx(func(tx database.Transaction) error {
 		var err error
-		userId, err = tx.CreateUser(schema.CleanText(orgIdStr), USER_LINE_ID)
+		userId, err = tx.CreateUser(orgId, USER_LINE_ID)
 		if err != nil {
 			return err
 		}
@@ -345,7 +344,7 @@ func TestLoading(t *testing.T) {
 }
 
 func TestReadFromOrg(t *testing.T) {
-	readOrg, err := db.ReadOrg(schema.CleanText(orgIdStr))
+	readOrg, err := db.ReadOrg(orgId)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -364,7 +363,7 @@ func TestReadFromOrg(t *testing.T) {
 		t.Fatal("read wrong user")
 	}
 
-	users, err := db.ReadUsers(schema.CleanText(orgIdStr))
+	users, err := db.ReadUsers(orgId)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -375,12 +374,6 @@ func TestReadFromOrg(t *testing.T) {
 	if !bytes.Equal(users[0].Id, userId) {
 		t.Fatal("read wrong users")
 	}
-
-	userUuid, err := uuid.FromBytes(userId)
-	if err != nil {
-		t.Fatal(err)
-	}
-	userIdStr := userUuid.String()
 
 	now := time.Now() // this code does not care TZs other than JST
 	from, to := timeconv.UtcRangeFromJstMonth(now.Year(), now.Month())
@@ -393,7 +386,7 @@ func TestReadFromOrg(t *testing.T) {
 		t.Fatal("read wrong morning call")
 	}
 
-	mCalls, err := db.ReadMorningCalls(schema.CleanText(userIdStr), from, to)
+	mCalls, err := db.ReadMorningCalls(userId, from, to)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -413,7 +406,7 @@ func TestReadFromOrg(t *testing.T) {
 		t.Fatal("read wrong evening call")
 	}
 
-	eCalls, err := db.ReadEveningCalls(schema.CleanText(userIdStr), from, to)
+	eCalls, err := db.ReadEveningCalls(userId, from, to)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -425,11 +418,7 @@ func TestReadFromOrg(t *testing.T) {
 		t.Fatal("read wrong evening calls")
 	}
 
-	repoUuid, err := uuid.FromBytes(reportId)
-	if err != nil {
-		t.Fatal(err)
-	}
-	report, err := db.ReadDailyReport(schema.CleanText(repoUuid.String()))
+	report, err := db.ReadDailyReport(reportId)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -437,7 +426,7 @@ func TestReadFromOrg(t *testing.T) {
 		t.Fatal("read wrong dialy report")
 	}
 
-	reports, err := db.ReadDailyReports(schema.CleanText(userIdStr), from, to)
+	reports, err := db.ReadDailyReports(userId, from, to)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -451,13 +440,7 @@ func TestReadFromOrg(t *testing.T) {
 }
 
 func TestReadFromReport(t *testing.T) {
-	repoUuid, err := uuid.FromBytes(reportId)
-	if err != nil {
-		t.Fatal(err)
-	}
-	repoIdStr := repoUuid.String()
-
-	locs, err := db.ReadLocations(schema.CleanText(repoIdStr))
+	locs, err := db.ReadLocations(reportId)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -469,7 +452,7 @@ func TestReadFromReport(t *testing.T) {
 		t.Fatal("read wrong locations")
 	}
 
-	rests, err := db.ReadRestings(schema.CleanText(repoIdStr))
+	rests, err := db.ReadRestings(reportId)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -481,7 +464,7 @@ func TestReadFromReport(t *testing.T) {
 		t.Fatal("read wrong restings")
 	}
 
-	waits, err := db.ReadWaitings(schema.CleanText(repoIdStr))
+	waits, err := db.ReadWaitings(reportId)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -493,7 +476,7 @@ func TestReadFromReport(t *testing.T) {
 		t.Fatal("read wrong waitings")
 	}
 
-	loads, err := db.ReadLoadings(schema.CleanText(repoIdStr))
+	loads, err := db.ReadLoadings(reportId)
 	if err != nil {
 		t.Fatal(err)
 	}

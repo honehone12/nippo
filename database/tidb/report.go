@@ -47,41 +47,31 @@ func (ti TiDbTx) CreateDailyReport(
 	return call.Id, nil
 }
 
-func (ti TiDb) ReadDailyReport(repoIdStr schema.CleanText) (*schema.DailyReport, error) {
-	if len(repoIdStr) != schema.ID_STR_LEN {
+func (ti TiDb) ReadDailyReport(repoId []uint8) (*schema.DailyReport, error) {
+	if len(repoId) != schema.ID_LEN {
 		return nil, errors.New("unexpected report id length")
 	}
 
-	id, err := uuid.Parse(string(repoIdStr))
-	if err != nil {
-		return nil, err
-	}
-
-	repo := schema.DailyReport{Id: id[:]}
+	repo := schema.DailyReport{Id: repoId}
 	if res := ti.orm.Take(&repo); res.Error != nil {
-		return nil, err
+		return nil, res.Error
 	}
 
 	return &repo, nil
 }
 
 func (ti TiDb) ReadDailyReports(
-	userIdStr schema.CleanText,
+	userId []uint8,
 	from time.Time,
 	to time.Time,
 ) ([]schema.DailyReport, error) {
-	if len(userIdStr) != schema.ID_STR_LEN {
+	if len(userId) != schema.ID_LEN {
 		return nil, errors.New("unexpected user id length")
 	}
 
-	userId, err := uuid.Parse(string(userIdStr))
-	if err != nil {
-		return nil, err
-	}
-
-	user := schema.User{Id: userId[:]}
+	user := schema.User{Id: userId}
 	var reports []schema.DailyReport
-	err = ti.orm.Model(&user).Where(
+	err := ti.orm.Model(&user).Where(
 		"created_at >= ? AND created_at < ?",
 		from,
 		to,
@@ -90,7 +80,7 @@ func (ti TiDb) ReadDailyReports(
 		return nil, err
 	}
 
-	return reports, err
+	return reports, nil
 }
 
 func (ti TiDbTx) UpdateDReportECall(repoId []uint8, eveningId []uint8) error {

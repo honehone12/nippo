@@ -65,22 +65,17 @@ func (ti TiDb) ReadMorningCall(id []uint8) (*schema.MorningCall, error) {
 }
 
 func (ti TiDb) ReadMorningCalls(
-	userIdStr schema.CleanText,
+	userId []uint8,
 	from time.Time,
 	to time.Time,
 ) ([]schema.MorningCall, error) {
-	if len(userIdStr) != schema.ID_STR_LEN {
-		return nil, errors.New("unexpected id length")
+	if len(userId) != schema.ID_LEN {
+		return nil, errors.New("unexpected user id length")
 	}
 
-	userId, err := uuid.Parse(string(userIdStr))
-	if err != nil {
-		return nil, err
-	}
-
-	user := schema.User{Id: userId[:]}
+	user := schema.User{Id: userId}
 	var calls []schema.MorningCall
-	err = ti.orm.Model(&user).Where(
+	err := ti.orm.Model(&user).Where(
 		"created_at >= ? AND created_at < ?",
 		from,
 		to,
@@ -182,22 +177,17 @@ func (ti TiDb) ReadEveningCall(id []uint8) (*schema.EveningCall, error) {
 }
 
 func (ti TiDb) ReadEveningCalls(
-	userIdStr schema.CleanText,
+	userId []uint8,
 	from time.Time,
 	to time.Time,
 ) ([]schema.EveningCall, error) {
-	if len(userIdStr) != schema.ID_STR_LEN {
-		return nil, errors.New("unexpected id length")
+	if len(userId) != schema.ID_LEN {
+		return nil, errors.New("unexpected user id length")
 	}
 
-	userId, err := uuid.Parse(string(userIdStr))
-	if err != nil {
-		return nil, err
-	}
-
-	user := schema.User{Id: userId[:]}
+	user := schema.User{Id: userId}
 	var calls []schema.EveningCall
-	err = ti.orm.Model(&user).Where(
+	err := ti.orm.Model(&user).Where(
 		"created_at >= ? AND created_at < ?",
 		from,
 		to,

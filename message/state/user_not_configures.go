@@ -32,7 +32,8 @@ func (s StUserNotConfigured) Run(
 	case webhook.PostbackEvent:
 		if strings.Compare(e.Postback.Data, reply.USER_SETTING_ACT_DATA) == 0 {
 			err := props.Db().Tx(func(tx database.Transaction) error {
-				id, err := tx.CreateUser(props.OrgId(), user.LineId)
+				orgId := props.OrgId()
+				id, err := tx.CreateUser(orgId, user.LineId)
 				if err != nil {
 					return err
 				}

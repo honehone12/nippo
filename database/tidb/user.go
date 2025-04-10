@@ -8,20 +8,15 @@ import (
 	"github.com/google/uuid"
 )
 
-func (ti TiDbTx) CreateUser(orgIdStr schema.CleanText, lineId schema.CleanText) ([]uint8, error) {
-	if len(orgIdStr) != schema.ID_STR_LEN {
-		return nil, errors.New("unexpected id length")
+func (ti TiDbTx) CreateUser(orgId []uint8, lineId schema.CleanText) ([]uint8, error) {
+	if len(orgId) != schema.ID_LEN {
+		return nil, errors.New("unexpected org id length")
 	}
 	if len(lineId) != schema.LINE_ID_LEN {
 		return nil, errors.New("unexpected line id length")
 	}
 	if !strings.HasPrefix(string(lineId), "U") {
 		return nil, errors.New("unexpected line id")
-	}
-
-	orgId, err := uuid.Parse(string(orgIdStr))
-	if err != nil {
-		return nil, err
 	}
 
 	id, err := uuid.NewRandom()
@@ -58,23 +53,18 @@ func (ti TiDb) ReadUser(lineId schema.CleanText) (*schema.User, error) {
 	return &user, nil
 }
 
-func (ti TiDb) ReadUsers(orgIdStr schema.CleanText) ([]schema.User, error) {
-	if len(orgIdStr) != schema.ID_STR_LEN {
-		return nil, errors.New("unexpected id length")
+func (ti TiDb) ReadUsers(orgId []uint8) ([]schema.User, error) {
+	if len(orgId) != schema.ID_LEN {
+		return nil, errors.New("unexpected org id length")
 	}
 
-	id, err := uuid.Parse(string(orgIdStr))
-	if err != nil {
-		return nil, err
-	}
-
-	org := schema.Org{Id: id[:]}
+	org := schema.Org{Id: orgId}
 	var users []schema.User
 	if err := ti.orm.Model(&org).Association("Users").Find(&users); err != nil {
 		return nil, err
 	}
 
-	return users, err
+	return users, nil
 }
 
 func (ti TiDbTx) UpdateUserName(userId []uint8, name schema.CleanText) error {

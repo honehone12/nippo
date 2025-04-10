@@ -3,32 +3,32 @@ package msgprops
 import (
 	"context"
 	"nippo/database"
-	"nippo/schema"
 
 	"github.com/aws/aws-sdk-go-v2/service/s3"
+	"github.com/google/uuid"
 	"github.com/line/line-bot-sdk-go/v8/linebot/messaging_api"
 )
 
 type Props struct {
-	ctx      context.Context
-	bucket   string
-	orgIdStr schema.CleanText
-	db       database.Database
-	api      *messaging_api.MessagingApiAPI
-	blobApi  *messaging_api.MessagingApiBlobAPI
-	s3       *s3.Client
+	ctx     context.Context
+	bucket  string
+	orgId   uuid.UUID
+	db      database.Database
+	api     *messaging_api.MessagingApiAPI
+	blobApi *messaging_api.MessagingApiBlobAPI
+	s3      *s3.Client
 }
 
 func NewProps(
 	ctx context.Context,
 	bucket string,
-	orgIdStr schema.CleanText,
+	orgId uuid.UUID,
 	db database.Database,
 	api *messaging_api.MessagingApiAPI,
 	blobApi *messaging_api.MessagingApiBlobAPI,
 	s3 *s3.Client,
 ) *Props {
-	return &Props{ctx, bucket, orgIdStr, db, api, blobApi, s3}
+	return &Props{ctx, bucket, orgId, db, api, blobApi, s3}
 }
 
 func (p *Props) Ctx() context.Context {
@@ -39,8 +39,12 @@ func (p *Props) Bucket() *string {
 	return &p.bucket
 }
 
-func (p *Props) OrgId() schema.CleanText {
-	return p.orgIdStr
+func (p *Props) OrgId() []byte {
+	return p.orgId[:]
+}
+
+func (p *Props) OrgUuid() uuid.UUID {
+	return p.orgId
 }
 
 func (p *Props) Db() database.Database {

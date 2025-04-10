@@ -42,19 +42,14 @@ func (ti TiDbTx) CreateResting(
 	return rest.Id, nil
 }
 
-func (ti TiDb) ReadRestings(repoIdStr schema.CleanText) ([]schema.Resting, error) {
-	if len(repoIdStr) != schema.ID_STR_LEN {
-		return nil, errors.New("unexpected rest id length")
+func (ti TiDb) ReadRestings(repoId []uint8) ([]schema.Resting, error) {
+	if len(repoId) != schema.ID_LEN {
+		return nil, errors.New("unexpected report id length")
 	}
 
-	repoId, err := uuid.Parse(string(repoIdStr))
-	if err != nil {
-		return nil, err
-	}
-
-	repo := schema.DailyReport{Id: repoId[:]}
+	repo := schema.DailyReport{Id: repoId}
 	var rests []schema.Resting
-	err = ti.orm.Model(&repo).Association("Restings").Find(&rests)
+	err := ti.orm.Model(&repo).Association("Restings").Find(&rests)
 	if err != nil {
 		return nil, err
 	}

@@ -1,12 +1,14 @@
 package database
 
-import "nippo/schema"
+import (
+	"nippo/schema"
+)
 
 type Transaction interface {
 	CreateOrg(name schema.CleanText) ([]uint8, error)
-	UpdateOrgLineId(idStr schema.CleanText, newLineId schema.CleanText) error
+	UpdateOrgLineId(id []uint8, newLineId schema.CleanText) error
 
-	CreateUser(orgIdStr schema.CleanText, lineId schema.CleanText) ([]uint8, error)
+	CreateUser(orgId []uint8, lineId schema.CleanText) ([]uint8, error)
 	UpdateUserName(userId []uint8, name schema.CleanText) error
 	UpdateUserCarNumber(userId []uint8, carNumber schema.CleanText) error
 	UpdateUserCurrentOpe(userId []uint8, opeId []uint8) error
