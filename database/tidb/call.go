@@ -51,6 +51,19 @@ func (ti TiDbTx) CreateMorningCall(
 	return call.Id, nil
 }
 
+func (ti TiDb) ReadMorningCall(id []uint8) (*schema.MorningCall, error) {
+	if len(id) != schema.ID_LEN {
+		return nil, errors.New("unexpexted call id length")
+	}
+
+	call := schema.MorningCall{Id: id}
+	if res := ti.orm.Take(&call); res.Error != nil {
+		return nil, res.Error
+	}
+
+	return &call, nil
+}
+
 func (ti TiDb) ReadMorningCalls(
 	userIdStr schema.CleanText,
 	from time.Time,
@@ -153,6 +166,19 @@ func (ti TiDbTx) CreateEveningCall(
 	}
 
 	return call.Id, nil
+}
+
+func (ti TiDb) ReadEveningCall(id []uint8) (*schema.EveningCall, error) {
+	if len(id) != schema.ID_LEN {
+		return nil, errors.New("unexpexted call id length")
+	}
+
+	call := schema.EveningCall{Id: id}
+	if res := ti.orm.Take(&call); res.Error != nil {
+		return nil, res.Error
+	}
+
+	return &call, nil
 }
 
 func (ti TiDb) ReadEveningCalls(

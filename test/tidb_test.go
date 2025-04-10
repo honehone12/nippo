@@ -385,6 +385,14 @@ func TestReadFromOrg(t *testing.T) {
 	now := time.Now() // this code does not care TZs other than JST
 	from, to := timeconv.UtcRangeFromJstMonth(now.Year(), now.Month())
 
+	mCall, err := db.ReadMorningCall(morningId)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if mCall.AlcPhoto != ALC_PHOTO {
+		t.Fatal("read wrong morning call")
+	}
+
 	mCalls, err := db.ReadMorningCalls(schema.CleanText(userIdStr), from, to)
 	if err != nil {
 		t.Fatal(err)
@@ -395,6 +403,14 @@ func TestReadFromOrg(t *testing.T) {
 	}
 	if !bytes.Equal(mCalls[0].Id, morningId) {
 		t.Fatal("read wrong morning calls")
+	}
+
+	eCall, err := db.ReadEveningCall(eveningId)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if eCall.AlcPhoto != ALC_PHOTO {
+		t.Fatal("read wrong evening call")
 	}
 
 	eCalls, err := db.ReadEveningCalls(schema.CleanText(userIdStr), from, to)

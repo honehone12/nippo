@@ -9,11 +9,13 @@ type Database interface {
 	ReadOrg(idStr schema.CleanText) (*schema.Org, error)
 	ReadUser(lineId schema.CleanText) (*schema.User, error)
 	ReadUsers(orgIdStr schema.CleanText) ([]schema.User, error)
+	ReadMorningCall(id []uint8) (*schema.MorningCall, error)
 	ReadMorningCalls(
 		userIdStr schema.CleanText,
 		from time.Time,
 		to time.Time,
 	) ([]schema.MorningCall, error)
+	ReadEveningCall(id []uint8) (*schema.EveningCall, error)
 	ReadEveningCalls(
 		userIdStr schema.CleanText,
 		from time.Time,
