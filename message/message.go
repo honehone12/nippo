@@ -149,8 +149,8 @@ func processEvent(props *msgprops.Props, event webhook.EventInterface) (*basicCo
 }
 
 func eventMain(props *msgprops.Props, event webhook.EventInterface) error {
-	if c, err := processEvent(props, event); err != nil {
-		sendErrMsg(props, c.replyToken)
+	if bc, err := processEvent(props, event); err != nil {
+		sendErrMsg(props, bc.replyToken)
 		return err
 	}
 
