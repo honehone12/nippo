@@ -52,6 +52,6 @@ func (p *Props) S3() *s3.Client {
 	return p.s3
 }
 
-func (p *Props) S3Presigne() *s3.PresignClient {
+func (p *Props) S3Presign() *s3.PresignClient {
 	return p.s3Presign
 }

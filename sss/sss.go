@@ -49,7 +49,7 @@ func GetPresigned(props *viewprops.Props, key string) (string, error) {
 		Key:    &key,
 	}
 
-	presigned, err := props.S3Presigne().PresignGetObject(
+	presigned, err := props.S3Presign().PresignGetObject(
 		props.Ctx(),
 		&s3Get,
 		s3.WithPresignExpires(time.Minute*30),
