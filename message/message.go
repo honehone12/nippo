@@ -74,8 +74,8 @@ func checkBasicContent(event webhook.EventInterface) (*basicContent, error) {
 		return nil, fmt.Errorf("unsupported event: %s", event.GetType())
 	}
 
-	if source == nil || len(content.replyToken) == 0 {
-		return nil, errors.New("nil souce or empty reply token")
+	if len(content.replyToken) == 0 {
+		return nil, errors.New("empty reply token")
 	}
 
 	s, ok := source.(webhook.UserSource)
