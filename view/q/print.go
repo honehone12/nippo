@@ -10,5 +10,7 @@ type QPrint struct {
 }
 
 func (q QPrint) Query(props *viewprops.Props) ([]byte, error) {
-	panic("not implemented")
+	db := props.Db()
+
+	report, err := db.ReadDailyReport(q.repoIdStr)
 }
