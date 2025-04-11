@@ -33,7 +33,7 @@ func (q QPrint) Query(props *viewprops.Props) ([]byte, error) {
 	var mCall *schema.MorningCall
 	if len(report.MorningCallId) > 0 {
 		mCall, err = db.ReadMorningCall(report.MorningCallId)
-		if !errors.Is(err, gorm.ErrRecordNotFound) {
+		if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, err
 		}
 	}
@@ -41,7 +41,7 @@ func (q QPrint) Query(props *viewprops.Props) ([]byte, error) {
 	var eCall *schema.EveningCall
 	if len(report.EveningCallId) > 0 {
 		eCall, err = db.ReadEveningCall(report.EveningCallId)
-		if !errors.Is(err, gorm.ErrRecordNotFound) {
+		if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, err
 		}
 	}
