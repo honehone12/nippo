@@ -14,14 +14,11 @@ func main() {
 		return
 	}
 
-	b := []byte(*url)
-	len := base64.StdEncoding.DecodedLen(len(b))
-	dst := make([]byte, len)
-	_, err := base64.StdEncoding.Decode(dst, b)
+	s, err := base64.StdEncoding.DecodeString(*url)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
-	fmt.Printf("url: %s\n", string(dst))
+	fmt.Printf("url: %s\n", s)
 }
