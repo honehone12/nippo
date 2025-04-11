@@ -25,7 +25,7 @@ func AToMonth(m string) (time.Month, error) {
 	if err != nil {
 		return time.Month(0), err
 	}
-	if month < 1 || month < 12 {
+	if month < 1 || month > 12 {
 		return time.Month(0), errors.New("out of range")
 	}
 
