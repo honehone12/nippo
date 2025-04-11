@@ -26,37 +26,43 @@ func (q QDownload) Query(props *viewprops.Props) ([]byte, error) {
 		return nil, err
 	}
 
-	var meter string
+	var meter []byte
 	if len(report.MeterPhoto) > 0 {
-		meter, err = sss.GetPresigned(props, report.MeterPhoto)
+		url, err := sss.GetPresigned(props, report.MeterPhoto)
 		if err != nil {
 			return nil, err
 		}
+
+		meter = []byte(url)
 	}
 
-	var morningAlc string
+	var morningAlc []byte
 	if len(report.MorningCallId) > 0 {
 		mCall, err := db.ReadMorningCall(report.MorningCallId)
 		if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, err
 		} else if err == nil && len(mCall.AlcPhoto) > 0 {
-			morningAlc, err = sss.GetPresigned(props, mCall.AlcPhoto)
+			url, err := sss.GetPresigned(props, mCall.AlcPhoto)
 			if err != nil {
 				return nil, err
 			}
+
+			morningAlc = []byte(url)
 		}
 	}
 
-	var eveningAlc string
+	var eveningAlc []byte
 	if len(report.EveningCallId) > 0 {
 		eCall, err := db.ReadEveningCall(report.EveningCallId)
 		if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, err
 		} else if err == nil && len(eCall.AlcPhoto) > 0 {
-			eveningAlc, err = sss.GetPresigned(props, eCall.AlcPhoto)
+			url, err := sss.GetPresigned(props, eCall.AlcPhoto)
 			if err != nil {
 				return nil, err
 			}
+
+			eveningAlc = []byte(url)
 		}
 	}
 

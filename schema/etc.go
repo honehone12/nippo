@@ -17,7 +17,7 @@ type DailyReportPrint struct {
 }
 
 type Photos struct {
-	MorningAlc string `json:"morning_alc"`
-	EveningAlc string `json:"evening_alc"`
-	Meter      string `json:"meter"`
+	MorningAlc []byte `json:"morning_alc"`
+	EveningAlc []byte `json:"evening_alc"`
+	Meter      []byte `json:"meter"`
 }
