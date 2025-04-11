@@ -15,7 +15,7 @@ func main() {
 	}
 
 	b := []byte(*url)
-	len := base64.StdEncoding.EncodedLen(len(b))
+	len := base64.StdEncoding.DecodedLen(len(b))
 	dst := make([]byte, len)
 	n, err := base64.StdEncoding.Decode(dst, b)
 	if err != nil {
