@@ -17,13 +17,9 @@ func main() {
 	b := []byte(*url)
 	len := base64.StdEncoding.DecodedLen(len(b))
 	dst := make([]byte, len)
-	n, err := base64.StdEncoding.Decode(dst, b)
+	_, err := base64.StdEncoding.Decode(dst, b)
 	if err != nil {
 		fmt.Println(err)
-		return
-	}
-	if n != len {
-		fmt.Printf("size not %d\n", len)
 		return
 	}
 
