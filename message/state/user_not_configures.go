@@ -7,7 +7,6 @@ import (
 	"nippo/message/msgprops"
 	"nippo/message/reply"
 	"nippo/schema"
-	"strings"
 
 	"github.com/line/line-bot-sdk-go/v8/linebot/messaging_api"
 	"github.com/line/line-bot-sdk-go/v8/linebot/webhook"
@@ -30,7 +29,7 @@ func (s StUserNotConfigured) Run(
 		_, err := props.Api().ReplyMessage(&req)
 		return err
 	case webhook.PostbackEvent:
-		if strings.Compare(e.Postback.Data, reply.USER_SETTING_ACT_DATA) == 0 {
+		if e.Postback.Data == reply.USER_SETTING_ACT_DATA {
 			err := props.Db().Tx(func(tx database.Transaction) error {
 				id, err := tx.CreateUser(props.OrgId(), user.LineId)
 				if err != nil {

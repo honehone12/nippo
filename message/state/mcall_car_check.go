@@ -8,7 +8,6 @@ import (
 	"nippo/message/msgprops"
 	"nippo/message/reply"
 	"nippo/schema"
-	"strings"
 
 	"github.com/line/line-bot-sdk-go/v8/linebot/messaging_api"
 	"github.com/line/line-bot-sdk-go/v8/linebot/webhook"
@@ -31,7 +30,7 @@ func (s StMCallCarCheck) Run(
 		_, err := props.Api().ReplyMessage(&req)
 		return err
 	case webhook.PostbackEvent:
-		if strings.Compare(e.Postback.Data, reply.FLAG_TRUE_ACT_DATA) == 0 {
+		if e.Postback.Data == reply.FLAG_TRUE_ACT_DATA {
 			if len(user.CurrentOperation) == 0 {
 				return errors.New("user does not have current call")
 			}

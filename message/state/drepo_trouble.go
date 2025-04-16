@@ -9,7 +9,6 @@ import (
 	"nippo/message/msgprops"
 	"nippo/message/reply"
 	"nippo/schema"
-	"strings"
 
 	"github.com/line/line-bot-sdk-go/v8/linebot/messaging_api"
 	"github.com/line/line-bot-sdk-go/v8/linebot/webhook"
@@ -24,7 +23,7 @@ func (s StDRepoTrouble) Run(
 ) error {
 	switch e := event.(type) {
 	case webhook.PostbackEvent:
-		if strings.Compare(e.Postback.Data, reply.IGNORE_TXT_ACT_DATA) == 0 {
+		if e.Postback.Data == reply.IGNORE_TXT_ACT_DATA {
 			log.L.Warn("ignoring postback data, means shorcut does not work")
 			return nil
 		} else {

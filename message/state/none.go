@@ -6,7 +6,6 @@ import (
 	"nippo/message/msgprops"
 	"nippo/message/reply"
 	"nippo/schema"
-	"strings"
 
 	"github.com/line/line-bot-sdk-go/v8/linebot/messaging_api"
 	"github.com/line/line-bot-sdk-go/v8/linebot/webhook"
@@ -29,7 +28,7 @@ func (s StNone) Run(
 		_, err := props.Api().ReplyMessage(&req)
 		return err
 	case webhook.PostbackEvent:
-		if strings.Compare(e.Postback.Data, reply.START_DUTY_ACT_DATA) == 0 {
+		if e.Postback.Data == reply.START_DUTY_ACT_DATA {
 			err := props.Db().Once().UpdateUserNextState(user.Id, ST_MCALL_ALC_PHOTO)
 			if err != nil {
 				return err
@@ -42,7 +41,7 @@ func (s StNone) Run(
 
 			_, err = props.Api().ReplyMessage(&req)
 			return err
-		} else if strings.Compare(e.Postback.Data, reply.USER_SETTING_ACT_DATA) == 0 {
+		} else if e.Postback.Data == reply.USER_SETTING_ACT_DATA {
 			err := props.Db().Once().UpdateUserNextState(user.Id, ST_USER_SET_NAME)
 			if err != nil {
 				return err

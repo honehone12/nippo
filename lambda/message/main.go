@@ -106,7 +106,7 @@ func validateMsg(req *events.APIGatewayProxyRequest) error {
 	}
 	if !ok || !strings.Contains(userAgent, "LineBotWebhook") {
 		return errors.New("invalid user agent")
-	} else if strings.Compare(userAgent, "LineBotWebhook/2.0") != 0 {
+	} else if userAgent != "LineBotWebhook/2.0" {
 		log.L.Warn("user agent was updated from version2.0")
 	}
 
