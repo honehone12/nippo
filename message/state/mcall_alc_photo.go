@@ -8,7 +8,6 @@ import (
 	"nippo/message/reply"
 	"nippo/schema"
 	"nippo/sss"
-	"strings"
 
 	"github.com/line/line-bot-sdk-go/v8/linebot/messaging_api"
 	"github.com/line/line-bot-sdk-go/v8/linebot/webhook"
@@ -39,7 +38,7 @@ func (s StMCallAlcPhoto) Run(
 				}
 				defer res.Body.Close()
 
-				if !strings.Contains(res.Header.Get("Content-Type"), "image/jpeg") {
+				if res.Header.Get("Content-Type") != "image/jpeg" {
 					return errors.New("unsupported iamge type")
 				}
 
