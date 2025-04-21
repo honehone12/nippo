@@ -155,7 +155,7 @@ type Loading struct {
 
 type Resting struct {
 	Id        []uint8        `gorm:"primaryKey;type:binary(16)" json:"id"`
-	CreatedAt time.Time      `gorm:"not null" json:"create_at"`
+	CreatedAt time.Time      `gorm:"not null" json:"created_at"`
 	UpdatedAt time.Time      `json:"updated_at"`
 	DeletedAt gorm.DeletedAt `gorm:"index" json:"deleted_at"`
 
