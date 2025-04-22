@@ -8,6 +8,10 @@ import (
 
 var jST = time.FixedZone("JST", 9*60*60)
 
+func NowJst() time.Time {
+	return time.Now().In(jST)
+}
+
 func AToYear(y string) (int, error) {
 	year, err := strconv.Atoi(y)
 	if err != nil {

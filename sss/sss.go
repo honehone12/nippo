@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"nippo/message/msgprops"
+	"nippo/timeconv"
 	"nippo/view/viewprops"
 	"time"
 
@@ -17,7 +18,18 @@ func JpgKey(userId []uint8) (*string, error) {
 		return nil, err
 	}
 
-	key := fmt.Sprintf("%s-%d.jpg", id.String(), time.Now().UnixMilli())
+	now := timeconv.NowJst()
+	key := fmt.Sprintf(
+		"%d-%d-%d-%d-%d-%d-%d_%s.jpg",
+		now.Year(),
+		now.Month(),
+		now.Day(),
+		now.Hour(),
+		now.Minute(),
+		now.Second(),
+		now.Nanosecond(),
+		id.String(),
+	)
 	return &key, nil
 }
 
