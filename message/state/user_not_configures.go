@@ -44,7 +44,7 @@ func (s StUserNotConfigured) Run(
 
 			req := messaging_api.ReplyMessageRequest{
 				ReplyToken: e.ReplyToken,
-				Messages:   reply.ReplyUsrSetName(),
+				Messages:   reply.ReplyUserSetName(),
 			}
 
 			_, err = props.Api().ReplyMessage(&req)

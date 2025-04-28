@@ -13,9 +13,14 @@ import (
 
 func main() {
 	name := flag.String("name", "", "org's name")
+	email := flag.String("email", "", "org's email")
 	flag.Parse()
 	if len(*name) == 0 {
 		fmt.Println("name is empty")
+		return
+	}
+	if len(*email) == 0 {
+		fmt.Println("email is empty")
 		return
 	}
 
@@ -35,7 +40,13 @@ func main() {
 	cName := input.Clean(*name)
 	fmt.Printf("creating org with name '%s'\n", cName)
 
-	bId, err := db.Once().CreateOrg(cName)
+	cEmail, err := input.ValidEmail(*email)
+	if err != nil {
+		fmt.Println("invalid email")
+		return
+	}
+
+	bId, err := db.Once().CreateOrg(cName, cEmail)
 	if err != nil {
 		fmt.Println(err)
 		return

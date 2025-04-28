@@ -71,12 +71,25 @@ func (ti TiDbTx) UpdateUserName(userId []uint8, name schema.CleanText) error {
 	if len(userId) != schema.ID_LEN {
 		return errors.New("unexpected id length")
 	}
-	if len(name) <= 1 || len(name) > schema.MAX_SHORT_TEXT_LEN {
+	if len(name) == 0 || len(name) > schema.MAX_SHORT_TEXT_LEN {
 		return errors.New("unexpected name length")
 	}
 
 	user := schema.User{Id: userId}
 	res := ti.orm.Model(&user).Update("name", name)
+	return res.Error
+}
+
+func (ti TiDbTx) UpdateUserEmail(userId []uint8, email schema.CleanText) error {
+	if len(userId) != schema.ID_LEN {
+		return errors.New("unexpected id length")
+	}
+	if len(email) == 0 || len(email) > schema.MAX_SHORT_TEXT_LEN {
+		return errors.New("unexpected email length")
+	}
+
+	user := schema.User{Id: userId}
+	res := ti.orm.Model(&user).Update("email", email)
 	return res.Error
 }
 

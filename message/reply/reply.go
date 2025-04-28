@@ -11,7 +11,7 @@ func ReplyDoUsrSet() []messaging_api.MessageInterface {
 	}
 }
 
-func ReplyUsrSetName() []messaging_api.MessageInterface {
+func ReplyUserSetName() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
 			Text: "名前を入力してください",
@@ -19,7 +19,15 @@ func ReplyUsrSetName() []messaging_api.MessageInterface {
 	}
 }
 
-func ReplyUsrSetCarNum() []messaging_api.MessageInterface {
+func ReplyUserSetEmail() []messaging_api.MessageInterface {
+	return []messaging_api.MessageInterface{
+		messaging_api.TextMessage{
+			Text: "メールアドレスを入力してください",
+		},
+	}
+}
+
+func ReplyUserSetCar() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
 			Text: "車両番号を入力してください",

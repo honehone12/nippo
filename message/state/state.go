@@ -12,6 +12,7 @@ const (
 	ST_USER_NOT_CONFIGURED schema.StateIdx = iota
 
 	ST_USER_SET_NAME
+	ST_USER_SET_EMAIL
 	ST_USER_SET_CAR
 
 	ST_MCALL_ALC_PHOTO
@@ -57,6 +58,8 @@ func FromIdx(idx schema.StateIdx) (State, error) {
 
 	case ST_USER_SET_NAME:
 		return StUserSetName{}, nil
+	case ST_USER_SET_EMAIL:
+		return StUserSetEmail{}, nil
 	case ST_USER_SET_CAR:
 		return StUserSetCar{}, nil
 	case ST_MCALL_ALC_PHOTO:

@@ -5,11 +5,12 @@ import (
 )
 
 type Transaction interface {
-	CreateOrg(name schema.CleanText) ([]uint8, error)
+	CreateOrg(name schema.CleanText, email schema.CleanText) ([]uint8, error)
 	UpdateOrgLineId(id []uint8, newLineId schema.CleanText) error
 
 	CreateUser(orgId []uint8, lineId schema.CleanText) ([]uint8, error)
 	UpdateUserName(userId []uint8, name schema.CleanText) error
+	UpdateUserEmail(userId []uint8, email schema.CleanText) error
 	UpdateUserCarNumber(userId []uint8, carNumber schema.CleanText) error
 	UpdateUserCurrentOpe(userId []uint8, opeId []uint8) error
 	UpdateUserCurrentDuty(userId []uint8, repoId []uint8) error

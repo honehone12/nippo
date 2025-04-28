@@ -14,6 +14,7 @@ import (
 	"github.com/joho/godotenv"
 )
 
+const EMAIL = "test@test.com"
 const ORG_NAME = "テスト　企業"
 const ORG_LINE_ID = "U9198cf6745fc0d808977bdb0b9f22995"
 const USER_LINE_ID = "U8189cf6745fc0d808977bdb0b9f22885"
@@ -50,7 +51,7 @@ func TestOpenDb(t *testing.T) {
 
 func TestCreateOrg(t *testing.T) {
 	err := db.Tx(func(tx database.Transaction) error {
-		bId, err := tx.CreateOrg(ORG_NAME)
+		bId, err := tx.CreateOrg(ORG_NAME, EMAIL)
 		if err != nil {
 			return err
 		}
@@ -77,6 +78,11 @@ func TestUserSetting(t *testing.T) {
 		}
 
 		err = tx.UpdateUserName(userId, USER_NAME)
+		if err != nil {
+			return err
+		}
+
+		err = tx.UpdateUserEmail(userId, EMAIL)
 		if err != nil {
 			return err
 		}
@@ -357,6 +363,9 @@ func TestReadFromOrg(t *testing.T) {
 		t.Fatal(err)
 	}
 	if !bytes.Equal(readUser.Id, userId) || readUser.Name != USER_NAME {
+		t.Fatal("read wrong user")
+	}
+	if readUser.Email != EMAIL {
 		t.Fatal("read wrong user")
 	}
 	if readUser.CarNumber != CAR_NUMBER || readUser.NextState != 9 {

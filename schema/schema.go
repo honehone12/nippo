@@ -21,6 +21,7 @@ type Org struct {
 	DeletedAt gorm.DeletedAt `gorm:"index" json:"deleted_at"`
 
 	Name   CleanText `gorm:"not null;size:100" json:"name"`
+	Email  CleanText `gorm:"unique;not null;size:100" json:"email"`
 	LineId CleanText `gorm:"unique;type:char(33)" json:"line_id"`
 	Users  []User    `gorm:"foreignKey:OrgId;references:Id" json:"-"`
 }
@@ -31,7 +32,8 @@ type User struct {
 	UpdatedAt time.Time      `json:"updated_at"`
 	DeletedAt gorm.DeletedAt `gorm:"index" json:"deleted_at"`
 
-	Name             CleanText `gorm:"not null;size:100" json:"name"`
+	Name             CleanText `gorm:"size:100" json:"name"`
+	Email            CleanText `gorm:"unique;size:100;index" json:"email"`
 	LineId           CleanText `gorm:"unique;not null;type:char(33);index" json:"line_id"`
 	CarNumber        CleanText `gorm:"size:100" json:"car_number"`
 	CurrentOperation []uint8   `gorm:"type:binary(16)" json:"-"`
@@ -42,7 +44,7 @@ type User struct {
 	EveningCalls []EveningCall `gorm:"foreignKey:UserId;references:Id" json:"-"`
 	DailyReports []DailyReport `gorm:"foreignKey:UserId;references:Id" json:"-"`
 
-	OrgId []uint8 `gorm:"not null;type:binary(16)" json:"org_id"` // ;index
+	OrgId []uint8 `gorm:"not null;type:binary(16)" json:"org_id"`
 }
 
 type MorningCall struct {
@@ -62,7 +64,7 @@ type MorningCall struct {
 	CarCheck        bool       `json:"car_check"`
 	Note            CleanText  `gorm:"size:5000" json:"note"`
 
-	UserId []uint8 `gorm:"not null;type:binary(16)" json:"user_id"` // ;index
+	UserId []uint8 `gorm:"not null;type:binary(16)" json:"user_id"`
 }
 
 type EveningCall struct {
@@ -80,7 +82,7 @@ type EveningCall struct {
 	AlcPhoto        string     `gorm:"size:100" json:"alc_photo"`
 	Note            CleanText  `gorm:"size:5000" json:"note"`
 
-	UserId []uint8 `gorm:"not null;type:binary(16)" json:"user_id"` // ;index
+	UserId []uint8 `gorm:"not null;type:binary(16)" json:"user_id"`
 }
 
 type DailyReport struct {
@@ -104,7 +106,7 @@ type DailyReport struct {
 	Loadings  []Loading  `gorm:"foreignKey:DailyReportId;references:Id" json:"-"`
 	Restings  []Resting  `gorm:"foreignKey:DailyReportId;references:Id" json:"-"`
 
-	UserId []uint8 `gorm:"not null;type:binary(16)" json:"user_id"` // ;index
+	UserId []uint8 `gorm:"not null;type:binary(16)" json:"user_id"`
 }
 
 type Location struct {
@@ -119,7 +121,7 @@ type Location struct {
 	Longitude float64   `json:"longitude"`
 	ShortNote CleanText `gorm:"size:100" json:"short_note"`
 
-	DailyReportId []uint8 `gorm:"not null;type:binary(16)" json:"daily_report_id"` // ;index
+	DailyReportId []uint8 `gorm:"not null;type:binary(16)" json:"daily_report_id"`
 }
 
 type Waiting struct {
@@ -134,7 +136,7 @@ type Waiting struct {
 	Longitude float64   `json:"longitude"`
 	Note      CleanText `gorm:"size:5000" json:"note"`
 
-	DailyReportId []uint8 `gorm:"not null;type:binary(16)" json:"daily_report_id"` // ;index
+	DailyReportId []uint8 `gorm:"not null;type:binary(16)" json:"daily_report_id"`
 }
 
 type Loading struct {
@@ -150,7 +152,7 @@ type Loading struct {
 	ShippingCheck bool      `json:"shipping_check"`
 	Note          CleanText `gorm:"size:5000" json:"note"`
 
-	DailyReportId []uint8 `gorm:"not null;type:binary(16)" json:"daily_report_id"` // ;index
+	DailyReportId []uint8 `gorm:"not null;type:binary(16)" json:"daily_report_id"`
 }
 
 type Resting struct {
@@ -165,5 +167,5 @@ type Resting struct {
 	Longitude float64   `json:"longitude"`
 	ShortNote CleanText `gorm:"size:100" json:"short_note"`
 
-	DailyReportId []uint8 `gorm:"not null;type:binary(16)" json:"daily_report_id"` // ;index
+	DailyReportId []uint8 `gorm:"not null;type:binary(16)" json:"daily_report_id"`
 }

@@ -8,9 +8,12 @@ import (
 	"github.com/google/uuid"
 )
 
-func (ti TiDbTx) CreateOrg(name schema.CleanText) ([]uint8, error) {
-	if len(name) <= 1 || len(name) > schema.MAX_SHORT_TEXT_LEN {
+func (ti TiDbTx) CreateOrg(name schema.CleanText, email schema.CleanText) ([]uint8, error) {
+	if len(name) == 0 || len(name) > schema.MAX_SHORT_TEXT_LEN {
 		return nil, errors.New("unexpected name length")
+	}
+	if len(email) == 0 || len(name) > schema.MAX_SHORT_TEXT_LEN {
+		return nil, errors.New("unexpected email length")
 	}
 
 	id, err := uuid.NewRandom()
@@ -19,8 +22,9 @@ func (ti TiDbTx) CreateOrg(name schema.CleanText) ([]uint8, error) {
 	}
 
 	org := schema.Org{
-		Id:   id[:],
-		Name: name,
+		Id:    id[:],
+		Name:  name,
+		Email: email,
 	}
 
 	if res := ti.orm.Create(&org); res.Error != nil {

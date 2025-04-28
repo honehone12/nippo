@@ -46,7 +46,7 @@ func (s StUserSetCar) Run(
 		} else {
 			req := messaging_api.ReplyMessageRequest{
 				ReplyToken: e.ReplyToken,
-				Messages:   reply.ReplyUsrSetCarNum(),
+				Messages:   reply.ReplyUserSetCar(),
 			}
 
 			_, err := props.Api().ReplyMessage(&req)
