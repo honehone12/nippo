@@ -1,6 +1,7 @@
 package message
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
 	"nippo/input"
@@ -125,6 +126,10 @@ func processEvent(props *msgprops.Props, event webhook.EventInterface) (*basicCo
 		return nil, nil
 	} else if err != nil {
 		return bc, err
+	}
+
+	if !bytes.Equal(props.OrgId(), user.OrgId) {
+		return bc, errors.New("org id do not match")
 	}
 
 	if bc.reset {
