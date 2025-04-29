@@ -92,7 +92,7 @@ func handler(
 
 	b, err := q.Query(props)
 	if err != nil {
-		log.L.Error(err)
+		log.Error(err)
 		return response.Internal(), nil
 	}
 
@@ -103,15 +103,15 @@ func main() {
 	log.FmtPlain()
 
 	if err := collectEnv(); err != nil {
-		log.L.Fatal(err)
+		log.Fatal(err)
 	}
 
 	if err := connectDb(); err != nil {
-		log.L.Fatal(err)
+		log.Fatal(err)
 	}
 
 	if err := configAws(); err != nil {
-		log.L.Fatal(err)
+		log.Fatal(err)
 	}
 
 	lambda.Start(handler)

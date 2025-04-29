@@ -107,7 +107,7 @@ func validateMsg(req *events.APIGatewayProxyRequest) error {
 	if !ok || !strings.Contains(userAgent, "LineBotWebhook") {
 		return errors.New("invalid user agent")
 	} else if userAgent != "LineBotWebhook/2.0" {
-		log.L.Warn("user agent was updated from version2.0")
+		log.Warn("user agent was updated from version2.0")
 	}
 
 	contentType, ok := req.Headers["Content-Type"]
@@ -157,13 +157,13 @@ func handler(
 	req events.APIGatewayProxyRequest,
 ) (events.APIGatewayProxyResponse, error) {
 	if err := validateMsg(&req); err != nil {
-		log.L.Warn(err)
+		log.Warn(err)
 		return response.BadRequest(), nil
 	}
 
 	var msg webhook.CallbackRequest
 	if err := parseMsg(&req, &msg); err != nil {
-		log.L.Warn(err)
+		log.Warn(err)
 		return response.BadRequest(), nil
 	}
 
@@ -185,19 +185,19 @@ func main() {
 	log.FmtPlain()
 
 	if err := collectEnv(); err != nil {
-		log.L.Fatal(err)
+		log.Fatal(err)
 	}
 
 	if err := connectDb(); err != nil {
-		log.L.Fatal(err)
+		log.Fatal(err)
 	}
 
 	if err := initApi(); err != nil {
-		log.L.Fatal(err)
+		log.Fatal(err)
 	}
 
 	if err := configAws(); err != nil {
-		log.L.Fatal(err)
+		log.Fatal(err)
 	}
 
 	lambda.Start(handler)

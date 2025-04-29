@@ -74,7 +74,7 @@ func (s StDRepoMtrPhoto) Run(
 		_, err := props.Api().ReplyMessage(&req)
 		return err
 	} else {
-		log.L.Warnf("unexpected event: %s", event.GetType())
+		log.Warnf("unexpected event: %s", event.GetType())
 		return nil
 	}
 }

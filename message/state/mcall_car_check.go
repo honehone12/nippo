@@ -58,7 +58,7 @@ func (s StMCallCarCheck) Run(
 			return fmt.Errorf("unexpected postback data: %s", e.Postback.Data)
 		}
 	default:
-		log.L.Warnf("unexpected event: %s", event.GetType())
+		log.Warnf("unexpected event: %s", event.GetType())
 		return nil
 	}
 }

@@ -24,7 +24,7 @@ func (s StMCallNote) Run(
 	switch e := event.(type) {
 	case webhook.PostbackEvent:
 		if e.Postback.Data == reply.IGNORE_TXT_ACT_DATA {
-			log.L.Warn("ignoring postback data, means shorcut does not work")
+			log.Warn("ignoring postback data, means shorcut does not work")
 			return nil
 		} else {
 			return fmt.Errorf("unexpected postback data: %s", e.Postback.Data)
@@ -92,7 +92,7 @@ func (s StMCallNote) Run(
 			return err
 		}
 	default:
-		log.L.Warnf("unexpected event: %s", event.GetType())
+		log.Warnf("unexpected event: %s", event.GetType())
 		return nil
 	}
 }

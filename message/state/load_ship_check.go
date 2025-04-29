@@ -64,7 +64,7 @@ func (s StLoadShipCheck) Run(
 		_, err = props.Api().ReplyMessage(&req)
 		return err
 	default:
-		log.L.Warnf("unexpected event: %s", event.GetType())
+		log.Warnf("unexpected event: %s", event.GetType())
 		return nil
 	}
 }

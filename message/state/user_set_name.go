@@ -53,7 +53,7 @@ func (s StUserSetName) Run(
 			return err
 		}
 	} else {
-		log.L.Warnf("unexpected event: %s", event.GetType())
+		log.Warnf("unexpected event: %s", event.GetType())
 		return nil
 	}
 }

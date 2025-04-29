@@ -38,7 +38,7 @@ func validateDst(props *msgprops.Props, msg *webhook.CallbackRequest) error {
 	cleanDst := input.Clean(msg.Destination)
 
 	if len(org.LineId) == 0 {
-		log.L.Warnf("updating org line id to: %s", cleanDst)
+		log.Warnf("updating org line id to: %s", cleanDst)
 		return db.Once().UpdateOrgLineId(orgId, cleanDst)
 	}
 
@@ -98,14 +98,14 @@ func sendErrMsg(props *msgprops.Props, repTkn string) {
 	}
 	_, err := props.Api().ReplyMessage(&req)
 	if err != nil {
-		log.L.Errorf("failed to send err msg: %s", err)
+		log.Errorf("failed to send err msg: %s", err)
 	}
 }
 
 func processEvent(props *msgprops.Props, event webhook.EventInterface) (*basicContent, error) {
 	bc, err := checkBasicContent(event)
 	if err != nil {
-		log.L.Warn(err)
+		log.Warn(err)
 		return nil, nil
 	}
 	if bc.ignore() {
@@ -115,7 +115,7 @@ func processEvent(props *msgprops.Props, event webhook.EventInterface) (*basicCo
 	cleanSource := input.Clean(bc.source)
 	user, err := props.Db().ReadUser(cleanSource)
 	if errors.Is(err, gorm.ErrRecordNotFound) {
-		log.L.Warnf("user not configured: %s", err)
+		log.Warnf("user not configured: %s", err)
 		st := state.StUserNotConfigured{}
 		unknown := schema.User{LineId: cleanSource}
 		err := st.Run(props, &unknown, event)
@@ -164,13 +164,13 @@ func eventMain(props *msgprops.Props, event webhook.EventInterface) error {
 
 func MessageMain(props *msgprops.Props, msg *webhook.CallbackRequest) {
 	if err := validateDst(props, msg); err != nil {
-		log.L.Error(err)
+		log.Error(err)
 		return
 	}
 
 	for _, e := range msg.Events {
 		if err := eventMain(props, e); err != nil {
-			log.L.Error(err)
+			log.Error(err)
 		}
 	}
 }
