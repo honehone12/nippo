@@ -38,7 +38,7 @@ func (s StUserSetName) Run(
 
 			req := messaging_api.ReplyMessageRequest{
 				ReplyToken: e.ReplyToken,
-				Messages:   reply.ReplyUserSetCar(),
+				Messages:   reply.ReplyUserSetEmail(),
 			}
 
 			_, err = props.Api().ReplyMessage(&req)
