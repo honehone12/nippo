@@ -24,9 +24,7 @@ import (
 
 type variable struct {
 	lnChSec string
-	lnChTkn string
 	orgId   uuid.UUID
-	dbUri   string
 	bucket  string
 }
 
@@ -38,13 +36,9 @@ var (
 	s3Client *s3.Client
 )
 
-func collectEnv() error {
+func cacheEnv() error {
 	if env.lnChSec = os.Getenv("LN_CH_SEC"); len(env.lnChSec) == 0 {
 		return errors.New("env for lnChSec is not set")
-	}
-
-	if env.lnChTkn = os.Getenv("LN_CH_TKN"); len(env.lnChTkn) == 0 {
-		return errors.New("env for lnChTkn is not set")
 	}
 
 	orgIdStr := os.Getenv("ORG_ID")
@@ -57,10 +51,6 @@ func collectEnv() error {
 	}
 	env.orgId = orgId
 
-	if env.dbUri = os.Getenv("DB_URI"); len(env.dbUri) == 0 {
-		return errors.New("env for dbUri is not set")
-	}
-
 	if env.bucket = os.Getenv("BUCKET"); len(env.bucket) == 0 {
 		return errors.New("env for bucket is not set")
 	}
@@ -69,19 +59,29 @@ func collectEnv() error {
 }
 
 func connectDb() error {
+	dbUri := os.Getenv("DB_URI")
+	if len(dbUri) == 0 {
+		return errors.New("env for dbUri is not set")
+	}
+
 	var err error
-	db, err = tidb.Open(env.dbUri)
+	db, err = tidb.Open(dbUri)
 	return err
 }
 
 func initApi() error {
+	lnChTkn := os.Getenv("LN_CH_TKN")
+	if len(lnChTkn) == 0 {
+		return errors.New("env for lnChTkn is not set")
+	}
+
 	var err error
-	api, err = messaging_api.NewMessagingApiAPI(env.lnChTkn)
+	api, err = messaging_api.NewMessagingApiAPI(lnChTkn)
 	if err != nil {
 		return err
 	}
 
-	blobApi, err = messaging_api.NewMessagingApiBlobAPI(env.lnChTkn)
+	blobApi, err = messaging_api.NewMessagingApiBlobAPI(lnChTkn)
 	if err != nil {
 		return err
 	}
@@ -184,7 +184,7 @@ func handler(
 func main() {
 	log.FmtPlain()
 
-	if err := collectEnv(); err != nil {
+	if err := cacheEnv(); err != nil {
 		log.Fatal(err)
 	}
 
