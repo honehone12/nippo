@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-const eMAIL_REGEX = `^[A-Za-z0-9._+-]+@[A-Za-z0-9]+\.[A-Za-z]{2,}$`
+const eMAIL_REGEX = `^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$`
 
 var forbidden = strings.NewReplacer(
 	"*", "",
@@ -34,15 +34,15 @@ func Clean(s string) schema.CleanText {
 }
 
 func ValidEmail(email string) (schema.CleanText, error) {
+	if strings.Contains(email, "--") {
+		return "", errors.New("could not accept email")
+	}
+
 	if emailRegex == nil {
 		var err error
 		if emailRegex, err = regexp.Compile(eMAIL_REGEX); err != nil {
 			return "", err
 		}
-	}
-
-	if strings.Contains(email, "--") {
-		return "", errors.New("could not accept email")
 	}
 
 	if !emailRegex.MatchString(string(email)) {

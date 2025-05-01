@@ -18,6 +18,10 @@ func TestEmail(t *testing.T) {
 		t.Fatal("should be valid")
 	}
 
+	if _, err := ValidEmail("somethin99g@go.co.xx"); err != nil {
+		t.Fatal("should be valid")
+	}
+
 	if _, err := ValidEmail("something.some+some@golang.com"); err != nil {
 		t.Fatal("should be valid")
 	}
@@ -32,6 +36,10 @@ func TestEmail(t *testing.T) {
 	}
 
 	if _, err := ValidEmail("some@thing@go.com"); err == nil {
+		t.Fatal("should be invalid")
+	}
+
+	if _, err := ValidEmail("something@go"); err == nil {
 		t.Fatal("should be invalid")
 	}
 
