@@ -178,7 +178,7 @@ func handler(
 	)
 	message.MessageMain(props, &msg)
 
-	return response.Ok(), nil
+	return response.Text("ok"), nil
 }
 
 func main() {

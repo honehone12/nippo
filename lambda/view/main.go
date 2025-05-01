@@ -9,6 +9,7 @@ import (
 	"nippo/input"
 	"nippo/lambda/response"
 	"nippo/log"
+	"nippo/schema"
 	"nippo/view/q"
 	"nippo/view/viewprops"
 	"os"
@@ -72,41 +73,42 @@ func configAws() error {
 	return nil
 }
 
-func getViewerOrgId(auth map[string]any) ([]uint8, error) {
+func getViewerEmail(auth map[string]any) (schema.CleanText, error) {
 	claims, ok := auth["claims"].(map[string]any)
 	if !ok {
-		return nil, errors.New("auth not found")
+		return "", errors.New("auth not found")
 	}
 
 	raw, ok := claims["email"].(string)
 	if !ok {
-		return nil, errors.New("user email not found")
+		return "", errors.New("user email not found")
 	}
 
 	email, err := input.ValidEmail(raw)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 
-	orgId, err := db.ReadUserOrgIdEm(email)
-	if err != nil {
-		return nil, err
-	}
-
-	return orgId, nil
+	return email, nil
 }
 
 func handler(
 	ctx context.Context,
 	req events.APIGatewayProxyRequest,
 ) (events.APIGatewayProxyResponse, error) {
-	viewerOrgId, err := getViewerOrgId(req.RequestContext.Authorizer)
+	viewerEmail, err := getViewerEmail(req.RequestContext.Authorizer)
 	if err != nil {
 		log.Warn(err)
 		return response.BadRequest(), nil
 	}
 
-	if !bytes.Equal(viewerOrgId, env.orgId[:]) {
+	viewerOrg, err := db.ReadUserOrgIdEm(viewerEmail)
+	if err != nil {
+		log.Warn(err)
+		return response.Internal(), nil
+	}
+
+	if !bytes.Equal(viewerOrg, env.orgId[:]) {
 		log.Warn("viewing user has wrong org id")
 		return response.BadRequest(), nil
 	}

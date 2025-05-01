@@ -26,10 +26,10 @@ func Internal() events.APIGatewayProxyResponse {
 	}
 }
 
-func Ok() events.APIGatewayProxyResponse {
+func Text(body string) events.APIGatewayProxyResponse {
 	return events.APIGatewayProxyResponse{
 		StatusCode: http.StatusOK,
-		Body:       "ok",
+		Body:       body,
 		Headers: map[string]string{
 			"Content-Type": "text/plain",
 		},
