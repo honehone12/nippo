@@ -24,11 +24,11 @@ func (q QReports) Query(props *viewprops.Props) ([]byte, error) {
 	from, to := timeconv.UtcRangeFromJstMonth(q.year, q.month)
 	userId := q.userId[:]
 
-	user, err := db.ReadUser(userId)
+	orgId, err := db.ReadUserOrgId(userId)
 	if err != nil {
 		return nil, err
 	}
-	if !bytes.Equal(user.OrgId, props.OrgId()) {
+	if !bytes.Equal(orgId, props.OrgId()) {
 		return nil, errors.New("viewing wrong org")
 	}
 

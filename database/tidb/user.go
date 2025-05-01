@@ -37,19 +37,6 @@ func (ti TiDbTx) CreateUser(orgId []uint8, lineId schema.CleanText) ([]uint8, er
 	return user.Id, nil
 }
 
-func (ti TiDb) ReadUser(id []uint8) (*schema.User, error) {
-	if len(id) != schema.ID_LEN {
-		return nil, errors.New("unexpected user id length")
-	}
-
-	user := schema.User{Id: id}
-	if res := ti.orm.Take(&user); res.Error != nil {
-		return nil, res.Error
-	}
-
-	return &user, nil
-}
-
 func (ti TiDb) ReadUserLn(lineId schema.CleanText) (*schema.User, error) {
 	if len(lineId) != schema.LINE_ID_LEN {
 		return nil, errors.New("unexpected line id length")
@@ -66,17 +53,30 @@ func (ti TiDb) ReadUserLn(lineId schema.CleanText) (*schema.User, error) {
 	return &user, nil
 }
 
-func (ti TiDb) ReadUserEm(email schema.CleanText) (*schema.User, error) {
+func (ti TiDb) ReadUserOrgId(id []uint8) ([]uint8, error) {
+	if len(id) != schema.ID_LEN {
+		return nil, errors.New("unexpected user id length")
+	}
+
+	user := schema.User{Id: id}
+	if res := ti.orm.Select("org_id").Take(&user); res.Error != nil {
+		return nil, res.Error
+	}
+
+	return user.OrgId, nil
+}
+
+func (ti TiDb) ReadUserOrgIdEm(email schema.CleanText) ([]uint8, error) {
 	if len(email) == 0 || len(email) > schema.MAX_SHORT_TEXT_LEN {
 		return nil, errors.New("unexpected line id length")
 	}
 
 	user := schema.User{}
-	if res := ti.orm.Take(&user, "email = ?", email); res.Error != nil {
+	if res := ti.orm.Select("org_id").Take(&user, "email = ?", email); res.Error != nil {
 		return nil, res.Error
 	}
 
-	return &user, nil
+	return user.OrgId, nil
 }
 
 func (ti TiDb) ReadUsers(orgId []uint8) ([]schema.User, error) {

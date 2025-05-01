@@ -23,11 +23,11 @@ func (q QCalls) Query(props *viewprops.Props) ([]byte, error) {
 	db := props.Db()
 	userId := q.userId[:]
 
-	user, err := db.ReadUser(userId)
+	orgId, err := db.ReadUserOrgId(userId)
 	if err != nil {
 		return nil, err
 	}
-	if !bytes.Equal(user.OrgId, props.OrgId()) {
+	if !bytes.Equal(orgId, props.OrgId()) {
 		return nil, errors.New("viewing wrong org")
 	}
 

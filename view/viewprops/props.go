@@ -3,7 +3,6 @@ package viewprops
 import (
 	"context"
 	"nippo/database"
-	"nippo/schema"
 
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/google/uuid"
@@ -13,7 +12,6 @@ type Props struct {
 	ctx       context.Context
 	bucket    string
 	orgId     uuid.UUID
-	user      *schema.User
 	db        database.Database
 	s3        *s3.Client
 	s3Presign *s3.PresignClient
@@ -23,7 +21,6 @@ func NewProps(
 	ctx context.Context,
 	bucket string,
 	orgId uuid.UUID,
-	user *schema.User,
 	db database.Database,
 	s3 *s3.Client,
 	s3Presign *s3.PresignClient,
@@ -32,7 +29,6 @@ func NewProps(
 		ctx,
 		bucket,
 		orgId,
-		user,
 		db,
 		s3,
 		s3Presign,
@@ -49,10 +45,6 @@ func (p *Props) Bucket() *string {
 
 func (p *Props) OrgId() []byte {
 	return p.orgId[:]
-}
-
-func (p *Props) User() *schema.User {
-	return p.user
 }
 
 func (p *Props) OrgUuid() uuid.UUID {

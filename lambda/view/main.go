@@ -9,7 +9,6 @@ import (
 	"nippo/input"
 	"nippo/lambda/response"
 	"nippo/log"
-	"nippo/schema"
 	"nippo/view/q"
 	"nippo/view/viewprops"
 	"os"
@@ -73,7 +72,7 @@ func configAws() error {
 	return nil
 }
 
-func getUser(auth map[string]any) (*schema.User, error) {
+func getViewerOrgId(auth map[string]any) ([]uint8, error) {
 	claims, ok := auth["claims"].(map[string]any)
 	if !ok {
 		return nil, errors.New("auth not found")
@@ -89,25 +88,25 @@ func getUser(auth map[string]any) (*schema.User, error) {
 		return nil, err
 	}
 
-	user, err := db.ReadUserEm(email)
+	orgId, err := db.ReadUserOrgIdEm(email)
 	if err != nil {
 		return nil, err
 	}
 
-	return user, nil
+	return orgId, nil
 }
 
 func handler(
 	ctx context.Context,
 	req events.APIGatewayProxyRequest,
 ) (events.APIGatewayProxyResponse, error) {
-	user, err := getUser(req.RequestContext.Authorizer)
+	viewerOrgId, err := getViewerOrgId(req.RequestContext.Authorizer)
 	if err != nil {
 		log.Warn(err)
 		return response.BadRequest(), nil
 	}
 
-	if !bytes.Equal(user.OrgId, env.orgId[:]) {
+	if !bytes.Equal(viewerOrgId, env.orgId[:]) {
 		log.Warn("viewing user has wrong org id")
 		return response.BadRequest(), nil
 	}
@@ -123,7 +122,6 @@ func handler(
 		ctx,
 		env.bucket,
 		env.orgId,
-		user,
 		db,
 		s3Client,
 		s3Presign,

@@ -7,9 +7,9 @@ import (
 
 type Database interface {
 	ReadOrg(id []uint8) (*schema.Org, error)
-	ReadUser(id []uint8) (*schema.User, error)
 	ReadUserLn(lineId schema.CleanText) (*schema.User, error)
-	ReadUserEm(email schema.CleanText) (*schema.User, error)
+	ReadUserOrgId(id []uint8) ([]uint8, error)
+	ReadUserOrgIdEm(email schema.CleanText) ([]uint8, error)
 	ReadUsers(orgId []uint8) ([]schema.User, error)
 	ReadMorningCall(id []uint8) (*schema.MorningCall, error)
 	ReadMorningCalls(

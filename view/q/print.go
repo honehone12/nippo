@@ -31,11 +31,11 @@ func (q QPrint) Query(props *viewprops.Props) ([]byte, error) {
 		return nil, err
 	}
 
-	user, err := db.ReadUser(report.UserId)
+	orgId, err := db.ReadUserOrgId(report.UserId)
 	if err != nil {
 		return nil, err
 	}
-	if !bytes.Equal(user.OrgId, props.OrgId()) {
+	if !bytes.Equal(orgId, props.OrgId()) {
 		return nil, errors.New("viewing wrong org")
 	}
 
