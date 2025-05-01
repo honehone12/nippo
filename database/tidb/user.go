@@ -37,6 +37,19 @@ func (ti TiDbTx) CreateUser(orgId []uint8, lineId schema.CleanText) ([]uint8, er
 	return user.Id, nil
 }
 
+func (ti TiDb) ReadUserId(id []uint8) (*schema.User, error) {
+	if len(id) != schema.ID_LEN {
+		return nil, errors.New("unexpected user id length")
+	}
+
+	user := schema.User{Id: id}
+	if res := ti.orm.Take(&user); res.Error != nil {
+		return nil, res.Error
+	}
+
+	return &user, nil
+}
+
 func (ti TiDb) ReadUserLine(lineId schema.CleanText) (*schema.User, error) {
 	if len(lineId) != schema.LINE_ID_LEN {
 		return nil, errors.New("unexpected line id length")
