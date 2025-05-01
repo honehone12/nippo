@@ -6,9 +6,15 @@ import (
 )
 
 func TestInput(t *testing.T) {
-	c := Clean("(\"'<>&`#--%*;\\ | =)")
+	if c := Clean(" (\"'<>&`#--%*;\\ | =) "); c != "" {
+		t.Fatalf("result %s is not expected", c)
+	}
 
-	if c != "" {
+	if c := Clean("--- ------ -- -"); c != "-   -" {
+		t.Fatalf("result %s is not expected", c)
+	}
+
+	if c := Clean("------"); c != "" {
 		t.Fatalf("result %s is not expected", c)
 	}
 }
