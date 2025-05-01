@@ -1,12 +1,15 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"errors"
 	"nippo/database"
 	"nippo/database/tidb"
+	"nippo/input"
 	"nippo/lambda/response"
 	"nippo/log"
+	"nippo/schema"
 	"nippo/view/q"
 	"nippo/view/viewprops"
 	"os"
@@ -70,10 +73,45 @@ func configAws() error {
 	return nil
 }
 
+func getUser(auth map[string]any) (*schema.User, error) {
+	claims, ok := auth["claims"].(map[string]any)
+	if !ok {
+		return nil, errors.New("auth not found")
+	}
+
+	raw, ok := claims["email"].(string)
+	if !ok {
+		return nil, errors.New("user email not found")
+	}
+
+	email, err := input.ValidEmail(raw)
+	if err != nil {
+		return nil, err
+	}
+
+	user, err := db.ReadUserEmail(email)
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
+}
+
 func handler(
 	ctx context.Context,
 	req events.APIGatewayProxyRequest,
 ) (events.APIGatewayProxyResponse, error) {
+	user, err := getUser(req.RequestContext.Authorizer)
+	if err != nil {
+		log.Warn(err)
+		return response.BadRequest(), nil
+	}
+
+	if !bytes.Equal(user.OrgId, env.orgId[:]) {
+		log.Warn("wrong org id")
+		return response.BadRequest(), nil
+	}
+
 	params := req.QueryStringParameters
 
 	q, err := q.FromParams(params)
