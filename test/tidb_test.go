@@ -372,6 +372,26 @@ func TestReadFromOrg(t *testing.T) {
 		t.Fatal("read wrong user")
 	}
 
+	{
+		readOrgId, err := db.ReadUserOrgId(userId)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if !bytes.Equal(readOrgId, orgId) {
+			t.Fatal("read wrong org id")
+		}
+	}
+
+	{
+		readOrgId, err := db.ReadUserOrgIdEm(EMAIL)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if !bytes.Equal(readOrgId, orgId) {
+			t.Fatal("read wrong org id")
+		}
+	}
+
 	users, err := db.ReadUsers(orgId)
 	if err != nil {
 		t.Fatal(err)

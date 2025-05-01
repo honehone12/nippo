@@ -2,8 +2,8 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"nippo/database/tidb"
-	"nippo/log"
 	"os"
 
 	"github.com/joho/godotenv"
@@ -29,12 +29,11 @@ func migrate() error {
 
 func main() {
 	godotenv.Load("../.env")
-	log.FmtPlain()
 
 	if err := migrate(); err != nil {
-		log.L.Error(err)
+		fmt.Println(err)
 		return
 	}
 
-	log.L.Info("done")
+	fmt.Println("done")
 }
