@@ -1,6 +1,7 @@
 package q
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"nippo/schema"
@@ -21,6 +22,15 @@ type QCalls struct {
 func (q QCalls) Query(props *viewprops.Props) ([]byte, error) {
 	db := props.Db()
 	userId := q.userId[:]
+
+	user, err := db.ReadUser(userId)
+	if err != nil {
+		return nil, err
+	}
+	if !bytes.Equal(user.OrgId, props.OrgId()) {
+		return nil, errors.New("viewing wrong org")
+	}
+
 	from, to := timeconv.UtcRangeFromJstMonth(q.year, q.month)
 
 	mCalls, err := db.ReadMorningCalls(userId, from, to)

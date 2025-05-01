@@ -1,6 +1,7 @@
 package q
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"nippo/schema"
@@ -24,6 +25,14 @@ func (q QDownload) Query(props *viewprops.Props) ([]byte, error) {
 		return json.Marshal(schema.Photos{})
 	} else if err != nil {
 		return nil, err
+	}
+
+	user, err := db.ReadUser(report.UserId)
+	if err != nil {
+		return nil, err
+	}
+	if !bytes.Equal(user.OrgId, props.OrgId()) {
+		return nil, errors.New("viewing wrong org")
 	}
 
 	var meter []byte

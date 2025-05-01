@@ -1,6 +1,7 @@
 package q
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"nippo/schema"
@@ -19,9 +20,19 @@ type QReports struct {
 }
 
 func (q QReports) Query(props *viewprops.Props) ([]byte, error) {
+	db := props.Db()
 	from, to := timeconv.UtcRangeFromJstMonth(q.year, q.month)
+	userId := q.userId[:]
 
-	reports, err := props.Db().ReadDailyReports(q.userId[:], from, to)
+	user, err := db.ReadUser(userId)
+	if err != nil {
+		return nil, err
+	}
+	if !bytes.Equal(user.OrgId, props.OrgId()) {
+		return nil, errors.New("viewing wrong org")
+	}
+
+	reports, err := db.ReadDailyReports(userId, from, to)
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		reports = []schema.DailyReport{}
 	} else if err != nil {

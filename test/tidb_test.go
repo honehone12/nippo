@@ -128,7 +128,7 @@ func TestMorningCall(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	readUser, err := db.ReadUserLine(USER_LINE_ID)
+	readUser, err := db.ReadUserLn(USER_LINE_ID)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -166,7 +166,7 @@ func TestDailyReport(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	readUser, err := db.ReadUserLine(USER_LINE_ID)
+	readUser, err := db.ReadUserLn(USER_LINE_ID)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -199,7 +199,7 @@ func TestEveningCall(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	readUser, err := db.ReadUserLine(USER_LINE_ID)
+	readUser, err := db.ReadUserLn(USER_LINE_ID)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -233,7 +233,7 @@ func TestLocation(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	readUser, err := db.ReadUserLine(USER_LINE_ID)
+	readUser, err := db.ReadUserLn(USER_LINE_ID)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -267,7 +267,7 @@ func TestResting(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	readUser, err := db.ReadUserLine(USER_LINE_ID)
+	readUser, err := db.ReadUserLn(USER_LINE_ID)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -301,7 +301,7 @@ func TestWaiting(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	readUser, err := db.ReadUserLine(USER_LINE_ID)
+	readUser, err := db.ReadUserLn(USER_LINE_ID)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -340,7 +340,7 @@ func TestLoading(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	readUser, err := db.ReadUserLine(USER_LINE_ID)
+	readUser, err := db.ReadUserLn(USER_LINE_ID)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -358,7 +358,7 @@ func TestReadFromOrg(t *testing.T) {
 		t.Fatal("read wrong data")
 	}
 
-	readUser, err := db.ReadUserLine(USER_LINE_ID)
+	readUser, err := db.ReadUserLn(USER_LINE_ID)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -511,7 +511,7 @@ func TestOnEnd(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	readUser, err := db.ReadUserLine(USER_LINE_ID)
+	readUser, err := db.ReadUserLn(USER_LINE_ID)
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -89,7 +89,7 @@ func getUser(auth map[string]any) (*schema.User, error) {
 		return nil, err
 	}
 
-	user, err := db.ReadUserEmail(email)
+	user, err := db.ReadUserEm(email)
 	if err != nil {
 		return nil, err
 	}
@@ -108,7 +108,7 @@ func handler(
 	}
 
 	if !bytes.Equal(user.OrgId, env.orgId[:]) {
-		log.Warn("wrong org id")
+		log.Warn("viewing user has wrong org id")
 		return response.BadRequest(), nil
 	}
 
