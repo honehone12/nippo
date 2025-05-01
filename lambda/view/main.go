@@ -123,6 +123,7 @@ func handler(
 		ctx,
 		env.bucket,
 		env.orgId,
+		user,
 		db,
 		s3Client,
 		s3Presign,
