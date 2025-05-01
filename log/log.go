@@ -19,81 +19,113 @@ func SetLevel(level logrus.Level) {
 	l.Level = level
 }
 
-func Debugf(format string, args ...interface{}) {
+func Tracef(format string, args ...any) {
 	if l == nil {
-		return
+		FmtDefault()
+	}
+
+	l.Tracef(format, args...)
+}
+
+func Trace(args ...any) {
+	if l == nil {
+		FmtDefault()
+	}
+
+	l.Trace(args...)
+}
+
+func Debugf(format string, args ...any) {
+	if l == nil {
+		FmtDefault()
 	}
 
 	l.Debugf(format, args...)
 }
 
-func Debug(args ...interface{}) {
+func Debug(args ...any) {
 	if l == nil {
-		return
+		FmtDefault()
 	}
 
 	l.Debug(args...)
 }
 
-func Infof(format string, args ...interface{}) {
+func Infof(format string, args ...any) {
 	if l == nil {
-		return
+		FmtDefault()
 	}
 
 	l.Infof(format, args...)
 }
 
-func Info(args ...interface{}) {
+func Info(args ...any) {
 	if l == nil {
-		return
+		FmtDefault()
 	}
 
 	l.Info(args...)
 }
 
-func Warnf(format string, args ...interface{}) {
+func Warnf(format string, args ...any) {
 	if l == nil {
-		return
+		FmtDefault()
 	}
 
 	l.Warnf(format, args...)
 }
 
-func Warn(args ...interface{}) {
+func Warn(args ...any) {
 	if l == nil {
-		return
+		FmtDefault()
 	}
 
 	l.Warn(args...)
 }
 
-func Errorf(format string, args ...interface{}) {
+func Errorf(format string, args ...any) {
 	if l == nil {
-		return
+		FmtDefault()
 	}
 
 	l.Errorf(format, args...)
 }
 
-func Error(args ...interface{}) {
+func Error(args ...any) {
 	if l == nil {
-		return
+		FmtDefault()
 	}
 
 	l.Error(args...)
 }
 
-func Fatalf(format string, args ...interface{}) {
+func Panicf(format string, args ...any) {
 	if l == nil {
-		return
+		FmtDefault()
+	}
+
+	l.Panicf(format, args...)
+}
+
+func Panic(args ...any) {
+	if l == nil {
+		FmtDefault()
+	}
+
+	l.Panic(args...)
+}
+
+func Fatalf(format string, args ...any) {
+	if l == nil {
+		FmtDefault()
 	}
 
 	l.Fatalf(format, args...)
 }
 
-func Fatal(args ...interface{}) {
+func Fatal(args ...any) {
 	if l == nil {
-		return
+		FmtDefault()
 	}
 
 	l.Fatal(args...)
