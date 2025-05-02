@@ -358,6 +358,26 @@ func TestReadFromOrg(t *testing.T) {
 		t.Fatal("read wrong data")
 	}
 
+	{
+		readLineId, err := db.ReadOrgLineId(orgId)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if string(readLineId) != ORG_LINE_ID {
+			t.Fatal("read wrong org")
+		}
+	}
+
+	{
+		readEmail, err := db.ReadOrgEmail(orgId)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if string(readEmail) != EMAIL {
+			t.Fatal(err)
+		}
+	}
+
 	readUser, err := db.ReadUserLn(USER_LINE_ID)
 	if err != nil {
 		t.Fatal(err)
