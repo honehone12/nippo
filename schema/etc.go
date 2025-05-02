@@ -28,11 +28,14 @@ type UserMini struct {
 	Id        []uint8   `json:"id"`
 	CreatedAt time.Time `json:"created_at"`
 	Name      CleanText `json:"name"`
-	Email     CleanText `json:"email"`
 }
 
 type Users struct {
 	Admin      bool       `json:"admin"`
 	Users      []UserMini `json:"users"`
 	Invitables []UserMini `json:"invitables"`
+}
+
+type Invited struct {
+	Email CleanText `json:"email"`
 }

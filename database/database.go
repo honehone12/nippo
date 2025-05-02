@@ -9,9 +9,11 @@ type Database interface {
 	ReadOrg(id []uint8) (*schema.Org, error)
 	ReadOrgLineId(id []uint8) (schema.CleanText, error)
 	ReadOrgEmail(id []uint8) (schema.CleanText, error)
-	ReadUserLn(lineId schema.CleanText) (*schema.User, error)
+	ReadUserEmailOrgId(id []uint8) (*schema.User, error)
+	ReadUser_Line(lineId schema.CleanText) (*schema.User, error)
 	ReadUserOrgId(id []uint8) ([]uint8, error)
-	ReadUserOrgIdEm(email schema.CleanText) ([]uint8, error)
+	ReadUserOrgId_Email(email schema.CleanText) ([]uint8, error)
+	ReadUserEmail(id []uint8) (schema.CleanText, error)
 	ReadUsersMini(orgId []uint8) ([]schema.User, error)
 	ReadMorningCall(id []uint8) (*schema.MorningCall, error)
 	ReadMorningCalls(

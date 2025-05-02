@@ -111,7 +111,7 @@ func handler(
 		return response.BadRequest(), nil
 	}
 
-	viewerOrg, err := db.ReadUserOrgIdEm(viewerEmail)
+	viewerOrg, err := db.ReadUserOrgId_Email(viewerEmail)
 	if err != nil {
 		log.Warn(err)
 		return response.Internal(), nil

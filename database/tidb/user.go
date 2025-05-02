@@ -37,7 +37,20 @@ func (ti TiDbTx) CreateUser(orgId []uint8, lineId schema.CleanText) ([]uint8, er
 	return user.Id, nil
 }
 
-func (ti TiDb) ReadUserLn(lineId schema.CleanText) (*schema.User, error) {
+func (ti TiDb) ReadUserEmailOrgId(id []uint8) (*schema.User, error) {
+	if len(id) != schema.ID_LEN {
+		return nil, errors.New("unexpected user id length")
+	}
+
+	user := schema.User{Id: id}
+	if res := ti.orm.Select("email", "org_id").Take(&user); res.Error != nil {
+		return nil, res.Error
+	}
+
+	return &user, nil
+}
+
+func (ti TiDb) ReadUser_Line(lineId schema.CleanText) (*schema.User, error) {
 	if len(lineId) != schema.LINE_ID_LEN {
 		return nil, errors.New("unexpected line id length")
 	}
@@ -66,7 +79,7 @@ func (ti TiDb) ReadUserOrgId(id []uint8) ([]uint8, error) {
 	return user.OrgId, nil
 }
 
-func (ti TiDb) ReadUserOrgIdEm(email schema.CleanText) ([]uint8, error) {
+func (ti TiDb) ReadUserOrgId_Email(email schema.CleanText) ([]uint8, error) {
 	if len(email) == 0 || len(email) > schema.MAX_SHORT_TEXT_LEN {
 		return nil, errors.New("unexpected line id length")
 	}
@@ -79,6 +92,19 @@ func (ti TiDb) ReadUserOrgIdEm(email schema.CleanText) ([]uint8, error) {
 	return user.OrgId, nil
 }
 
+func (ti TiDb) ReadUserEmail(id []uint8) (schema.CleanText, error) {
+	if len(id) != schema.ID_LEN {
+		return "", errors.New("unexpected user id length")
+	}
+
+	user := schema.User{Id: id}
+	if res := ti.orm.Select("email").Take(&user); res.Error != nil {
+		return "", res.Error
+	}
+
+	return user.Email, nil
+}
+
 func (ti TiDb) ReadUsersMini(orgId []uint8) ([]schema.User, error) {
 	if len(orgId) != schema.ID_LEN {
 		return nil, errors.New("unexpected org id length")
@@ -86,8 +112,7 @@ func (ti TiDb) ReadUsersMini(orgId []uint8) ([]schema.User, error) {
 
 	org := schema.Org{Id: orgId}
 	var users []schema.User
-	err := ti.orm.Model(&org).Select("id", "created_at", "name", "email").
-		Association("Users").Find(&users)
+	err := ti.orm.Model(&org).Select("id", "created_at", "name").Association("Users").Find(&users)
 	if err != nil {
 		return nil, err
 	}

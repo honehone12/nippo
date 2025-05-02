@@ -43,7 +43,6 @@ func (q QUsers) Query(props *viewprops.Props, email schema.CleanText) ([]byte, e
 			Id:        u.Id,
 			CreatedAt: u.CreatedAt,
 			Name:      u.Name,
-			Email:     u.Email,
 		}
 		users.Users = append(users.Users, user)
 

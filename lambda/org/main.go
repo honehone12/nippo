@@ -48,7 +48,7 @@ func handler(
 		return response.BadRequest(), nil
 	}
 
-	orgId, err := db.ReadUserOrgIdEm(email)
+	orgId, err := db.ReadUserOrgId_Email(email)
 	if err != nil {
 		log.Warn(err)
 		return response.Internal(), nil
