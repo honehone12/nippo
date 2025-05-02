@@ -1,5 +1,7 @@
 package schema
 
+import "time"
+
 type Calls struct {
 	MorningCalls []MorningCall `json:"morning_calls"`
 	EveningCalls []EveningCall `json:"evening_calls"`
@@ -23,9 +25,10 @@ type Photos struct {
 }
 
 type UserMini struct {
-	Id    []uint8   `json:"id"`
-	Name  CleanText `json:"name"`
-	Email CleanText `json:"email"`
+	Id        []uint8   `json:"id"`
+	CreatedAt time.Time `json:"created_at"`
+	Name      CleanText `json:"name"`
+	Email     CleanText `json:"email"`
 }
 
 type Users struct {

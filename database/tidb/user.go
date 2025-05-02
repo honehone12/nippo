@@ -86,7 +86,8 @@ func (ti TiDb) ReadUsersMini(orgId []uint8) ([]schema.User, error) {
 
 	org := schema.Org{Id: orgId}
 	var users []schema.User
-	err := ti.orm.Model(&org).Select("id", "name", "email").Association("Users").Find(&users)
+	err := ti.orm.Model(&org).Select("id", "created_at", "name", "email").
+		Association("Users").Find(&users)
 	if err != nil {
 		return nil, err
 	}
