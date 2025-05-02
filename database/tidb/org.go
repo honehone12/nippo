@@ -47,6 +47,32 @@ func (ti TiDb) ReadOrg(id []uint8) (*schema.Org, error) {
 	return &org, nil
 }
 
+func (ti TiDb) ReadOrgLineId(id []uint8) (schema.CleanText, error) {
+	if len(id) != schema.ID_LEN {
+		return "", errors.New("unexpected org id length")
+	}
+
+	org := schema.Org{Id: id}
+	if res := ti.orm.Select("line_id").Take(&org); res.Error != nil {
+		return "", res.Error
+	}
+
+	return org.LineId, nil
+}
+
+func (ti TiDb) ReadOrgEmail(id []uint8) (schema.CleanText, error) {
+	if len(id) != schema.ID_LEN {
+		return "", errors.New("unexpected org id length")
+	}
+
+	org := schema.Org{Id: id}
+	if res := ti.orm.Select("email").Take(&org); res.Error != nil {
+		return "", res.Error
+	}
+
+	return org.Email, nil
+}
+
 func (ti TiDbTx) UpdateOrgLineId(id []uint8, newLineId schema.CleanText) error {
 	if len(id) != schema.ID_LEN {
 		return errors.New("unexpected org id length")

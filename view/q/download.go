@@ -16,7 +16,7 @@ type QDownload struct {
 	repoId uuid.UUID
 }
 
-func (q QDownload) Query(props *viewprops.Props) ([]byte, error) {
+func (q QDownload) Query(props *viewprops.Props, email schema.CleanText) ([]byte, error) {
 	db := props.Db()
 	repoId := q.repoId[:]
 

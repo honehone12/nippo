@@ -79,14 +79,15 @@ func (ti TiDb) ReadUserOrgIdEm(email schema.CleanText) ([]uint8, error) {
 	return user.OrgId, nil
 }
 
-func (ti TiDb) ReadUsers(orgId []uint8) ([]schema.User, error) {
+func (ti TiDb) ReadUsersMini(orgId []uint8) ([]schema.User, error) {
 	if len(orgId) != schema.ID_LEN {
 		return nil, errors.New("unexpected org id length")
 	}
 
 	org := schema.Org{Id: orgId}
 	var users []schema.User
-	if err := ti.orm.Model(&org).Association("Users").Find(&users); err != nil {
+	err := ti.orm.Model(&org).Select("id", "name", "email").Association("Users").Find(&users)
+	if err != nil {
 		return nil, err
 	}
 

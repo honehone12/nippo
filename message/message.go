@@ -30,23 +30,20 @@ func validateDst(props *msgprops.Props, msg *webhook.CallbackRequest) error {
 	db := props.Db()
 	orgId := props.OrgId()
 
-	org, err := db.ReadOrg(orgId)
+	orgLineId, err := db.ReadOrgLineId(orgId)
 	if err != nil {
 		return fmt.Errorf("org is not configured, %w", err)
 	}
 
 	cleanDst := input.Clean(msg.Destination)
 
-	if len(org.LineId) == 0 {
+	if len(orgLineId) == 0 {
 		log.Warnf("updating org line id to: %s", cleanDst)
 		return db.Once().UpdateOrgLineId(orgId, cleanDst)
 	}
 
-	if org.LineId != cleanDst {
-		return fmt.Errorf(
-			"dst has changed from: %s to %s. this is not expected",
-			org.LineId, cleanDst,
-		)
+	if orgLineId != cleanDst {
+		return fmt.Errorf("dst line id has been changed")
 	}
 
 	return nil

@@ -19,7 +19,7 @@ type QCalls struct {
 	month  time.Month
 }
 
-func (q QCalls) Query(props *viewprops.Props) ([]byte, error) {
+func (q QCalls) Query(props *viewprops.Props, email schema.CleanText) ([]byte, error) {
 	db := props.Db()
 	userId := q.userId[:]
 

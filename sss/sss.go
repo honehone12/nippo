@@ -28,7 +28,7 @@ func JpgKey(userId []uint8) (*string, error) {
 		now.Minute(),
 		now.Second(),
 		now.Nanosecond(),
-		id.String(),
+		id,
 	)
 	return &key, nil
 }

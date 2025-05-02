@@ -7,10 +7,12 @@ import (
 
 type Database interface {
 	ReadOrg(id []uint8) (*schema.Org, error)
+	ReadOrgLineId(id []uint8) (schema.CleanText, error)
+	ReadOrgEmail(id []uint8) (schema.CleanText, error)
 	ReadUserLn(lineId schema.CleanText) (*schema.User, error)
 	ReadUserOrgId(id []uint8) ([]uint8, error)
 	ReadUserOrgIdEm(email schema.CleanText) ([]uint8, error)
-	ReadUsers(orgId []uint8) ([]schema.User, error)
+	ReadUsersMini(orgId []uint8) ([]schema.User, error)
 	ReadMorningCall(id []uint8) (*schema.MorningCall, error)
 	ReadMorningCalls(
 		userId []uint8,

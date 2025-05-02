@@ -17,20 +17,23 @@ import (
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/service/cognitoidentityprovider"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/google/uuid"
 )
 
 type variable struct {
-	orgId  uuid.UUID
-	bucket string
+	orgId    uuid.UUID
+	bucket   string
+	userPool string
 }
 
 var (
-	env       variable
-	db        database.Database
-	s3Client  *s3.Client
-	s3Presign *s3.PresignClient
+	env           variable
+	db            database.Database
+	s3Client      *s3.Client
+	s3Presign     *s3.PresignClient
+	cognitoClient *cognitoidentityprovider.Client
 )
 
 func cacheEnv() error {
@@ -46,6 +49,10 @@ func cacheEnv() error {
 
 	if env.bucket = os.Getenv("BUCKET"); len(env.bucket) == 0 {
 		return errors.New("env for bucket is not set")
+	}
+
+	if env.userPool = os.Getenv("USER_POOL"); len(env.userPool) == 0 {
+		return errors.New("env for user pool is not set")
 	}
 
 	return nil
@@ -70,10 +77,12 @@ func configAws() error {
 
 	s3Client = s3.NewFromConfig(cfg)
 	s3Presign = s3.NewPresignClient(s3Client)
+	cognitoClient = cognitoidentityprovider.NewFromConfig(cfg)
+
 	return nil
 }
 
-func getViewerEmail(auth map[string]any) (schema.CleanText, error) {
+func viewerEmail(auth map[string]any) (schema.CleanText, error) {
 	claims, ok := auth["claims"].(map[string]any)
 	if !ok {
 		return "", errors.New("auth not found")
@@ -96,7 +105,7 @@ func handler(
 	ctx context.Context,
 	req events.APIGatewayProxyRequest,
 ) (events.APIGatewayProxyResponse, error) {
-	viewerEmail, err := getViewerEmail(req.RequestContext.Authorizer)
+	viewerEmail, err := viewerEmail(req.RequestContext.Authorizer)
 	if err != nil {
 		log.Warn(err)
 		return response.BadRequest(), nil
@@ -123,13 +132,15 @@ func handler(
 	props := viewprops.NewProps(
 		ctx,
 		env.bucket,
+		env.userPool,
 		env.orgId,
 		db,
 		s3Client,
 		s3Presign,
+		cognitoClient,
 	)
 
-	b, err := q.Query(props)
+	b, err := q.Query(props, viewerEmail)
 	if err != nil {
 		log.Error(err)
 		return response.Internal(), nil

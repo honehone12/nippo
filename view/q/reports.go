@@ -19,7 +19,7 @@ type QReports struct {
 	month  time.Month
 }
 
-func (q QReports) Query(props *viewprops.Props) ([]byte, error) {
+func (q QReports) Query(props *viewprops.Props, email schema.CleanText) ([]byte, error) {
 	db := props.Db()
 	from, to := timeconv.UtcRangeFromJstMonth(q.year, q.month)
 	userId := q.userId[:]

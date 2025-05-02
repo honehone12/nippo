@@ -3,6 +3,7 @@ package q
 import (
 	"errors"
 	"nippo/input"
+	"nippo/schema"
 	"nippo/timeconv"
 	"nippo/view/viewprops"
 
@@ -10,7 +11,7 @@ import (
 )
 
 type Q interface {
-	Query(props *viewprops.Props) ([]byte, error)
+	Query(props *viewprops.Props, email schema.CleanText) ([]byte, error)
 }
 
 func FromParams(params map[string]string) (Q, error) {
