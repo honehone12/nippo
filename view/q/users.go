@@ -40,9 +40,10 @@ func (q QUsers) Query(props *viewprops.Props, email schema.CleanText) ([]byte, e
 	}
 	for _, u := range read {
 		user := schema.UserMini{
-			Id:    u.Id,
-			Name:  u.Name,
-			Email: u.Email,
+			Id:        u.Id,
+			CreatedAt: u.CreatedAt,
+			Name:      u.Name,
+			Email:     u.Email,
 		}
 		users.Users = append(users.Users, user)
 
