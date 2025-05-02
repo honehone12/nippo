@@ -34,6 +34,9 @@ func (q QInvite) Query(props *viewprops.Props, email schema.CleanText) ([]byte, 
 	if !bytes.Equal(invitedUser.OrgId, orgId) {
 		return nil, errors.New("wrong org")
 	}
+	if len(invitedUser.Email) == 0 {
+		return nil, errors.New("user email is empty")
+	}
 
 	err = cognito.Invite(props, invitedUser.Email)
 	if err != nil {

@@ -156,11 +156,11 @@ func main() {
 		log.Fatal(err)
 	}
 
-	if err := connectDb(); err != nil {
+	if err := configAws(); err != nil {
 		log.Fatal(err)
 	}
 
-	if err := configAws(); err != nil {
+	if err := connectDb(); err != nil {
 		log.Fatal(err)
 	}
 

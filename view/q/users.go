@@ -21,7 +21,7 @@ func (q QUsers) Query(props *viewprops.Props, email schema.CleanText) ([]byte, e
 	}
 	admin := orgEmail == email
 
-	read, err := db.ReadUsersMini(props.OrgId())
+	read, err := db.ReadUsersIdCreatedAtName(props.OrgId())
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		users := schema.Users{
 			Admin:      admin,
@@ -46,11 +46,20 @@ func (q QUsers) Query(props *viewprops.Props, email schema.CleanText) ([]byte, e
 		}
 		users.Users = append(users.Users, user)
 
-		if admin {
-			invite := cognito.Pooled(props, u.Email)
-			if invite {
-				users.Invitables = append(users.Invitables, user)
-			}
+		if !admin {
+			continue
+		}
+
+		if len(u.Email) == 0 {
+			continue
+		}
+
+		exists, err := cognito.Exists(props, u.Email)
+		if err != nil {
+			return nil, err
+		}
+		if !exists {
+			users.Invitables = append(users.Invitables, user)
 		}
 	}
 

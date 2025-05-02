@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/base64"
 	"errors"
+	"nippo/cognito"
 	"nippo/database"
 	"nippo/database/tidb"
 	"nippo/input"
@@ -13,9 +14,26 @@ import (
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
+	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/service/cognitoidentityprovider"
+	"gorm.io/gorm"
 )
 
+type variable struct {
+	userPool string
+}
+
+var env variable
 var db database.Database
+var cognitoClient *cognitoidentityprovider.Client
+
+func cacheEnv() error {
+	if env.userPool = os.Getenv("USER_POOL"); len(env.userPool) == 0 {
+		return errors.New("env for user pool is not set")
+	}
+
+	return nil
+}
 
 func connectDb() error {
 	dbUri := os.Getenv("DB_URI")
@@ -26,6 +44,17 @@ func connectDb() error {
 	var err error
 	db, err = tidb.Open(dbUri)
 	return err
+}
+
+func configAws() error {
+	cfg, err := config.LoadDefaultConfig(context.Background())
+	if err != nil {
+		return err
+	}
+
+	cognitoClient = cognitoidentityprovider.NewFromConfig(cfg)
+
+	return nil
 }
 
 func handler(
@@ -49,6 +78,15 @@ func handler(
 	}
 
 	orgId, err := db.ReadUserOrgId_Email(email)
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		log.Errorf("%s has token but not found on database", email)
+		return response.BadRequest(), nil
+	} else if err != nil {
+		log.Warn(err)
+		return response.Internal(), nil
+	}
+
+	err = cognito.MarkEmailChecked(ctx, cognitoClient, env.userPool, email)
 	if err != nil {
 		log.Warn(err)
 		return response.Internal(), nil
@@ -61,6 +99,14 @@ func handler(
 
 func main() {
 	log.FmtPlain()
+
+	if err := cacheEnv(); err != nil {
+		log.Fatal(err)
+	}
+
+	if err := configAws(); err != nil {
+		log.Fatal(err)
+	}
 
 	if err := connectDb(); err != nil {
 		log.Fatal(err)

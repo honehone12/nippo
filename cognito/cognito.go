@@ -1,9 +1,12 @@
 package cognito
 
 import (
+	"context"
+	"errors"
 	"fmt"
 	"nippo/schema"
 	"nippo/view/viewprops"
+	"slices"
 
 	"github.com/aws/aws-sdk-go-v2/service/cognitoidentityprovider"
 	"github.com/aws/aws-sdk-go-v2/service/cognitoidentityprovider/types"
@@ -14,14 +17,30 @@ func emailAttr() *string {
 	return &attr
 }
 
-func Pooled(props *viewprops.Props, email schema.CleanText) bool {
+func emailCheckedAttr() *string {
+	attr := "email_verified"
+	return &attr
+}
+
+func checked() *string {
+	checked := "true"
+	return &checked
+}
+
+func Exists(props *viewprops.Props, email schema.CleanText) (bool, error) {
 	name := string(email)
 	getUser := cognitoidentityprovider.AdminGetUserInput{
 		UserPoolId: props.UserPool(),
 		Username:   &name,
 	}
 	_, err := props.Cognito().AdminGetUser(props.Ctx(), &getUser)
-	return err == nil
+	if errors.Is(err, &types.ResourceNotFoundException{}) {
+		return false, nil
+	} else if err != nil {
+		return false, err
+	}
+
+	return true, nil
 }
 
 func Invite(props *viewprops.Props, email schema.CleanText) error {
@@ -54,4 +73,49 @@ func Invite(props *viewprops.Props, email schema.CleanText) error {
 	_, err = client.AdminAddUserToGroup(ctx, &groupAdd)
 
 	return err
+}
+
+func MarkEmailChecked(
+	ctx context.Context,
+	client *cognitoidentityprovider.Client,
+	userPool string,
+	email schema.CleanText,
+) error {
+	name := string(email)
+
+	getUser := cognitoidentityprovider.AdminGetUserInput{
+		UserPoolId: &userPool,
+		Username:   &name,
+	}
+	out, err := client.AdminGetUser(ctx, &getUser)
+	if err != nil {
+		return err
+	}
+
+	idx := slices.IndexFunc(out.UserAttributes, func(attr types.AttributeType) bool {
+		return *attr.Name == *emailCheckedAttr()
+	})
+	if idx < 0 {
+		return errors.New("could not find email checked attribute")
+	}
+	if *out.UserAttributes[idx].Value == *checked() {
+		return nil
+	}
+
+	updateAttr := cognitoidentityprovider.AdminUpdateUserAttributesInput{
+		UserPoolId: &userPool,
+		Username:   &name,
+		UserAttributes: []types.AttributeType{
+			{
+				Name:  emailCheckedAttr(),
+				Value: checked(),
+			},
+		},
+	}
+	_, err = client.AdminUpdateUserAttributes(ctx, &updateAttr)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
