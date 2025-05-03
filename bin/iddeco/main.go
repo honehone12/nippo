@@ -33,5 +33,5 @@ func main() {
 		return
 	}
 
-	fmt.Printf("id: %s\n", uUID.String())
+	fmt.Printf("id: %s\n", uUID)
 }
