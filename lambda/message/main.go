@@ -99,7 +99,7 @@ func configAws() error {
 	return nil
 }
 
-func validateMsg(req *events.APIGatewayProxyRequest) error {
+func validateHeaders(req *events.APIGatewayProxyRequest) error {
 	userAgent, ok := req.Headers["User-Agent"]
 	if !ok {
 		userAgent, ok = req.Headers["user-agent"]
@@ -116,15 +116,6 @@ func validateMsg(req *events.APIGatewayProxyRequest) error {
 	}
 	if !ok || !strings.Contains(contentType, "application/json") {
 		return errors.New("invalid content type header")
-	}
-
-	sig, ok := req.Headers["x-line-signature"]
-	if !ok {
-		return errors.New("no signature")
-	}
-
-	if !webhook.ValidateSignature(env.lnChSec, sig, []byte(req.Body)) {
-		return errors.New("invalid signature")
 	}
 
 	return nil
@@ -145,6 +136,14 @@ func parseMsg(
 		b = []byte(req.Body)
 	}
 
+	sig, ok := req.Headers["x-line-signature"]
+	if !ok {
+		return errors.New("no signature")
+	}
+	if !webhook.ValidateSignature(env.lnChSec, sig, b) {
+		return errors.New("invalid signature")
+	}
+
 	if err := msg.UnmarshalJSON(b); err != nil {
 		return err
 	}
@@ -156,7 +155,7 @@ func handler(
 	ctx context.Context,
 	req events.APIGatewayProxyRequest,
 ) (events.APIGatewayProxyResponse, error) {
-	if err := validateMsg(&req); err != nil {
+	if err := validateHeaders(&req); err != nil {
 		log.Warn(err)
 		return response.BadRequest(), nil
 	}

@@ -95,18 +95,6 @@ func FromParams(params map[string]string) (Q, error) {
 		}
 
 		return QDownload{repoId}, nil
-	case "invite":
-		user, ok := params["user"]
-		if !ok {
-			return nil, errors.New("unexpected params")
-		}
-		userIdStr := input.Clean(user)
-		userId, err := uuid.Parse(string(userIdStr))
-		if err != nil {
-			return nil, err
-		}
-
-		return QInvite{userId}, nil
 	default:
 		return nil, errors.New("unexpected q string")
 	}

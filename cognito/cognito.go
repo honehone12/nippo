@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"nippo/admin/adminprops"
 	"nippo/schema"
 	"nippo/view/viewprops"
 	"slices"
@@ -43,7 +44,7 @@ func Exists(props *viewprops.Props, email schema.CleanText) (bool, error) {
 	return true, nil
 }
 
-func Invite(props *viewprops.Props, email schema.CleanText) error {
+func Invite(props *adminprops.Props, email schema.CleanText) error {
 	name := string(email)
 	userPool := props.UserPool()
 	client := props.Cognito()

@@ -35,7 +35,3 @@ type Users struct {
 	Users      []UserMini `json:"users"`
 	Invitables []UserMini `json:"invitables"`
 }
-
-type Invited struct {
-	Email CleanText `json:"email"`
-}

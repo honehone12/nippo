@@ -116,7 +116,6 @@ func handler(
 		log.Warn(err)
 		return response.Internal(), nil
 	}
-
 	if !bytes.Equal(viewerOrg, env.orgId[:]) {
 		log.Warn("viewing user has wrong org id")
 		return response.BadRequest(), nil
