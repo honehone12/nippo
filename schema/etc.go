@@ -35,3 +35,11 @@ type Users struct {
 	Users      []UserMini `json:"users"`
 	Invitables []UserMini `json:"invitables"`
 }
+
+type AuthOrg struct {
+	OrgId []uint8 `json:"org_id"`
+}
+
+type Invited struct {
+	UserEmail CleanText `json:"user_email"`
+}

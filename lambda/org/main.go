@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	"encoding/base64"
+	"encoding/json"
 	"errors"
 	"nippo/cognito"
 	"nippo/database"
@@ -10,6 +10,7 @@ import (
 	"nippo/input"
 	"nippo/lambda/response"
 	"nippo/log"
+	"nippo/schema"
 	"os"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -92,9 +93,16 @@ func handler(
 		return response.Internal(), nil
 	}
 
-	enc := base64.StdEncoding.EncodeToString(orgId)
+	authOrg := schema.AuthOrg{
+		OrgId: orgId,
+	}
+	b, err := json.Marshal(authOrg)
+	if err != nil {
+		log.Warn(err)
+		return response.Internal(), nil
+	}
 
-	return response.Text(enc), nil
+	return response.Json(b), nil
 }
 
 func main() {
