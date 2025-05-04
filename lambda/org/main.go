@@ -80,16 +80,16 @@ func handler(
 
 	orgId, err := db.ReadUserOrgId_Email(email)
 	if errors.Is(err, gorm.ErrRecordNotFound) {
-		log.Errorf("%s has token but not found on database", email)
+		log.Warnf("%s has token but not found on database", email)
 		return response.BadRequest(), nil
 	} else if err != nil {
-		log.Warn(err)
+		log.Error(err)
 		return response.Internal(), nil
 	}
 
 	err = cognito.MarkEmailChecked(ctx, cognitoClient, env.userPool, email)
 	if err != nil {
-		log.Warn(err)
+		log.Error(err)
 		return response.Internal(), nil
 	}
 
@@ -98,7 +98,7 @@ func handler(
 	}
 	b, err := json.Marshal(authOrg)
 	if err != nil {
-		log.Warn(err)
+		log.Error(err)
 		return response.Internal(), nil
 	}
 

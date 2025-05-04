@@ -119,7 +119,7 @@ func ReplyLocNote() []messaging_api.MessageInterface {
 func ReplyLoading() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
-			Text:       "荷役（附帯）作業に入りました\n終了時に位置情報を送信してください",
+			Text:       "荷役（附帯）作業に入りました\n『終了時』に位置情報を送信してください",
 			QuickReply: QuickRepEndLoading(),
 		},
 	}
@@ -146,7 +146,7 @@ func ReplyLoadNote() []messaging_api.MessageInterface {
 func ReplyResting() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
-			Text:       "休憩に入りました\n終了時に位置情報を送信してください",
+			Text:       "休憩に入りました\n『終了時』に位置情報を送信してください",
 			QuickReply: QuickRepEndResting(),
 		},
 	}
@@ -164,7 +164,7 @@ func ReplyRestNote() []messaging_api.MessageInterface {
 func ReplyWaiting() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
-			Text:       "待機に入りました\n終了時に位置情報を送信してください",
+			Text:       "待機に入りました\n『終了時』に位置情報を送信してください",
 			QuickReply: QuickRepEndWaiting(),
 		},
 	}

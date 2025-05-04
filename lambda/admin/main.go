@@ -146,7 +146,7 @@ func handler(
 
 	orgEmail, err := db.ReadOrgEmail(adminOrg)
 	if err != nil {
-		log.Warn(err)
+		log.Error(err)
 		return response.Internal(), nil
 	}
 	if orgEmail != adminEmail {
@@ -170,11 +170,12 @@ func handler(
 
 	switch form.Get("op") {
 	case "invite":
-		email, err := admin.Invite(props, form)
+		b, err := admin.Invite(props, form)
 		if err != nil {
+			log.Error(err)
 			return response.Internal(), nil
 		}
-		return response.Text(string(email)), nil
+		return response.Json(b), nil
 	default:
 		log.Warn("invalid operation")
 		return response.BadRequest(), nil

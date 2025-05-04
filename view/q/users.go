@@ -21,7 +21,7 @@ func (q QUsers) Query(props *viewprops.Props, email schema.CleanText) ([]byte, e
 	}
 	admin := orgEmail == email
 
-	read, err := db.ReadUsersIdCreatedAtName(props.OrgId())
+	read, err := db.ReadUsersBasic(props.OrgId())
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		users := schema.Users{
 			Admin:      admin,

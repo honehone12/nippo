@@ -105,14 +105,19 @@ func (ti TiDb) ReadUserEmail(id []uint8) (schema.CleanText, error) {
 	return user.Email, nil
 }
 
-func (ti TiDb) ReadUsersIdCreatedAtName(orgId []uint8) ([]schema.User, error) {
+func (ti TiDb) ReadUsersBasic(orgId []uint8) ([]schema.User, error) {
 	if len(orgId) != schema.ID_LEN {
 		return nil, errors.New("unexpected org id length")
 	}
 
 	org := schema.Org{Id: orgId}
 	var users []schema.User
-	err := ti.orm.Model(&org).Select("id", "created_at", "name").Association("Users").Find(&users)
+	err := ti.orm.Model(&org).Select(
+		"id",
+		"created_at",
+		"name",
+		"email",
+	).Association("Users").Find(&users)
 	if err != nil {
 		return nil, err
 	}

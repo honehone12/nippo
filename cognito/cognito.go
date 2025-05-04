@@ -35,10 +35,13 @@ func Exists(props *viewprops.Props, email schema.CleanText) (bool, error) {
 		Username:   &name,
 	}
 	_, err := props.Cognito().AdminGetUser(props.Ctx(), &getUser)
-	if errors.Is(err, &types.ResourceNotFoundException{}) {
-		return false, nil
-	} else if err != nil {
-		return false, err
+	if err != nil {
+		errUserNotFound := &types.UserNotFoundException{}
+		if errors.As(err, &errUserNotFound) {
+			return false, nil
+		} else {
+			return false, err
+		}
 	}
 
 	return true, nil
@@ -55,36 +58,39 @@ func Invite(props *adminprops.Props, email schema.CleanText) error {
 		Username:   &name,
 	}
 	_, err := props.Cognito().AdminGetUser(props.Ctx(), &getUser)
-	if errors.Is(err, &types.ResourceNotFoundException{}) {
-		invite := cognitoidentityprovider.AdminCreateUserInput{
-			UserPoolId: userPool,
-			Username:   &name,
-			UserAttributes: []types.AttributeType{
-				{
-					Name:  emailAttr(),
-					Value: &name,
+	if err != nil {
+		errUserNotFound := &types.UserNotFoundException{}
+		if errors.As(err, &errUserNotFound) {
+			invite := cognitoidentityprovider.AdminCreateUserInput{
+				UserPoolId: userPool,
+				Username:   &name,
+				UserAttributes: []types.AttributeType{
+					{
+						Name:  emailAttr(),
+						Value: &name,
+					},
 				},
-			},
-		}
-		_, err := client.AdminCreateUser(ctx, &invite)
-		if err != nil {
+			}
+			_, err := client.AdminCreateUser(ctx, &invite)
+			if err != nil {
+				return err
+			}
+
+			group := fmt.Sprintf("nippo-%s", props.OrgUuid())
+			groupAdd := cognitoidentityprovider.AdminAddUserToGroupInput{
+				UserPoolId: userPool,
+				Username:   &name,
+				GroupName:  &group,
+			}
+			_, err = client.AdminAddUserToGroup(ctx, &groupAdd)
+
+			return err
+		} else {
 			return err
 		}
-
-		group := fmt.Sprintf("nippo-%s", props.OrgUuid())
-		groupAdd := cognitoidentityprovider.AdminAddUserToGroupInput{
-			UserPoolId: userPool,
-			Username:   &name,
-			GroupName:  &group,
-		}
-		_, err = client.AdminAddUserToGroup(ctx, &groupAdd)
-
-		return err
-	} else if err != nil {
-		return err
-	} else {
-		return nil
 	}
+
+	return nil
 }
 
 func MarkEmailChecked(
@@ -107,10 +113,7 @@ func MarkEmailChecked(
 	idx := slices.IndexFunc(out.UserAttributes, func(attr types.AttributeType) bool {
 		return *attr.Name == *emailCheckedAttr()
 	})
-	if idx < 0 {
-		return errors.New("could not find email checked attribute")
-	}
-	if *out.UserAttributes[idx].Value == *checked() {
+	if idx >= 0 && *out.UserAttributes[idx].Value == *checked() {
 		return nil
 	}
 

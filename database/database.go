@@ -14,7 +14,7 @@ type Database interface {
 	ReadUserOrgId(id []uint8) ([]uint8, error)
 	ReadUserOrgId_Email(email schema.CleanText) ([]uint8, error)
 	ReadUserEmail(id []uint8) (schema.CleanText, error)
-	ReadUsersIdCreatedAtName(orgId []uint8) ([]schema.User, error)
+	ReadUsersBasic(orgId []uint8) ([]schema.User, error)
 	ReadMorningCall(id []uint8) (*schema.MorningCall, error)
 	ReadMorningCalls(
 		userId []uint8,
