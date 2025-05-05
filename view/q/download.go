@@ -43,6 +43,8 @@ func (q QDownload) Query(props *viewprops.Props, email schema.CleanText) ([]byte
 		}
 
 		meter = []byte(url)
+	} else {
+		meter = []byte{}
 	}
 
 	var morningAlc []byte
@@ -58,6 +60,8 @@ func (q QDownload) Query(props *viewprops.Props, email schema.CleanText) ([]byte
 
 			morningAlc = []byte(url)
 		}
+	} else {
+		morningAlc = []byte{}
 	}
 
 	var eveningAlc []byte
@@ -73,6 +77,8 @@ func (q QDownload) Query(props *viewprops.Props, email schema.CleanText) ([]byte
 
 			eveningAlc = []byte(url)
 		}
+	} else {
+		eveningAlc = []byte{}
 	}
 
 	return json.Marshal(schema.Photos{
