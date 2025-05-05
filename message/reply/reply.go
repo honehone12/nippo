@@ -218,7 +218,7 @@ func ReplyNone() []messaging_api.MessageInterface {
 func ReplyErrMsg() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
-			Text: "エラーが発生しました\nお手数ですが、スタンプを送信して復帰を試みてください",
+			Text: "エラーが発生しました( ﾟДﾟ)\nお手数ですが、スタンプを送信して復帰を試みてください",
 		},
 	}
 }

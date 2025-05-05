@@ -193,3 +193,10 @@ func ActionReset() messaging_api.PostbackAction {
 		DisplayText: "リセット",
 	}
 }
+
+func ActionNone() messaging_api.MessageAction {
+	return messaging_api.MessageAction{
+		Label: "無し",
+		Text:  "無し",
+	}
+}

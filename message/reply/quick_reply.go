@@ -14,6 +14,7 @@ func QuickRepMCallNote() *messaging_api.QuickReply {
 	return &messaging_api.QuickReply{
 		Items: []messaging_api.QuickReplyItem{
 			{Action: ActionMCallNote()},
+			{Action: ActionNone()},
 		},
 	}
 }
@@ -22,6 +23,7 @@ func QuickRepECallNote() *messaging_api.QuickReply {
 	return &messaging_api.QuickReply{
 		Items: []messaging_api.QuickReplyItem{
 			{Action: ActionECallNote()},
+			{Action: ActionNone()},
 		},
 	}
 }
@@ -47,6 +49,7 @@ func QuickRepDReportTrouble() *messaging_api.QuickReply {
 	return &messaging_api.QuickReply{
 		Items: []messaging_api.QuickReplyItem{
 			{Action: ActionDReportTrouble()},
+			{Action: ActionNone()},
 		},
 	}
 }
@@ -55,6 +58,7 @@ func QuickRepDReportNote() *messaging_api.QuickReply {
 	return &messaging_api.QuickReply{
 		Items: []messaging_api.QuickReplyItem{
 			{Action: ActionDReportNote()},
+			{Action: ActionNone()},
 		},
 	}
 }
@@ -63,6 +67,7 @@ func QuickRepLocNote() *messaging_api.QuickReply {
 	return &messaging_api.QuickReply{
 		Items: []messaging_api.QuickReplyItem{
 			{Action: ActionLocNote()},
+			{Action: ActionNone()},
 		},
 	}
 }
@@ -88,6 +93,7 @@ func QuickRepLoadNote() *messaging_api.QuickReply {
 	return &messaging_api.QuickReply{
 		Items: []messaging_api.QuickReplyItem{
 			{Action: ActionLoadNote()},
+			{Action: ActionNone()},
 		},
 	}
 }
@@ -104,6 +110,7 @@ func QuickRepRestNote() *messaging_api.QuickReply {
 	return &messaging_api.QuickReply{
 		Items: []messaging_api.QuickReplyItem{
 			{Action: ActionRestNote()},
+			{Action: ActionNone()},
 		},
 	}
 }
@@ -120,6 +127,7 @@ func QuickRepWaitNote() *messaging_api.QuickReply {
 	return &messaging_api.QuickReply{
 		Items: []messaging_api.QuickReplyItem{
 			{Action: ActionWaitNote()},
+			{Action: ActionNone()},
 		},
 	}
 }
