@@ -166,7 +166,7 @@ func (ti TiDbTx) UpdateDReportNonDutyDst(repoId []uint8, dst uint64) error {
 		return errors.New("unexpected report id length")
 	}
 	if dst == 0 {
-		return errors.New("unexpected empty meter")
+		return errors.New("unexpected empty distance")
 	}
 
 	repo := schema.DailyReport{Id: repoId}
