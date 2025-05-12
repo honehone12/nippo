@@ -56,7 +56,7 @@ func (s StECallNote) Run(
 
 			req := messaging_api.ReplyMessageRequest{
 				ReplyToken: e.ReplyToken,
-				Messages:   reply.ReplySendMtr(),
+				Messages:   reply.ReplyMtr(),
 			}
 
 			_, err = props.Api().ReplyMessage(&req)

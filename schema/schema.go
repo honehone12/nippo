@@ -100,6 +100,7 @@ type DailyReport struct {
 	MorningMeterPhoto string    `gorm:"size:100" json:"morning_meter_photo"`
 	EveninggMeter     uint64    `json:"evening_meter"`
 	EveningMeterPhoto string    `gorm:"size:100" json:"evening_meter_photo"`
+	NonDutyDistance   uint64    `json:"non_duty_distance"`
 	Trouble           CleanText `gorm:"size:5000" json:"trouble"`
 	Note              CleanText `gorm:"size:5000" json:"note"`
 

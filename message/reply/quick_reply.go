@@ -28,19 +28,19 @@ func QuickRepECallNote() *messaging_api.QuickReply {
 	}
 }
 
-func QuickRepSendAlcPhoto() *messaging_api.QuickReply {
+func QuickRepAlcPhoto() *messaging_api.QuickReply {
 	return &messaging_api.QuickReply{
 		Items: []messaging_api.QuickReplyItem{
-			{Action: ActionSendAlcPhoto()},
+			{Action: ActionAlcPhoto()},
 			{Action: ActionReset()},
 		},
 	}
 }
 
-func QuickRepSendMtrPhoto() *messaging_api.QuickReply {
+func QuickRepMtrPhoto() *messaging_api.QuickReply {
 	return &messaging_api.QuickReply{
 		Items: []messaging_api.QuickReplyItem{
-			{Action: ActionSendMtrPhoto()},
+			{Action: ActionMtrPhoto()},
 		},
 	}
 }

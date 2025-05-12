@@ -28,6 +28,7 @@ const (
 
 	ST_DREPO_E_MTR
 	ST_DREPO_E_MTR_PHOTO
+	ST_DREPO_NON_DUTY_DST
 	ST_DREPO_TROUBLE
 	ST_DREPO_NOTE
 
@@ -86,6 +87,8 @@ func FromIdx(idx schema.StateIdx) (State, error) {
 		return StDRepoEMtr{}, nil
 	case ST_DREPO_E_MTR_PHOTO:
 		return StDRepoEMtrPhoto{}, nil
+	case ST_DREPO_NON_DUTY_DST:
+		return StDRepoNonDutyDst{}, nil
 	case ST_DREPO_TROUBLE:
 		return StDRepoTrouble{}, nil
 	case ST_DREPO_NOTE:

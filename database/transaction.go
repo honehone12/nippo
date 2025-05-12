@@ -44,6 +44,7 @@ type Transaction interface {
 	UpdateDReportMMtrPhoto(repoId []uint8, photo string) error
 	UpdateDReportEMtr(repoId []uint8, meter uint64) error
 	UpdateDReportEMtrPhoto(repoId []uint8, photo string) error
+	UpdateDReportNonDutyDst(repoId []uint8, dst uint64) error
 	UpdateDReportTrouble(repoId []uint8, trouble schema.CleanText) error
 	UpdateDReportNote(repoId []uint8, note schema.CleanText) error
 

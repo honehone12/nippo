@@ -36,7 +36,7 @@ func (s StNone) Run(
 
 			req := messaging_api.ReplyMessageRequest{
 				ReplyToken: e.ReplyToken,
-				Messages:   reply.ReplySendAlcPhoto(),
+				Messages:   reply.ReplyAlcPhoto(),
 			}
 
 			_, err = props.Api().ReplyMessage(&req)

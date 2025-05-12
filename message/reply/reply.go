@@ -27,11 +27,11 @@ func ReplyUserSetEmail() []messaging_api.MessageInterface {
 	}
 }
 
-func ReplySendAlcPhoto() []messaging_api.MessageInterface {
+func ReplyAlcPhoto() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
 			Text:       "アルコール検査機を使用し、結果が良好な場合は写真に撮って送信してください",
-			QuickReply: QuickRepSendAlcPhoto(),
+			QuickReply: QuickRepAlcPhoto(),
 		},
 	}
 }
@@ -80,7 +80,7 @@ func ReplyECallNote() []messaging_api.MessageInterface {
 	}
 }
 
-func ReplySendMtr() []messaging_api.MessageInterface {
+func ReplyMtr() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
 			Text: "車両のメーターを『英数字』、『自然数』で入力してください",
@@ -88,11 +88,19 @@ func ReplySendMtr() []messaging_api.MessageInterface {
 	}
 }
 
-func ReplySendMtrPhoto() []messaging_api.MessageInterface {
+func ReplyMtrPhoto() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
 			Text:       "車両のメーターを写真に撮って送信してください",
-			QuickReply: QuickRepSendMtrPhoto(),
+			QuickReply: QuickRepMtrPhoto(),
+		},
+	}
+}
+
+func ReplyDReportNonDutyDst() []messaging_api.MessageInterface {
+	return []messaging_api.MessageInterface{
+		messaging_api.TextMessage{
+			Text: "空走行距離を『英数字』、『自然数』で入力してください",
 		},
 	}
 }

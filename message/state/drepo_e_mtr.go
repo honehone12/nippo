@@ -47,7 +47,7 @@ func (s StDRepoEMtr) Run(
 
 			req := messaging_api.ReplyMessageRequest{
 				ReplyToken: e.ReplyToken,
-				Messages:   reply.ReplySendMtrPhoto(),
+				Messages:   reply.ReplyMtrPhoto(),
 			}
 
 			_, err = props.Api().ReplyMessage(&req)
@@ -55,7 +55,7 @@ func (s StDRepoEMtr) Run(
 		} else {
 			req := messaging_api.ReplyMessageRequest{
 				ReplyToken: e.ReplyToken,
-				Messages:   reply.ReplySendMtr(),
+				Messages:   reply.ReplyMtr(),
 			}
 
 			_, err := props.Api().ReplyMessage(&req)

@@ -113,6 +113,9 @@ func (ti TiDbTx) UpdateDReportMMtr(repoId []uint8, meter uint64) error {
 	if len(repoId) != schema.ID_LEN {
 		return errors.New("unexpected report id length")
 	}
+	if meter == 0 {
+		return errors.New("unexpected empty meter")
+	}
 
 	repo := schema.DailyReport{Id: repoId}
 	res := ti.orm.Model(&repo).Update("morning_meter", meter)
@@ -136,6 +139,9 @@ func (ti TiDbTx) UpdateDReportEMtr(repoId []uint8, meter uint64) error {
 	if len(repoId) != schema.ID_LEN {
 		return errors.New("unexpected report id length")
 	}
+	if meter == 0 {
+		return errors.New("unexpected empty meter")
+	}
 
 	repo := schema.DailyReport{Id: repoId}
 	res := ti.orm.Model(&repo).Update("evening_meter", meter)
@@ -152,6 +158,19 @@ func (ti TiDbTx) UpdateDReportEMtrPhoto(repoId []uint8, photo string) error {
 
 	repo := schema.DailyReport{Id: repoId}
 	res := ti.orm.Model(&repo).Update("evening_meter_photo", photo)
+	return res.Error
+}
+
+func (ti TiDbTx) UpdateDReportNonDutyDst(repoId []uint8, dst uint64) error {
+	if len(repoId) != schema.ID_LEN {
+		return errors.New("unexpected report id length")
+	}
+	if dst == 0 {
+		return errors.New("unexpected empty meter")
+	}
+
+	repo := schema.DailyReport{Id: repoId}
+	res := ti.orm.Model(&repo).Update("non_duty_distance", dst)
 	return res.Error
 }
 

@@ -40,13 +40,13 @@ func ActionECallNote() messaging_api.PostbackAction {
 	}
 }
 
-func ActionSendAlcPhoto() messaging_api.CameraAction {
+func ActionAlcPhoto() messaging_api.CameraAction {
 	return messaging_api.CameraAction{
 		Label: "アルコール検査機の結果を写真に撮る",
 	}
 }
 
-func ActionSendMtrPhoto() messaging_api.CameraAction {
+func ActionMtrPhoto() messaging_api.CameraAction {
 	return messaging_api.CameraAction{
 		Label: "車両のメーターを写真に撮る",
 	}

@@ -165,6 +165,11 @@ func TestDailyReport(t *testing.T) {
 			return err
 		}
 
+		err = tx.UpdateDReportNonDutyDst(reportId, 1)
+		if err != nil {
+			return err
+		}
+
 		err = tx.UpdateDReportEMtrPhoto(reportId, MTR_PHOTO)
 		if err != nil {
 			return err
@@ -494,16 +499,19 @@ func TestReadFromOrg(t *testing.T) {
 		t.Fatal(err)
 	}
 	if report.MorningMeterPhoto != MTR_PHOTO {
-		t.Fatal("read wrong dialy report")
+		t.Fatal("read wrong daily report")
 	}
 	if report.EveningMeterPhoto != MTR_PHOTO {
-		t.Fatal("read wrong dialy report")
+		t.Fatal("read wrong daily report")
 	}
 	if report.MorningMeter != 99 {
-		t.Fatal("read wrong dialy report")
+		t.Fatal("read wrong daily report")
 	}
 	if report.EveninggMeter != 100 {
-		t.Fatal("read wrong dialy report")
+		t.Fatal("read wrong daily report")
+	}
+	if report.NonDutyDistance != 1 {
+		t.Fatal("read wrong daily report")
 	}
 
 	reports, err := db.ReadDailyReports(userId, from, to)

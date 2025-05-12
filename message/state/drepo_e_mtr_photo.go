@@ -50,7 +50,7 @@ func (s StDRepoEMtrPhoto) Run(
 						return err
 					}
 
-					return tx.UpdateUserNextState(user.Id, ST_DREPO_TROUBLE)
+					return tx.UpdateUserNextState(user.Id, ST_DREPO_NON_DUTY_DST)
 				})
 				if err != nil {
 					return err
@@ -58,7 +58,7 @@ func (s StDRepoEMtrPhoto) Run(
 
 				req := messaging_api.ReplyMessageRequest{
 					ReplyToken: e.ReplyToken,
-					Messages:   reply.ReplyDReportTrouble(),
+					Messages:   reply.ReplyDReportNonDutyDst(),
 				}
 
 				_, err = props.Api().ReplyMessage(&req)
@@ -68,7 +68,7 @@ func (s StDRepoEMtrPhoto) Run(
 
 		req := messaging_api.ReplyMessageRequest{
 			ReplyToken: e.ReplyToken,
-			Messages:   reply.ReplySendMtrPhoto(),
+			Messages:   reply.ReplyMtrPhoto(),
 		}
 
 		_, err := props.Api().ReplyMessage(&req)
