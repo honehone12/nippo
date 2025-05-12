@@ -60,7 +60,7 @@ func checkBasicContent(event webhook.EventInterface) (*basicContent, error) {
 		switch e.Postback.Data {
 		case reply.IGNORE_TXT_ACT_DATA:
 			return &content, nil
-		case reply.RESET_ACT_DATA:
+		case reply.DECLINE_ACT_DATA:
 			source = e.Source
 			content.replyToken = e.ReplyToken
 			content.reset = true

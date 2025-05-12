@@ -188,6 +188,15 @@ func ReplyInDuty() []messaging_api.MessageInterface {
 	}
 }
 
+func ReplyDecline() []messaging_api.MessageInterface {
+	return []messaging_api.MessageInterface{
+		messaging_api.TextMessage{
+			Text:       "辞退しました\n管理者に連絡してください",
+			QuickReply: QuickRepStartMenu(),
+		},
+	}
+}
+
 func ReplyDone() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{

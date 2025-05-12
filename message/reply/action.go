@@ -11,7 +11,7 @@ const START_RESTING_ACT_DATA = "START_RESTING"
 const END_DUTY_ACT_DATA = "END_DUTY"
 const FLAG_TRUE_ACT_DATA = "FLAG_TRUE"
 const FLAG_FALSE_ACT_DATA = "FLAG_FALSE"
-const RESET_ACT_DATA = "RESET"
+const DECLINE_ACT_DATA = "RESET"
 
 func ActionUserSetting() messaging_api.PostbackAction {
 	return messaging_api.PostbackAction{
@@ -188,9 +188,9 @@ func ActionEndDuty() messaging_api.PostbackAction {
 
 func ActionReset() messaging_api.PostbackAction {
 	return messaging_api.PostbackAction{
-		Label:       "リセット",
-		Data:        RESET_ACT_DATA,
-		DisplayText: "リセット",
+		Label:       "辞退",
+		Data:        DECLINE_ACT_DATA,
+		DisplayText: "辞退",
 	}
 }
 

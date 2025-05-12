@@ -29,7 +29,7 @@ func Reset(props *msgprops.Props, user *schema.User, replyToken string) error {
 
 	req := messaging_api.ReplyMessageRequest{
 		ReplyToken: replyToken,
-		Messages:   reply.ReplyDone(),
+		Messages:   reply.ReplyDecline(),
 	}
 
 	_, err = props.Api().ReplyMessage(&req)
