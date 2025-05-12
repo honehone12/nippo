@@ -27,7 +27,7 @@ func ActionMCallNote() messaging_api.PostbackAction {
 		Label:       "入力する",
 		Data:        IGNORE_TXT_ACT_DATA,
 		InputOption: "openKeyboard",
-		FillInText:  "【指示事項】\n【天気】\n【その他】",
+		FillInText:  "【指示事項】\n【天気】\n【健康状態】\n【車両状態】\n【その他】",
 	}
 }
 
