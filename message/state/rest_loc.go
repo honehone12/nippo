@@ -58,7 +58,7 @@ func (s StResting) Run(
 		} else {
 			req := messaging_api.ReplyMessageRequest{
 				ReplyToken: e.ReplyToken,
-				Messages:   reply.ReplyResting(),
+				Messages:   reply.ReplyRestLoc(),
 			}
 
 			_, err := props.Api().ReplyMessage(&req)

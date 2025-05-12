@@ -98,15 +98,15 @@ func (s StInDuty) Run(
 
 			_, err = props.Api().ReplyMessage(&req)
 			return err
-		case reply.START_RESTING_ACT_DATA:
-			err := props.Db().Once().UpdateUserNextState(user.Id, ST_RESTING)
+		case reply.REST_LOC_ACT_DATA:
+			err := props.Db().Once().UpdateUserNextState(user.Id, ST_REST_LOC)
 			if err != nil {
 				return err
 			}
 
 			req := messaging_api.ReplyMessageRequest{
 				ReplyToken: e.ReplyToken,
-				Messages:   reply.ReplyResting(),
+				Messages:   reply.ReplyRestLoc(),
 			}
 
 			_, err = props.Api().ReplyMessage(&req)

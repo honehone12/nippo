@@ -101,7 +101,7 @@ func QuickRepLoadNote() *messaging_api.QuickReply {
 func QuickRepEndResting() *messaging_api.QuickReply {
 	return &messaging_api.QuickReply{
 		Items: []messaging_api.QuickReplyItem{
-			{Action: ActionEndResting()},
+			{Action: ActionRestLoc()},
 		},
 	}
 }
@@ -136,7 +136,7 @@ func QuickRepInDuty() *messaging_api.QuickReply {
 	return &messaging_api.QuickReply{
 		Items: []messaging_api.QuickReplyItem{
 			{Action: ActionSendLocation()},
-			{Action: ActionStartResting()},
+			{Action: ActionRegisterResting()},
 			{Action: ActionStartWaiting()},
 			{Action: ActionStartLoading()},
 			{Action: ActionEndDuty()},

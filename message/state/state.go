@@ -29,7 +29,7 @@ const (
 
 	ST_LOC_NOTE
 
-	ST_RESTING
+	ST_REST_LOC
 	ST_REST_NOTE
 
 	ST_WAITING
@@ -82,7 +82,7 @@ func FromIdx(idx schema.StateIdx) (State, error) {
 		return StDRepoNote{}, nil
 	case ST_LOC_NOTE:
 		return StLocNote{}, nil
-	case ST_RESTING:
+	case ST_REST_LOC:
 		return StResting{}, nil
 	case ST_REST_NOTE:
 		return StRestNote{}, nil

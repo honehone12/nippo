@@ -130,7 +130,7 @@ func processEvent(props *msgprops.Props, event webhook.EventInterface) (*basicCo
 	}
 
 	if bc.reset {
-		err := state.Reset(props, user, bc.replyToken)
+		err := state.Decline(props, user, bc.replyToken)
 		if err != nil {
 			return bc, err
 		}

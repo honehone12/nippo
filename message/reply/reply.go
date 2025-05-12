@@ -143,10 +143,10 @@ func ReplyLoadNote() []messaging_api.MessageInterface {
 	}
 }
 
-func ReplyResting() []messaging_api.MessageInterface {
+func ReplyRestLoc() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
-			Text:       "休憩に入りました\n『終了時』に位置情報を送信してください",
+			Text:       "位置情報を送信してください",
 			QuickReply: QuickRepEndResting(),
 		},
 	}

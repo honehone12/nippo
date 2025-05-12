@@ -9,7 +9,7 @@ import (
 	"github.com/line/line-bot-sdk-go/v8/linebot/messaging_api"
 )
 
-func Reset(props *msgprops.Props, user *schema.User, replyToken string) error {
+func Decline(props *msgprops.Props, user *schema.User, replyToken string) error {
 	err := props.Db().Tx(func(tx database.Transaction) error {
 		err := tx.UpdateUserCurrentOpe(user.Id, nil)
 		if err != nil {

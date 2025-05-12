@@ -7,7 +7,7 @@ const USER_SETTING_ACT_DATA = "USER_SETTING"
 const START_DUTY_ACT_DATA = "START_DUTY"
 const START_WAITING_ACT_DATA = "START_WAITING"
 const START_LOADING_ACT_DATA = "START_LOADING"
-const START_RESTING_ACT_DATA = "START_RESTING"
+const REST_LOC_ACT_DATA = "START_RESTING"
 const END_DUTY_ACT_DATA = "END_DUTY"
 const FLAG_TRUE_ACT_DATA = "FLAG_TRUE"
 const FLAG_FALSE_ACT_DATA = "FLAG_FALSE"
@@ -112,21 +112,21 @@ func ActionLoadNote() messaging_api.PostbackAction {
 		Label:       "入力する",
 		Data:        IGNORE_TXT_ACT_DATA,
 		InputOption: "openKeyboard",
-		FillInText:  "【作業内容】\n【その他】",
+		FillInText:  "【作業内容】\n【時間】\n【その他】",
 	}
 }
 
-func ActionStartResting() messaging_api.PostbackAction {
+func ActionRegisterResting() messaging_api.PostbackAction {
 	return messaging_api.PostbackAction{
-		Label:       "休憩を開始する",
-		Data:        START_RESTING_ACT_DATA,
-		DisplayText: "休憩を開始する",
+		Label:       "休憩を登録する",
+		Data:        REST_LOC_ACT_DATA,
+		DisplayText: "休憩を登録する",
 	}
 }
 
-func ActionEndResting() messaging_api.LocationAction {
+func ActionRestLoc() messaging_api.LocationAction {
 	return messaging_api.LocationAction{
-		Label: "休憩を終了する（位置情報を送信）",
+		Label: "位置情報を送信する",
 	}
 }
 
@@ -135,7 +135,7 @@ func ActionRestNote() messaging_api.PostbackAction {
 		Label:       "入力する",
 		Data:        IGNORE_TXT_ACT_DATA,
 		InputOption: "openKeyboard",
-		FillInText:  "【睡眠】時間：　",
+		FillInText:  "【時間】\n【睡眠】",
 	}
 }
 
@@ -150,7 +150,7 @@ func ActionWaitNote() messaging_api.PostbackAction {
 		Label:       "入力する",
 		Data:        IGNORE_TXT_ACT_DATA,
 		InputOption: "openKeyboard",
-		FillInText:  "【荷主指定時刻】\n【その他】",
+		FillInText:  "【荷主指定時刻】\n【時間】\n【その他】",
 	}
 }
 
