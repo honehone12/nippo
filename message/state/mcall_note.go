@@ -44,6 +44,9 @@ func (s StMCallNote) Run(
 			if err != nil {
 				return err
 			}
+			if len(carNum) == 0 {
+				return errors.New("morning call does not have car number")
+			}
 
 			text := input.Clean(t.Text)
 			err = db.Tx(func(tx database.Transaction) error {
@@ -72,7 +75,7 @@ func (s StMCallNote) Run(
 					return err
 				}
 
-				return tx.UpdateUserNextState(user.Id, ST_IN_DUTY)
+				return tx.UpdateUserNextState(user.Id, ST_DREPO_M_MTR)
 			})
 			if err != nil {
 				return err
@@ -80,7 +83,7 @@ func (s StMCallNote) Run(
 
 			req := messaging_api.ReplyMessageRequest{
 				ReplyToken: e.ReplyToken,
-				Messages:   reply.ReplyInDuty(),
+				Messages:   reply.ReplySendMtr(),
 			}
 
 			_, err = props.Api().ReplyMessage(&req)

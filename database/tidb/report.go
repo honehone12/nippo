@@ -109,7 +109,17 @@ func (ti TiDbTx) UpdateDReportECall(repoId []uint8, eveningId []uint8) error {
 	return res.Error
 }
 
-func (ti TiDbTx) UpdateDReportMtrPhoto(repoId []uint8, photo string) error {
+func (ti TiDbTx) UpdateDReportMMtr(repoId []uint8, meter uint64) error {
+	if len(repoId) != schema.ID_LEN {
+		return errors.New("unexpected report id length")
+	}
+
+	repo := schema.DailyReport{Id: repoId}
+	res := ti.orm.Model(&repo).Update("morning_meter", meter)
+	return res.Error
+}
+
+func (ti TiDbTx) UpdateDReportMMtrPhoto(repoId []uint8, photo string) error {
 	if len(repoId) != schema.ID_LEN {
 		return errors.New("unexpected report id length")
 	}
@@ -118,7 +128,30 @@ func (ti TiDbTx) UpdateDReportMtrPhoto(repoId []uint8, photo string) error {
 	}
 
 	repo := schema.DailyReport{Id: repoId}
-	res := ti.orm.Model(&repo).Update("meter_photo", photo)
+	res := ti.orm.Model(&repo).Update("morning_meter_photo", photo)
+	return res.Error
+}
+
+func (ti TiDbTx) UpdateDReportEMtr(repoId []uint8, meter uint64) error {
+	if len(repoId) != schema.ID_LEN {
+		return errors.New("unexpected report id length")
+	}
+
+	repo := schema.DailyReport{Id: repoId}
+	res := ti.orm.Model(&repo).Update("evening_meter", meter)
+	return res.Error
+}
+
+func (ti TiDbTx) UpdateDReportEMtrPhoto(repoId []uint8, photo string) error {
+	if len(repoId) != schema.ID_LEN {
+		return errors.New("unexpected report id length")
+	}
+	if len(photo) > schema.MAX_SHORT_TEXT_LEN {
+		return errors.New("unexpected photo length")
+	}
+
+	repo := schema.DailyReport{Id: repoId}
+	res := ti.orm.Model(&repo).Update("evening_meter_photo", photo)
 	return res.Error
 }
 

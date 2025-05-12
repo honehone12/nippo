@@ -40,7 +40,10 @@ type Transaction interface {
 		morningId []uint8,
 	) ([]uint8, error)
 	UpdateDReportECall(repoId []uint8, eveningId []uint8) error
-	UpdateDReportMtrPhoto(repoId []uint8, photo string) error
+	UpdateDReportMMtr(repoId []uint8, meter uint64) error
+	UpdateDReportMMtrPhoto(repoId []uint8, photo string) error
+	UpdateDReportEMtr(repoId []uint8, meter uint64) error
+	UpdateDReportEMtrPhoto(repoId []uint8, photo string) error
 	UpdateDReportTrouble(repoId []uint8, trouble schema.CleanText) error
 	UpdateDReportNote(repoId []uint8, note schema.CleanText) error
 

@@ -22,7 +22,7 @@ func ReplyUserSetName() []messaging_api.MessageInterface {
 func ReplyUserSetEmail() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
-			Text: "メールアドレスを入力してください",
+			Text: "メールアドレスを『英数字』で入力してください",
 		},
 	}
 }
@@ -76,6 +76,14 @@ func ReplyECallNote() []messaging_api.MessageInterface {
 		messaging_api.TextMessage{
 			Text:       "その他必要な事項を入力してください",
 			QuickReply: QuickRepECallNote(),
+		},
+	}
+}
+
+func ReplySendMtr() []messaging_api.MessageInterface {
+	return []messaging_api.MessageInterface{
+		messaging_api.TextMessage{
+			Text: "車両のメーターを『英数字』、『自然数』で入力してください",
 		},
 	}
 }

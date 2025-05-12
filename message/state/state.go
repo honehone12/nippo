@@ -20,10 +20,14 @@ const (
 	ST_MCALL_SET_CAR
 	ST_MCALL_NOTE
 
+	ST_DREPO_M_MTR
+	ST_DREPO_M_MTR_PHOTO
+
 	ST_ECALL_ALC_PHOTO
 	ST_ECALL_NOTE
 
-	ST_DREPO_MTR_PHOTO
+	ST_DREPO_E_MTR
+	ST_DREPO_E_MTR_PHOTO
 	ST_DREPO_TROUBLE
 	ST_DREPO_NOTE
 
@@ -70,12 +74,18 @@ func FromIdx(idx schema.StateIdx) (State, error) {
 		return StMCallSetCar{}, nil
 	case ST_MCALL_NOTE:
 		return StMCallNote{}, nil
+	case ST_DREPO_M_MTR:
+		return StDRepoMMtr{}, nil
+	case ST_DREPO_M_MTR_PHOTO:
+		return StDRepoMMtrPhoto{}, nil
 	case ST_ECALL_ALC_PHOTO:
 		return StECallAlcPhoto{}, nil
 	case ST_ECALL_NOTE:
 		return StECallNote{}, nil
-	case ST_DREPO_MTR_PHOTO:
-		return StDRepoMtrPhoto{}, nil
+	case ST_DREPO_E_MTR:
+		return StDRepoEMtr{}, nil
+	case ST_DREPO_E_MTR_PHOTO:
+		return StDRepoEMtrPhoto{}, nil
 	case ST_DREPO_TROUBLE:
 		return StDRepoTrouble{}, nil
 	case ST_DREPO_NOTE:

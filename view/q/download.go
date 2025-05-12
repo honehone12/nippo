@@ -36,8 +36,8 @@ func (q QDownload) Query(props *viewprops.Props, email schema.CleanText) ([]byte
 	}
 
 	var meter []byte
-	if len(report.MeterPhoto) > 0 {
-		url, err := sss.GetPresigned(props, report.MeterPhoto)
+	if len(report.EveningMeterPhoto) > 0 {
+		url, err := sss.GetPresigned(props, report.EveningMeterPhoto)
 		if err != nil {
 			return nil, err
 		}

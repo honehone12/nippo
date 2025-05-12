@@ -52,6 +52,9 @@ func (s StECallAlcPhoto) Run(
 				if err != nil {
 					return nil
 				}
+				if len(carNum) == 0 {
+					return errors.New("daily report does not have car number")
+				}
 
 				err = db.Tx(func(tx database.Transaction) error {
 					callId, err := tx.CreateEveningCall(

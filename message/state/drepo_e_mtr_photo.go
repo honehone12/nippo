@@ -13,9 +13,9 @@ import (
 	"github.com/line/line-bot-sdk-go/v8/linebot/webhook"
 )
 
-type StDRepoMtrPhoto struct{}
+type StDRepoEMtrPhoto struct{}
 
-func (s StDRepoMtrPhoto) Run(
+func (s StDRepoEMtrPhoto) Run(
 	props *msgprops.Props,
 	user *schema.User,
 	event webhook.EventInterface,
@@ -45,7 +45,7 @@ func (s StDRepoMtrPhoto) Run(
 				}
 
 				err = props.Db().Tx(func(tx database.Transaction) error {
-					err := tx.UpdateDReportMtrPhoto(user.CurrentDuty, photo)
+					err := tx.UpdateDReportEMtrPhoto(user.CurrentDuty, photo)
 					if err != nil {
 						return err
 					}

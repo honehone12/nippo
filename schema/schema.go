@@ -96,9 +96,12 @@ type DailyReport struct {
 	Name      CleanText `gorm:"size:100" json:"name"`
 	CarNumber CleanText `gorm:"size:100" json:"car_number"`
 
-	MeterPhoto string    `gorm:"size:100" json:"meter_photo"`
-	Trouble    CleanText `gorm:"size:5000" json:"trouble"`
-	Note       CleanText `gorm:"size:5000" json:"note"`
+	MorningMeter      uint64    `json:"morning_meter"`
+	MorningMeterPhoto string    `gorm:"size:100" json:"morning_meter_photo"`
+	EveninggMeter     uint64    `json:"evening_meter"`
+	EveningMeterPhoto string    `gorm:"size:100" json:"evening_meter_photo"`
+	Trouble           CleanText `gorm:"size:5000" json:"trouble"`
+	Note              CleanText `gorm:"size:5000" json:"note"`
 
 	Locations []Location `gorm:"foreignKey:DailyReportId;references:Id" json:"-"`
 	Waitings  []Waiting  `gorm:"foreignKey:DailyReportId;references:Id" json:"-"`

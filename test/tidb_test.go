@@ -150,7 +150,22 @@ func TestDailyReport(t *testing.T) {
 			return err
 		}
 
-		err = tx.UpdateDReportMtrPhoto(reportId, MTR_PHOTO)
+		err = tx.UpdateDReportMMtr(reportId, 99)
+		if err != nil {
+			return err
+		}
+
+		err = tx.UpdateDReportMMtrPhoto(reportId, MTR_PHOTO)
+		if err != nil {
+			return err
+		}
+
+		err = tx.UpdateDReportEMtr(reportId, 100)
+		if err != nil {
+			return err
+		}
+
+		err = tx.UpdateDReportEMtrPhoto(reportId, MTR_PHOTO)
 		if err != nil {
 			return err
 		}
@@ -478,7 +493,16 @@ func TestReadFromOrg(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if report.MeterPhoto != MTR_PHOTO {
+	if report.MorningMeterPhoto != MTR_PHOTO {
+		t.Fatal("read wrong dialy report")
+	}
+	if report.EveningMeterPhoto != MTR_PHOTO {
+		t.Fatal("read wrong dialy report")
+	}
+	if report.MorningMeter != 99 {
+		t.Fatal("read wrong dialy report")
+	}
+	if report.EveninggMeter != 100 {
 		t.Fatal("read wrong dialy report")
 	}
 
