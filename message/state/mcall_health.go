@@ -24,7 +24,7 @@ func (s StMCallHealth) Run(
 	case webhook.MessageEvent:
 		req := messaging_api.ReplyMessageRequest{
 			ReplyToken: e.ReplyToken,
-			Messages:   reply.ReplyMoCallHealth(),
+			Messages:   reply.ReplyMCallHealth(),
 		}
 
 		_, err := props.Api().ReplyMessage(&req)

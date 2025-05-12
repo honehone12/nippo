@@ -47,17 +47,30 @@ func (ti TiDbTx) CreateDailyReport(
 	return call.Id, nil
 }
 
-func (ti TiDb) ReadDailyReport(repoId []uint8) (*schema.DailyReport, error) {
-	if len(repoId) != schema.ID_LEN {
+func (ti TiDb) ReadDailyReport(id []uint8) (*schema.DailyReport, error) {
+	if len(id) != schema.ID_LEN {
 		return nil, errors.New("unexpected report id length")
 	}
 
-	repo := schema.DailyReport{Id: repoId}
+	repo := schema.DailyReport{Id: id}
 	if res := ti.orm.Take(&repo); res.Error != nil {
 		return nil, res.Error
 	}
 
 	return &repo, nil
+}
+
+func (ti TiDb) ReadDRepoCarNum(id []uint8) (schema.CleanText, error) {
+	if len(id) != schema.ID_LEN {
+		return "", errors.New("unexpected report id length")
+	}
+
+	repo := schema.DailyReport{Id: id}
+	if res := ti.orm.Select("car_number").Take(&repo); res.Error != nil {
+		return "", res.Error
+	}
+
+	return repo.CarNumber, nil
 }
 
 func (ti TiDb) ReadDailyReports(

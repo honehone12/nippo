@@ -34,7 +34,7 @@ func (s StUserSetEmail) Run(
 					return err
 				}
 
-				return tx.UpdateUserNextState(user.Id, ST_USER_SET_CAR)
+				return tx.UpdateUserNextState(user.Id, ST_NONE)
 			})
 			if err != nil {
 				return err
@@ -42,7 +42,7 @@ func (s StUserSetEmail) Run(
 
 			req := messaging_api.ReplyMessageRequest{
 				ReplyToken: e.ReplyToken,
-				Messages:   reply.ReplyUserSetCar(),
+				Messages:   reply.ReplyDone(),
 			}
 
 			_, err = props.Api().ReplyMessage(&req)

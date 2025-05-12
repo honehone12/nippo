@@ -11,7 +11,6 @@ import (
 func (ti TiDbTx) CreateMorningCall(
 	userId []uint8,
 	name schema.CleanText,
-	carNum schema.CleanText,
 	photo string,
 ) ([]uint8, error) {
 	if len(userId) != schema.ID_LEN {
@@ -23,9 +22,6 @@ func (ti TiDbTx) CreateMorningCall(
 	if len(name) <= 1 || len(name) > schema.MAX_SHORT_TEXT_LEN {
 		return nil, errors.New("unexpected name length")
 	}
-	if len(carNum) == 0 || len(carNum) > schema.MAX_SHORT_TEXT_LEN {
-		return nil, errors.New("unexpected car number length")
-	}
 
 	id, err := uuid.NewRandom()
 	if err != nil {
@@ -36,7 +32,6 @@ func (ti TiDbTx) CreateMorningCall(
 		Id:              id[:],
 		Caller:          name,
 		Name:            name,
-		CarNumber:       carNum,
 		Method:          schema.METHOD_PERSON,
 		UsingAlcChecker: true,
 		AlcCheck:        true,
@@ -62,6 +57,19 @@ func (ti TiDb) ReadMorningCall(id []uint8) (*schema.MorningCall, error) {
 	}
 
 	return &call, nil
+}
+
+func (ti TiDb) ReadMCallCarNum(id []uint8) (schema.CleanText, error) {
+	if len(id) != schema.ID_LEN {
+		return "", errors.New("unexpexted call id length")
+	}
+
+	call := schema.MorningCall{Id: id}
+	if res := ti.orm.Select("car_number").Take(&call); res.Error != nil {
+		return "", res.Error
+	}
+
+	return call.CarNumber, nil
 }
 
 func (ti TiDb) ReadMorningCalls(
@@ -104,6 +112,19 @@ func (ti TiDbTx) UpdateMCallCarCheck(callId []uint8) error {
 
 	call := schema.MorningCall{Id: callId}
 	res := ti.orm.Model(&call).Update("car_check", true)
+	return res.Error
+}
+
+func (ti TiDbTx) UpdateMCallCarNumber(callId []uint8, carNumber schema.CleanText) error {
+	if len(callId) != schema.ID_LEN {
+		return errors.New("unexpected id length")
+	}
+	if len(carNumber) == 0 || len(carNumber) > schema.MAX_SHORT_TEXT_LEN {
+		return errors.New("unexpected car number length")
+	}
+
+	call := schema.MorningCall{Id: callId}
+	res := ti.orm.Model(&call).Update("car_number", carNumber)
 	return res.Error
 }
 

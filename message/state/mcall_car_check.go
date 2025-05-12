@@ -41,7 +41,7 @@ func (s StMCallCarCheck) Run(
 					return err
 				}
 
-				return tx.UpdateUserNextState(user.Id, ST_MCALL_NOTE)
+				return tx.UpdateUserNextState(user.Id, ST_MCALL_SET_CAR)
 			})
 			if err != nil {
 				return err
@@ -49,7 +49,7 @@ func (s StMCallCarCheck) Run(
 
 			req := messaging_api.ReplyMessageRequest{
 				ReplyToken: e.ReplyToken,
-				Messages:   reply.ReplyMCallNote(),
+				Messages:   reply.ReplyMCallSetCar(),
 			}
 
 			_, err = props.Api().ReplyMessage(&req)

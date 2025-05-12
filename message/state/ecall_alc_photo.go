@@ -31,9 +31,6 @@ func (s StECallAlcPhoto) Run(
 				if len(user.Name) <= 1 {
 					return errors.New("user does not have name")
 				}
-				if len(user.CarNumber) == 0 {
-					return errors.New("user does not have car number")
-				}
 
 				res, err := props.BlobApi().GetMessageContent(img.Id)
 				if err != nil {
@@ -50,11 +47,17 @@ func (s StECallAlcPhoto) Run(
 					return err
 				}
 
-				err = props.Db().Tx(func(tx database.Transaction) error {
+				db := props.Db()
+				carNum, err := db.ReadDRepoCarNum(user.CurrentDuty)
+				if err != nil {
+					return nil
+				}
+
+				err = db.Tx(func(tx database.Transaction) error {
 					callId, err := tx.CreateEveningCall(
 						user.Id,
 						user.Name,
-						user.CarNumber,
+						carNum,
 						photo,
 					)
 					if err != nil {

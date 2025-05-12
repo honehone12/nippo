@@ -12,9 +12,9 @@ import (
 	"github.com/line/line-bot-sdk-go/v8/linebot/webhook"
 )
 
-type StUserSetCar struct{}
+type StMCallSetCar struct{}
 
-func (s StUserSetCar) Run(
+func (s StMCallSetCar) Run(
 	props *msgprops.Props,
 	user *schema.User,
 	event webhook.EventInterface,
@@ -25,12 +25,12 @@ func (s StUserSetCar) Run(
 		if ok {
 			text := input.Clean(t.Text)
 			err := props.Db().Tx(func(tx database.Transaction) error {
-				err := tx.UpdateUserCarNumber(user.Id, text)
+				err := tx.UpdateMCallCarNumber(user.Id, text)
 				if err != nil {
 					return err
 				}
 
-				return tx.UpdateUserNextState(user.Id, ST_NONE)
+				return tx.UpdateUserNextState(user.Id, ST_MCALL_NOTE)
 			})
 			if err != nil {
 				return err
@@ -38,7 +38,7 @@ func (s StUserSetCar) Run(
 
 			req := messaging_api.ReplyMessageRequest{
 				ReplyToken: e.ReplyToken,
-				Messages:   reply.ReplyDone(),
+				Messages:   reply.ReplyMCallNote(),
 			}
 
 			_, err = props.Api().ReplyMessage(&req)
@@ -46,7 +46,7 @@ func (s StUserSetCar) Run(
 		} else {
 			req := messaging_api.ReplyMessageRequest{
 				ReplyToken: e.ReplyToken,
-				Messages:   reply.ReplyUserSetCar(),
+				Messages:   reply.ReplyMCallSetCar(),
 			}
 
 			_, err := props.Api().ReplyMessage(&req)

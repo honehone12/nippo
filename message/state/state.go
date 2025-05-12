@@ -13,11 +13,11 @@ const (
 
 	ST_USER_SET_NAME
 	ST_USER_SET_EMAIL
-	ST_USER_SET_CAR
 
 	ST_MCALL_ALC_PHOTO
 	ST_MCALL_HEALTH
 	ST_MCALL_CAR_CHECK
+	ST_MCALL_SET_CAR
 	ST_MCALL_NOTE
 
 	ST_ECALL_ALC_PHOTO
@@ -60,14 +60,14 @@ func FromIdx(idx schema.StateIdx) (State, error) {
 		return StUserSetName{}, nil
 	case ST_USER_SET_EMAIL:
 		return StUserSetEmail{}, nil
-	case ST_USER_SET_CAR:
-		return StUserSetCar{}, nil
 	case ST_MCALL_ALC_PHOTO:
 		return StMCallAlcPhoto{}, nil
 	case ST_MCALL_HEALTH:
 		return StMCallHealth{}, nil
 	case ST_MCALL_CAR_CHECK:
 		return StMCallCarCheck{}, nil
+	case ST_MCALL_SET_CAR:
+		return StMCallSetCar{}, nil
 	case ST_MCALL_NOTE:
 		return StMCallNote{}, nil
 	case ST_ECALL_ALC_PHOTO:

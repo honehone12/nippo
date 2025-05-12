@@ -27,14 +27,6 @@ func ReplyUserSetEmail() []messaging_api.MessageInterface {
 	}
 }
 
-func ReplyUserSetCar() []messaging_api.MessageInterface {
-	return []messaging_api.MessageInterface{
-		messaging_api.TextMessage{
-			Text: "車両番号を入力してください",
-		},
-	}
-}
-
 func ReplySendAlcPhoto() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
@@ -44,7 +36,7 @@ func ReplySendAlcPhoto() []messaging_api.MessageInterface {
 	}
 }
 
-func ReplyMoCallHealth() []messaging_api.MessageInterface {
+func ReplyMCallHealth() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
 			Text:       "疾病、疲労、睡眠不足等はありますか？",
@@ -58,6 +50,14 @@ func ReplyMCallCarCheck() []messaging_api.MessageInterface {
 		messaging_api.TextMessage{
 			Text:       "車両の日常点検は良好でしたか？",
 			QuickReply: QuickRepFlag(),
+		},
+	}
+}
+
+func ReplyMCallSetCar() []messaging_api.MessageInterface {
+	return []messaging_api.MessageInterface{
+		messaging_api.TextMessage{
+			Text: "車両番号を入力してください",
 		},
 	}
 }

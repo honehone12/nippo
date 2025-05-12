@@ -11,7 +11,6 @@ type Transaction interface {
 	CreateUser(orgId []uint8, lineId schema.CleanText) ([]uint8, error)
 	UpdateUserName(userId []uint8, name schema.CleanText) error
 	UpdateUserEmail(userId []uint8, email schema.CleanText) error
-	UpdateUserCarNumber(userId []uint8, carNumber schema.CleanText) error
 	UpdateUserCurrentOpe(userId []uint8, opeId []uint8) error
 	UpdateUserCurrentDuty(userId []uint8, repoId []uint8) error
 	UpdateUserNextState(userId []uint8, nextState schema.StateIdx) error
@@ -19,11 +18,11 @@ type Transaction interface {
 	CreateMorningCall(
 		userId []uint8,
 		name schema.CleanText,
-		carNum schema.CleanText,
 		photo string,
 	) ([]uint8, error)
 	UpdateMCallHealth(callId []uint8) error
 	UpdateMCallCarCheck(CallId []uint8) error
+	UpdateMCallCarNumber(callId []uint8, carNumber schema.CleanText) error
 	UpdateMCallNote(callId []uint8, note schema.CleanText) error
 
 	CreateEveningCall(

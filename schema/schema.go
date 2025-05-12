@@ -35,7 +35,6 @@ type User struct {
 	Name             CleanText `gorm:"size:100" json:"name"`
 	Email            CleanText `gorm:"unique;size:100;index" json:"email"`
 	LineId           CleanText `gorm:"unique;not null;type:char(33);index" json:"line_id"`
-	CarNumber        CleanText `gorm:"size:100" json:"car_number"`
 	CurrentOperation []uint8   `gorm:"type:binary(16)" json:"-"`
 	CurrentDuty      []uint8   `gorm:"type:binary(16)" json:"-"`
 	NextState        StateIdx  `json:"-"`

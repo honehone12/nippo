@@ -151,19 +151,6 @@ func (ti TiDbTx) UpdateUserEmail(userId []uint8, email schema.CleanText) error {
 	return res.Error
 }
 
-func (ti TiDbTx) UpdateUserCarNumber(userId []uint8, carNumber schema.CleanText) error {
-	if len(userId) != schema.ID_LEN {
-		return errors.New("unexpected id length")
-	}
-	if len(carNumber) == 0 || len(carNumber) > schema.MAX_SHORT_TEXT_LEN {
-		return errors.New("unexpected car number length")
-	}
-
-	user := schema.User{Id: userId}
-	res := ti.orm.Model(&user).Update("car_number", carNumber)
-	return res.Error
-}
-
 func (ti TiDbTx) UpdateUserNextState(userId []uint8, nextState schema.StateIdx) error {
 	if len(userId) != schema.ID_LEN {
 		return errors.New("unexpected id length")

@@ -38,12 +38,15 @@ func (s StMCallNote) Run(
 			if len(user.Name) <= 1 {
 				return errors.New("user does not have name")
 			}
-			if len(user.CarNumber) == 0 {
-				return errors.New("user does not have car number")
+
+			db := props.Db()
+			carNum, err := db.ReadMCallCarNum(user.CurrentOperation)
+			if err != nil {
+				return err
 			}
 
 			text := input.Clean(t.Text)
-			err := props.Db().Tx(func(tx database.Transaction) error {
+			err = db.Tx(func(tx database.Transaction) error {
 				err := tx.UpdateMCallNote(user.CurrentOperation, text)
 				if err != nil {
 					return err
@@ -52,7 +55,7 @@ func (s StMCallNote) Run(
 				reportId, err := tx.CreateDailyReport(
 					user.Id,
 					user.Name,
-					user.CarNumber,
+					carNum,
 					user.CurrentOperation,
 				)
 				if err != nil {

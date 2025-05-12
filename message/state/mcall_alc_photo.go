@@ -28,9 +28,6 @@ func (s StMCallAlcPhoto) Run(
 				if len(user.Name) <= 1 {
 					return errors.New("user does not have name")
 				}
-				if len(user.CarNumber) == 0 {
-					return errors.New("user does not have car number")
-				}
 
 				res, err := props.BlobApi().GetMessageContent(img.Id)
 				if err != nil {
@@ -51,7 +48,6 @@ func (s StMCallAlcPhoto) Run(
 					callId, err := tx.CreateMorningCall(
 						user.Id,
 						user.Name,
-						user.CarNumber,
 						photo,
 					)
 					if err != nil {
@@ -71,7 +67,7 @@ func (s StMCallAlcPhoto) Run(
 
 				req := messaging_api.ReplyMessageRequest{
 					ReplyToken: e.ReplyToken,
-					Messages:   reply.ReplyMoCallHealth(),
+					Messages:   reply.ReplyMCallHealth(),
 				}
 
 				_, err = props.Api().ReplyMessage(&req)

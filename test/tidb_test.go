@@ -87,11 +87,6 @@ func TestUserSetting(t *testing.T) {
 			return err
 		}
 
-		err = tx.UpdateUserCarNumber(userId, CAR_NUMBER)
-		if err != nil {
-			return err
-		}
-
 		return tx.UpdateUserNextState(userId, 9)
 	})
 	if err != nil {
@@ -102,7 +97,7 @@ func TestUserSetting(t *testing.T) {
 func TestMorningCall(t *testing.T) {
 	err := db.Tx(func(tx database.Transaction) error {
 		var err error
-		morningId, err = tx.CreateMorningCall(userId, USER_NAME, CAR_NUMBER, ALC_PHOTO)
+		morningId, err = tx.CreateMorningCall(userId, USER_NAME, ALC_PHOTO)
 		if err != nil {
 			return err
 		}
@@ -118,6 +113,11 @@ func TestMorningCall(t *testing.T) {
 		}
 
 		err = tx.UpdateMCallCarCheck(morningId)
+		if err != nil {
+			return err
+		}
+
+		err = tx.UpdateMCallCarNumber(morningId, CAR_NUMBER)
 		if err != nil {
 			return err
 		}
@@ -386,9 +386,6 @@ func TestReadFromOrg(t *testing.T) {
 		t.Fatal("read wrong user")
 	}
 	if readUser.Email != EMAIL {
-		t.Fatal("read wrong user")
-	}
-	if readUser.CarNumber != CAR_NUMBER || readUser.NextState != 9 {
 		t.Fatal("read wrong user")
 	}
 
