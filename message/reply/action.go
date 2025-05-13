@@ -7,7 +7,8 @@ const USER_SETTING_ACT_DATA = "USER_SETTING"
 const START_DUTY_ACT_DATA = "START_DUTY"
 const START_WAITING_ACT_DATA = "START_WAITING"
 const START_LOADING_ACT_DATA = "START_LOADING"
-const REST_LOC_ACT_DATA = "START_RESTING"
+const REGISTER_RESTING_ACT_DATA = "REGISTER_RESTING"
+const REGISTER_SITE_ACT_DATA = "REGISTER_SITE"
 const END_DUTY_ACT_DATA = "END_DUTY"
 const FLAG_TRUE_ACT_DATA = "FLAG_TRUE"
 const FLAG_FALSE_ACT_DATA = "FLAG_FALSE"
@@ -70,9 +71,26 @@ func ActionDReportNote() messaging_api.PostbackAction {
 	}
 }
 
-func ActionSendLocation() messaging_api.LocationAction {
+func ActionRegisterSite() messaging_api.PostbackAction {
+	return messaging_api.PostbackAction{
+		Label:       "現場を追加する",
+		Data:        REGISTER_SITE_ACT_DATA,
+		DisplayText: "現場を追加する",
+	}
+}
+
+func ActionSiteNote() messaging_api.PostbackAction {
+	return messaging_api.PostbackAction{
+		Label:       "入力する",
+		Data:        IGNORE_TXT_ACT_DATA,
+		InputOption: "openKeyboard",
+		FillInText:  "【備考】",
+	}
+}
+
+func ActionRegisterLocation() messaging_api.LocationAction {
 	return messaging_api.LocationAction{
-		Label: "位置情報を登録する",
+		Label: "位置情報を追加する",
 	}
 }
 
@@ -118,9 +136,9 @@ func ActionLoadNote() messaging_api.PostbackAction {
 
 func ActionRegisterResting() messaging_api.PostbackAction {
 	return messaging_api.PostbackAction{
-		Label:       "休憩を登録する",
-		Data:        REST_LOC_ACT_DATA,
-		DisplayText: "休憩を登録する",
+		Label:       "休憩を追加する",
+		Data:        REGISTER_RESTING_ACT_DATA,
+		DisplayText: "休憩を追加する",
 	}
 }
 

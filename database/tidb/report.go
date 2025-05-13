@@ -20,10 +20,10 @@ func (ti TiDbTx) CreateDailyReport(
 	if len(morningId) != schema.ID_LEN {
 		return nil, errors.New("unexpected morning id len")
 	}
-	if len(name) <= 1 || len(name) > schema.MAX_SHORT_TEXT_LEN {
+	if len := len(name); len == 0 || len > schema.MAX_SHORT_TEXT_LEN {
 		return nil, errors.New("unexpected name length")
 	}
-	if len(carNum) == 0 || len(carNum) > schema.MAX_SHORT_TEXT_LEN {
+	if len := len(carNum); len == 0 || len > schema.MAX_SHORT_TEXT_LEN {
 		return nil, errors.New("unexpected car number length")
 	}
 

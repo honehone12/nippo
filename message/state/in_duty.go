@@ -72,6 +72,19 @@ func (s StInDuty) Run(
 		}
 	case webhook.PostbackEvent:
 		switch e.Postback.Data {
+		case reply.REGISTER_SITE_ACT_DATA:
+			err := props.Db().Once().UpdateUserNextState(user.Id, ST_SITE_NAME)
+			if err != nil {
+				return err
+			}
+
+			req := messaging_api.ReplyMessageRequest{
+				ReplyToken: e.ReplyToken,
+				Messages:   reply.ReplySiteName(),
+			}
+
+			_, err = props.Api().ReplyMessage(&req)
+			return err
 		case reply.START_WAITING_ACT_DATA:
 			err := props.Db().Once().UpdateUserNextState(user.Id, ST_WAITING)
 			if err != nil {
@@ -98,7 +111,7 @@ func (s StInDuty) Run(
 
 			_, err = props.Api().ReplyMessage(&req)
 			return err
-		case reply.REST_LOC_ACT_DATA:
+		case reply.REGISTER_RESTING_ACT_DATA:
 			err := props.Db().Once().UpdateUserNextState(user.Id, ST_REST_LOC)
 			if err != nil {
 				return err

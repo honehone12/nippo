@@ -33,6 +33,7 @@ var loadId []uint8
 var waitId []uint8
 var restId []uint8
 var locId []uint8
+var siteId []uint8
 
 func TestOpenDb(t *testing.T) {
 	godotenv.Load("../bin/.env")
@@ -258,6 +259,34 @@ func TestLocation(t *testing.T) {
 		t.Fatal(err)
 	}
 	if !bytes.Equal(readUser.CurrentOperation, locId) {
+		t.Fatal("read wrong user")
+	}
+}
+
+func TestSite(t *testing.T) {
+	err := db.Tx(func(tx database.Transaction) error {
+		var err error
+		siteId, err = tx.CreateSite(reportId, "現場")
+		if err != nil {
+			return err
+		}
+
+		err = tx.UpdateUserCurrentOpe(userId, restId)
+		if err != nil {
+			return err
+		}
+
+		return tx.UpdateSiteNote(restId, "無し")
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	readUser, err := db.ReadUser_Line(USER_LINE_ID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !bytes.Equal(readUser.CurrentOperation, restId) {
 		t.Fatal("read wrong user")
 	}
 }
@@ -528,11 +557,21 @@ func TestReadFromOrg(t *testing.T) {
 }
 
 func TestReadFromReport(t *testing.T) {
+	sites, err := db.ReadSites(reportId)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(sites) != 1 {
+		t.Fatal("read wrong locations")
+	}
+	if !bytes.Equal(sites[0].Id, siteId) {
+		t.Fatal("read wrong locations")
+	}
+
 	locs, err := db.ReadLocations(reportId)
 	if err != nil {
 		t.Fatal(err)
 	}
-
 	if len(locs) != 1 {
 		t.Fatal("read wrong locations")
 	}
@@ -544,7 +583,6 @@ func TestReadFromReport(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-
 	if len(rests) != 1 {
 		t.Fatal("read wrong restings")
 	}
@@ -556,7 +594,6 @@ func TestReadFromReport(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-
 	if len(waits) != 1 {
 		t.Fatal("read wrong waitings")
 	}
@@ -568,7 +605,6 @@ func TestReadFromReport(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-
 	if len(loads) != 1 {
 		t.Fatal("read wrong loadings")
 	}

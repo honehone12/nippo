@@ -104,12 +104,25 @@ type DailyReport struct {
 	Trouble           CleanText `gorm:"size:5000" json:"trouble"`
 	Note              CleanText `gorm:"size:5000" json:"note"`
 
+	Sites     []Site     `gorm:"foreignKey:DailyReportId;references:Id" json:"-"`
 	Locations []Location `gorm:"foreignKey:DailyReportId;references:Id" json:"-"`
 	Waitings  []Waiting  `gorm:"foreignKey:DailyReportId;references:Id" json:"-"`
 	Loadings  []Loading  `gorm:"foreignKey:DailyReportId;references:Id" json:"-"`
 	Restings  []Resting  `gorm:"foreignKey:DailyReportId;references:Id" json:"-"`
 
 	UserId []uint8 `gorm:"not null;type:binary(16)" json:"user_id"`
+}
+
+type Site struct {
+	Id        []uint8        `gorm:"primaryKey;type:binary(16)" json:"id"`
+	CreatedAt time.Time      `gorm:"not null" json:"created_at"`
+	UpdatedAt time.Time      `json:"updated_at"`
+	DeletedAt gorm.DeletedAt `gorm:"index" json:"deleted_at"`
+
+	Name      CleanText `gorm:"not null;size:100" json:"name"`
+	ShortNote CleanText `gorm:"size:100" json:"short_note"`
+
+	DailyReportId []uint8 `gorm:"not null;type:binary(16)" json:"daily_report_id"`
 }
 
 type Location struct {

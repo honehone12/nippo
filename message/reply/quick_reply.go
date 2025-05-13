@@ -106,6 +106,15 @@ func QuickRepEndResting() *messaging_api.QuickReply {
 	}
 }
 
+func QuickRepSiteNote() *messaging_api.QuickReply {
+	return &messaging_api.QuickReply{
+		Items: []messaging_api.QuickReplyItem{
+			{Action: ActionSiteNote()},
+			{Action: ActionNone()},
+		},
+	}
+}
+
 func QuickRepRestNote() *messaging_api.QuickReply {
 	return &messaging_api.QuickReply{
 		Items: []messaging_api.QuickReplyItem{
@@ -135,7 +144,8 @@ func QuickRepWaitNote() *messaging_api.QuickReply {
 func QuickRepInDuty() *messaging_api.QuickReply {
 	return &messaging_api.QuickReply{
 		Items: []messaging_api.QuickReplyItem{
-			{Action: ActionSendLocation()},
+			{Action: ActionRegisterSite()},
+			{Action: ActionRegisterLocation()},
 			{Action: ActionRegisterResting()},
 			{Action: ActionStartWaiting()},
 			{Action: ActionStartLoading()},

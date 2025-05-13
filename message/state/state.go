@@ -32,6 +32,9 @@ const (
 	ST_DREPO_TROUBLE
 	ST_DREPO_NOTE
 
+	ST_SITE_NAME
+	ST_SITE_NOTE
+
 	ST_LOC_NOTE
 
 	ST_REST_LOC
@@ -93,6 +96,10 @@ func FromIdx(idx schema.StateIdx) (State, error) {
 		return StDRepoTrouble{}, nil
 	case ST_DREPO_NOTE:
 		return StDRepoNote{}, nil
+	case ST_SITE_NAME:
+		return StSiteName{}, nil
+	case ST_SITE_NOTE:
+		return StSiteNote{}, nil
 	case ST_LOC_NOTE:
 		return StLocNote{}, nil
 	case ST_REST_LOC:

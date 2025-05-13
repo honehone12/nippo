@@ -80,7 +80,7 @@ func (ti TiDb) ReadUserOrgId(id []uint8) ([]uint8, error) {
 }
 
 func (ti TiDb) ReadUserOrgId_Email(email schema.CleanText) ([]uint8, error) {
-	if len(email) == 0 || len(email) > schema.MAX_SHORT_TEXT_LEN {
+	if len := len(email); len == 0 || len > schema.MAX_SHORT_TEXT_LEN {
 		return nil, errors.New("unexpected line id length")
 	}
 
@@ -129,7 +129,7 @@ func (ti TiDbTx) UpdateUserName(userId []uint8, name schema.CleanText) error {
 	if len(userId) != schema.ID_LEN {
 		return errors.New("unexpected id length")
 	}
-	if len(name) == 0 || len(name) > schema.MAX_SHORT_TEXT_LEN {
+	if len := len(name); len == 0 || len > schema.MAX_SHORT_TEXT_LEN {
 		return errors.New("unexpected name length")
 	}
 
@@ -142,7 +142,7 @@ func (ti TiDbTx) UpdateUserEmail(userId []uint8, email schema.CleanText) error {
 	if len(userId) != schema.ID_LEN {
 		return errors.New("unexpected id length")
 	}
-	if len(email) == 0 || len(email) > schema.MAX_SHORT_TEXT_LEN {
+	if len := len(email); len == 0 || len > schema.MAX_SHORT_TEXT_LEN {
 		return errors.New("unexpected email length")
 	}
 

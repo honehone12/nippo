@@ -40,6 +40,7 @@ type Database interface {
 		to time.Time,
 	) ([]schema.DailyReport, error)
 
+	ReadSites(repoId []uint8) ([]schema.Site, error)
 	ReadLocations(repoId []uint8) ([]schema.Location, error)
 	ReadRestings(repoId []uint8) ([]schema.Resting, error)
 	ReadWaitings(repoId []uint8) ([]schema.Waiting, error)

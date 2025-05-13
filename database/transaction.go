@@ -48,6 +48,9 @@ type Transaction interface {
 	UpdateDReportTrouble(repoId []uint8, trouble schema.CleanText) error
 	UpdateDReportNote(repoId []uint8, note schema.CleanText) error
 
+	CreateSite(repoId []uint8, name schema.CleanText) ([]uint8, error)
+	UpdateSiteNote(siteId []uint8, shortNote schema.CleanText) error
+
 	CreateLocation(
 		repoId []uint8,
 		label schema.CleanText,

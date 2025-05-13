@@ -9,10 +9,10 @@ import (
 )
 
 func (ti TiDbTx) CreateOrg(name schema.CleanText, email schema.CleanText) ([]uint8, error) {
-	if len(name) == 0 || len(name) > schema.MAX_SHORT_TEXT_LEN {
+	if len := len(name); len == 0 || len > schema.MAX_SHORT_TEXT_LEN {
 		return nil, errors.New("unexpected name length")
 	}
-	if len(email) == 0 || len(name) > schema.MAX_SHORT_TEXT_LEN {
+	if len := len(email); len == 0 || len > schema.MAX_SHORT_TEXT_LEN {
 		return nil, errors.New("unexpected email length")
 	}
 

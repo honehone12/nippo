@@ -22,6 +22,7 @@ func (q QPrint) Query(props *viewprops.Props, email schema.CleanText) ([]byte, e
 	report, err := db.ReadDailyReport(repoId)
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return json.Marshal(schema.DailyReportPrint{
+			Sites:     []schema.Site{},
 			Locations: []schema.Location{},
 			Waitings:  []schema.Waiting{},
 			Loadings:  []schema.Loading{},
@@ -53,6 +54,13 @@ func (q QPrint) Query(props *viewprops.Props, email schema.CleanText) ([]byte, e
 		if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, err
 		}
+	}
+
+	sites, err := db.ReadSites(repoId)
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		sites = []schema.Site{}
+	} else if err != nil {
+		return nil, err
 	}
 
 	locs, err := db.ReadLocations(repoId)
@@ -87,6 +95,7 @@ func (q QPrint) Query(props *viewprops.Props, email schema.CleanText) ([]byte, e
 		DailyReport: report,
 		MorningCall: mCall,
 		EveningCall: eCall,
+		Sites:       sites,
 		Locations:   locs,
 		Waitings:    waits,
 		Loadings:    loads,

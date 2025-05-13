@@ -12,6 +12,7 @@ type DailyReportPrint struct {
 	MorningCall *MorningCall `json:"morning_call"`
 	EveningCall *EveningCall `json:"evening_call"`
 
+	Sites     []Site     `json:"sites"`
 	Locations []Location `json:"locations"`
 	Waitings  []Waiting  `json:"waitings"`
 	Loadings  []Loading  `json:"loadings"`

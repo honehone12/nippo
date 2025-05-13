@@ -132,6 +132,23 @@ func ReplyLocNote() []messaging_api.MessageInterface {
 	}
 }
 
+func ReplySiteName() []messaging_api.MessageInterface {
+	return []messaging_api.MessageInterface{
+		messaging_api.TextMessage{
+			Text: "現場名を入力してください",
+		},
+	}
+}
+
+func ReplySiteNote() []messaging_api.MessageInterface {
+	return []messaging_api.MessageInterface{
+		messaging_api.TextMessage{
+			Text:       "その他追加する事項を入力してください",
+			QuickReply: QuickRepSiteNote(),
+		},
+	}
+}
+
 func ReplyLoading() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{

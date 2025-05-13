@@ -19,7 +19,7 @@ func (ti TiDbTx) CreateMorningCall(
 	if len(photo) > schema.MAX_SHORT_TEXT_LEN {
 		return nil, errors.New("unexpected photo length")
 	}
-	if len(name) <= 1 || len(name) > schema.MAX_SHORT_TEXT_LEN {
+	if len := len(name); len == 0 || len > schema.MAX_SHORT_TEXT_LEN {
 		return nil, errors.New("unexpected name length")
 	}
 
@@ -119,7 +119,7 @@ func (ti TiDbTx) UpdateMCallCarNumber(callId []uint8, carNumber schema.CleanText
 	if len(callId) != schema.ID_LEN {
 		return errors.New("unexpected id length")
 	}
-	if len(carNumber) == 0 || len(carNumber) > schema.MAX_SHORT_TEXT_LEN {
+	if len := len(carNumber); len == 0 || len > schema.MAX_SHORT_TEXT_LEN {
 		return errors.New("unexpected car number length")
 	}
 
@@ -153,10 +153,10 @@ func (ti TiDbTx) CreateEveningCall(
 	if len(photo) > schema.MAX_SHORT_TEXT_LEN {
 		return nil, errors.New("unexpected photo length")
 	}
-	if len(name) <= 1 || len(name) > schema.MAX_SHORT_TEXT_LEN {
+	if len := len(name); len == 0 || len > schema.MAX_SHORT_TEXT_LEN {
 		return nil, errors.New("unexpected name length")
 	}
-	if len(carNum) == 0 || len(carNum) > schema.MAX_SHORT_TEXT_LEN {
+	if len := len(carNum); len == 0 || len > schema.MAX_SHORT_TEXT_LEN {
 		return nil, errors.New("unexpected car number length")
 	}
 
