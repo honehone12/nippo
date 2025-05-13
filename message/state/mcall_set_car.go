@@ -1,6 +1,7 @@
 package state
 
 import (
+	"errors"
 	"nippo/database"
 	"nippo/input"
 	"nippo/log"
@@ -23,14 +24,18 @@ func (s StMCallSetCar) Run(
 	if ok {
 		t, ok := e.Message.(webhook.TextMessageContent)
 		if ok {
+			if len(user.CurrentOperation) == 0 {
+				return errors.New("user does not have current call")
+			}
+
 			text := input.Clean(t.Text)
 			err := props.Db().Tx(func(tx database.Transaction) error {
-				err := tx.UpdateMCallCarNumber(user.Id, text)
+				err := tx.UpdateMCallCarNumber(user.CurrentOperation, text)
 				if err != nil {
 					return err
 				}
 
-				return tx.UpdateUserNextState(user.Id, ST_MCALL_NOTE)
+				return tx.UpdateUserNextState(user.Id, ST_MCALL_LICENSE_EXP)
 			})
 			if err != nil {
 				return err
@@ -38,7 +43,7 @@ func (s StMCallSetCar) Run(
 
 			req := messaging_api.ReplyMessageRequest{
 				ReplyToken: e.ReplyToken,
-				Messages:   reply.ReplyMCallNote(),
+				Messages:   reply.ReplyLicenseExp(),
 			}
 
 			_, err = props.Api().ReplyMessage(&req)

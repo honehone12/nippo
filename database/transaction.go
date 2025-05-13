@@ -2,6 +2,7 @@ package database
 
 import (
 	"nippo/schema"
+	"time"
 )
 
 type Transaction interface {
@@ -23,6 +24,7 @@ type Transaction interface {
 	UpdateMCallHealth(callId []uint8) error
 	UpdateMCallCarCheck(CallId []uint8) error
 	UpdateMCallCarNumber(callId []uint8, carNumber schema.CleanText) error
+	UpdateMCallLicenseExp(callId []uint8, exp time.Time) error
 	UpdateMCallNote(callId []uint8, note schema.CleanText) error
 
 	CreateEveningCall(

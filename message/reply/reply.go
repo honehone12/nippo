@@ -27,6 +27,15 @@ func ReplyUserSetEmail() []messaging_api.MessageInterface {
 	}
 }
 
+func ReplyLicenseExp() []messaging_api.MessageInterface {
+	return []messaging_api.MessageInterface{
+		messaging_api.TextMessage{
+			Text:       "免許証の有効期限を入力してください",
+			QuickReply: QuickRepLicenseExp(),
+		},
+	}
+}
+
 func ReplyAlcPhoto() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{

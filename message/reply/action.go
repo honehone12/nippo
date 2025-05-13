@@ -4,6 +4,7 @@ import "github.com/line/line-bot-sdk-go/v8/linebot/messaging_api"
 
 const IGNORE_TXT_ACT_DATA = "IGNORE_TXT"
 const USER_SETTING_ACT_DATA = "USER_SETTING"
+const LICENSE_EXP_ACT_DATA = "LICENSE_EXPIRATION"
 const START_DUTY_ACT_DATA = "START_DUTY"
 const START_WAITING_ACT_DATA = "START_WAITING"
 const START_LOADING_ACT_DATA = "START_LOADING"
@@ -20,6 +21,14 @@ func ActionUserSetting() messaging_api.PostbackAction {
 		Data:        USER_SETTING_ACT_DATA,
 		DisplayText: "ユーザー設定を行う",
 		InputOption: "openKeyboard",
+	}
+}
+
+func ActionLicenseExp() messaging_api.DatetimePickerAction {
+	return messaging_api.DatetimePickerAction{
+		Label: "有効期限を入力する",
+		Data:  LICENSE_EXP_ACT_DATA,
+		Mode:  "date",
 	}
 }
 
@@ -204,7 +213,7 @@ func ActionEndDuty() messaging_api.PostbackAction {
 	}
 }
 
-func ActionReset() messaging_api.PostbackAction {
+func ActionDecline() messaging_api.PostbackAction {
 	return messaging_api.PostbackAction{
 		Label:       "辞退",
 		Data:        DECLINE_ACT_DATA,

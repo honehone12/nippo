@@ -12,6 +12,10 @@ func NowJst() time.Time {
 	return time.Now().In(jST)
 }
 
+func ParseDateInJst(d string) (time.Time, error) {
+	return time.ParseInLocation(time.DateOnly, d, jST)
+}
+
 func AToYear(y string) (int, error) {
 	year, err := strconv.Atoi(y)
 	if err != nil {

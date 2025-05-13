@@ -52,16 +52,17 @@ type MorningCall struct {
 	UpdatedAt time.Time      `json:"updated_at"`
 	DeletedAt gorm.DeletedAt `gorm:"index" json:"deleted_at"`
 
-	Caller          CleanText  `gorm:"size:100" json:"caller"`
-	Name            CleanText  `gorm:"size:100" json:"name"`
-	CarNumber       CleanText  `gorm:"size:100" json:"car_number"`
-	Method          CallMethod `json:"method"`
-	UsingAlcChecker bool       `json:"using_alc_checker"`
-	AlcCheck        bool       `json:"alc_check"`
-	AlcPhoto        string     `gorm:"size:100" json:"alc_photo"`
-	HealthCheck     bool       `json:"health_check"`
-	CarCheck        bool       `json:"car_check"`
-	Note            CleanText  `gorm:"size:5000" json:"note"`
+	Caller            CleanText  `gorm:"size:100" json:"caller"`
+	Name              CleanText  `gorm:"size:100" json:"name"`
+	LicenseExpiration time.Time  `json:"license_expiration"`
+	CarNumber         CleanText  `gorm:"size:100" json:"car_number"`
+	Method            CallMethod `json:"method"`
+	UsingAlcChecker   bool       `json:"using_alc_checker"`
+	AlcCheck          bool       `json:"alc_check"`
+	AlcPhoto          string     `gorm:"size:100" json:"alc_photo"`
+	HealthCheck       bool       `json:"health_check"`
+	CarCheck          bool       `json:"car_check"`
+	Note              CleanText  `gorm:"size:5000" json:"note"`
 
 	UserId []uint8 `gorm:"not null;type:binary(16)" json:"user_id"`
 }

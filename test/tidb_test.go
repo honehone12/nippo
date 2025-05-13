@@ -123,6 +123,11 @@ func TestMorningCall(t *testing.T) {
 			return err
 		}
 
+		err = tx.UpdateMCallLicenseExp(morningId, time.Now())
+		if err != nil {
+			return err
+		}
+
 		return tx.UpdateMCallNote(morningId, "【ラベル】\n無し\n【ラベル】\n無し")
 	})
 	if err != nil {

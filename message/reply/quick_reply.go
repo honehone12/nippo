@@ -10,6 +10,14 @@ func QuickRepConfigMenu() *messaging_api.QuickReply {
 	}
 }
 
+func QuickRepLicenseExp() *messaging_api.QuickReply {
+	return &messaging_api.QuickReply{
+		Items: []messaging_api.QuickReplyItem{
+			{Action: ActionLicenseExp()},
+		},
+	}
+}
+
 func QuickRepMCallNote() *messaging_api.QuickReply {
 	return &messaging_api.QuickReply{
 		Items: []messaging_api.QuickReplyItem{
@@ -32,7 +40,7 @@ func QuickRepAlcPhoto() *messaging_api.QuickReply {
 	return &messaging_api.QuickReply{
 		Items: []messaging_api.QuickReplyItem{
 			{Action: ActionAlcPhoto()},
-			{Action: ActionReset()},
+			{Action: ActionDecline()},
 		},
 	}
 }
@@ -158,7 +166,7 @@ func QuickRepFlag() *messaging_api.QuickReply {
 	return &messaging_api.QuickReply{
 		Items: []messaging_api.QuickReplyItem{
 			{Action: ActionFlagTrue()},
-			{Action: ActionReset()},
+			{Action: ActionDecline()},
 		},
 	}
 }
