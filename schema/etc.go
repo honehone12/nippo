@@ -22,7 +22,8 @@ type DailyReportPrint struct {
 type Photos struct {
 	MorningAlc []byte `json:"morning_alc"`
 	EveningAlc []byte `json:"evening_alc"`
-	Meter      []byte `json:"meter"`
+	MorningMtr []byte `json:"morning_mtr"`
+	EveningMtr []byte `json:"evening_mtr"`
 }
 
 type UserMini struct {
@@ -43,4 +44,8 @@ type AuthOrg struct {
 
 type Invited struct {
 	UserEmail CleanText `json:"user_email"`
+}
+
+type Promoted struct {
+	SubAdmin bool `json:"sub_admin"`
 }

@@ -33,6 +33,7 @@ type User struct {
 	DeletedAt gorm.DeletedAt `gorm:"index" json:"deleted_at"`
 
 	Name             CleanText `gorm:"size:100" json:"name"`
+	SubAdmin         bool      `json:"sub_admin"`
 	Email            CleanText `gorm:"unique;size:100;index" json:"email"`
 	LineId           CleanText `gorm:"unique;not null;type:char(33);index" json:"line_id"`
 	CurrentOperation []uint8   `gorm:"type:binary(16)" json:"-"`

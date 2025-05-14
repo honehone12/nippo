@@ -16,13 +16,19 @@ type QDownload struct {
 	repoId uuid.UUID
 }
 
-func (q QDownload) Query(props *viewprops.Props, email schema.CleanText) ([]byte, error) {
+func (q QDownload) Query(props *viewprops.Props, viewer *viewprops.Viewer) ([]byte, error) {
 	db := props.Db()
 	repoId := q.repoId[:]
+	photos := schema.Photos{
+		MorningAlc: []byte{},
+		EveningAlc: []byte{},
+		MorningMtr: []byte{},
+		EveningMtr: []byte{},
+	}
 
-	report, err := db.ReadDailyReport(repoId)
+	report, err := db.ReadDRepoDownload(repoId)
 	if errors.Is(err, gorm.ErrRecordNotFound) {
-		return json.Marshal(schema.Photos{})
+		return json.Marshal(photos)
 	} else if err != nil {
 		return nil, err
 	}
@@ -35,55 +41,55 @@ func (q QDownload) Query(props *viewprops.Props, email schema.CleanText) ([]byte
 		return nil, errors.New("viewing wrong org")
 	}
 
-	var meter []byte
+	if !viewer.Privileged() && !bytes.Equal(report.UserId, viewer.Id()) {
+		return nil, errors.New("no permission for viewing other user")
+	}
+
+	if len(report.MorningMeterPhoto) > 0 {
+		url, err := sss.GetPresigned(props, report.MorningMeterPhoto)
+		if err != nil {
+			return nil, err
+		}
+
+		photos.MorningMtr = []byte(url)
+	}
+
 	if len(report.EveningMeterPhoto) > 0 {
 		url, err := sss.GetPresigned(props, report.EveningMeterPhoto)
 		if err != nil {
 			return nil, err
 		}
 
-		meter = []byte(url)
-	} else {
-		meter = []byte{}
+		photos.EveningMtr = []byte(url)
 	}
 
-	var morningAlc []byte
 	if len(report.MorningCallId) > 0 {
-		mCall, err := db.ReadMorningCall(report.MorningCallId)
+		alc, err := db.ReadMCallAlcPhoto(report.MorningCallId)
 		if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, err
-		} else if err == nil && len(mCall.AlcPhoto) > 0 {
-			url, err := sss.GetPresigned(props, mCall.AlcPhoto)
+		} else if len(alc) > 0 {
+			url, err := sss.GetPresigned(props, alc)
 			if err != nil {
 				return nil, err
 			}
 
-			morningAlc = []byte(url)
+			photos.MorningAlc = []byte(url)
 		}
-	} else {
-		morningAlc = []byte{}
 	}
 
-	var eveningAlc []byte
 	if len(report.EveningCallId) > 0 {
-		eCall, err := db.ReadEveningCall(report.EveningCallId)
+		alc, err := db.ReadECallAlcPhoto(report.EveningCallId)
 		if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, err
-		} else if err == nil && len(eCall.AlcPhoto) > 0 {
-			url, err := sss.GetPresigned(props, eCall.AlcPhoto)
+		} else if len(alc) > 0 {
+			url, err := sss.GetPresigned(props, alc)
 			if err != nil {
 				return nil, err
 			}
 
-			eveningAlc = []byte(url)
+			photos.EveningAlc = []byte(url)
 		}
-	} else {
-		eveningAlc = []byte{}
 	}
 
-	return json.Marshal(schema.Photos{
-		MorningAlc: morningAlc,
-		EveningAlc: eveningAlc,
-		Meter:      meter,
-	})
+	return json.Marshal(photos)
 }

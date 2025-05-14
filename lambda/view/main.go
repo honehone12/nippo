@@ -82,7 +82,7 @@ func configAws() error {
 	return nil
 }
 
-func viewerEmail(auth map[string]any) (schema.CleanText, error) {
+func claimedEmail(auth map[string]any) (schema.CleanText, error) {
 	claims, ok := auth["claims"].(map[string]any)
 	if !ok {
 		return "", errors.New("auth not found")
@@ -105,26 +105,35 @@ func handler(
 	ctx context.Context,
 	req events.APIGatewayProxyRequest,
 ) (events.APIGatewayProxyResponse, error) {
-	viewerEmail, err := viewerEmail(req.RequestContext.Authorizer)
+	email, err := claimedEmail(req.RequestContext.Authorizer)
 	if err != nil {
 		log.Warn(err)
 		return response.BadRequest(), nil
 	}
 
-	viewerOrg, err := db.ReadUserOrgId_Email(viewerEmail)
+	orgId := env.orgId[:]
+	user, err := db.ReadUserBasic_Email(email)
 	if err != nil {
-		log.Warn(err)
+		log.Error(err)
 		return response.Internal(), nil
 	}
-	if !bytes.Equal(viewerOrg, env.orgId[:]) {
+	if !bytes.Equal(user.OrgId, orgId) {
 		log.Warn("viewing user has wrong org id")
 		return response.BadRequest(), nil
 	}
+
+	orgEmail, err := db.ReadOrgEmail(orgId)
+	if err != nil {
+		log.Error(err)
+		return response.Internal(), nil
+	}
+	admin := orgEmail == email
 
 	params := req.QueryStringParameters
 
 	q, err := q.FromParams(params)
 	if err != nil {
+		log.Warn(err)
 		return response.BadRequest(), nil
 	}
 
@@ -139,7 +148,16 @@ func handler(
 		cognitoClient,
 	)
 
-	b, err := q.Query(props, viewerEmail)
+	viewer := viewprops.NewViewer(
+		user.Id,
+		user.CreatedAt,
+		user.Name,
+		email,
+		admin,
+		user.SubAdmin,
+	)
+
+	b, err := q.Query(props, viewer)
 	if err != nil {
 		log.Error(err)
 		return response.Internal(), nil

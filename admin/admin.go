@@ -45,3 +45,36 @@ func Invite(props *adminprops.Props, form url.Values) ([]byte, error) {
 
 	return json.Marshal(invited)
 }
+
+func Promote(props *adminprops.Props, form url.Values) ([]byte, error) {
+	userIdStr := form.Get("user")
+	if len(userIdStr) == 0 {
+		return nil, errors.New("invalid form")
+	}
+
+	userUuid, err := uuid.Parse(userIdStr)
+	if err != nil {
+		return nil, err
+	}
+
+	userId := userUuid[:]
+	db := props.Db()
+	orgId, err := db.ReadUserOrgId(userId)
+	if err != nil {
+		return nil, err
+	}
+	if !bytes.Equal(orgId, props.OrgId()) {
+		return nil, errors.New("wrong org")
+	}
+
+	err = db.Once().UpdateUserSubAdmin(userId, true)
+	if err != nil {
+		return nil, err
+	}
+
+	privileged := schema.Promoted{
+		SubAdmin: true,
+	}
+
+	return json.Marshal(privileged)
+}

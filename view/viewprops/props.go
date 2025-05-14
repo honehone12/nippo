@@ -3,11 +3,68 @@ package viewprops
 import (
 	"context"
 	"nippo/database"
+	"nippo/schema"
+	"time"
 
 	"github.com/aws/aws-sdk-go-v2/service/cognitoidentityprovider"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/google/uuid"
 )
+
+type Viewer struct {
+	id        []uint8
+	createdAt time.Time
+	name      schema.CleanText
+	email     schema.CleanText
+	admin     bool
+	subAdmin  bool
+}
+
+func NewViewer(
+	id []uint8,
+	created_at time.Time,
+	name schema.CleanText,
+	email schema.CleanText,
+	admin bool,
+	subAdmin bool,
+) *Viewer {
+	return &Viewer{
+		id,
+		created_at,
+		name,
+		email,
+		admin,
+		subAdmin,
+	}
+}
+
+func (v *Viewer) Id() []uint8 {
+	return v.id
+}
+
+func (v *Viewer) CreatedAt() time.Time {
+	return v.createdAt
+}
+
+func (v *Viewer) Name() schema.CleanText {
+	return v.name
+}
+
+func (v *Viewer) Email() schema.CleanText {
+	return v.email
+}
+
+func (v *Viewer) Admin() bool {
+	return v.admin
+}
+
+func (v *Viewer) SubAdmin() bool {
+	return v.subAdmin
+}
+
+func (v *Viewer) Privileged() bool {
+	return v.admin || v.subAdmin
+}
 
 type Props struct {
 	ctx           context.Context

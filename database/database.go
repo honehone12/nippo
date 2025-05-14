@@ -14,11 +14,13 @@ type Database interface {
 	ReadUser_Line(lineId schema.CleanText) (*schema.User, error)
 	ReadUserOrgId(id []uint8) ([]uint8, error)
 	ReadUserOrgId_Email(email schema.CleanText) ([]uint8, error)
+	ReadUserBasic_Email(email schema.CleanText) (*schema.User, error)
 	ReadUserEmail(id []uint8) (schema.CleanText, error)
 	ReadUsersBasic(orgId []uint8) ([]schema.User, error)
 
 	ReadMorningCall(id []uint8) (*schema.MorningCall, error)
 	ReadMCallCarNum(id []uint8) (schema.CleanText, error)
+	ReadMCallAlcPhoto(id []uint8) (string, error)
 	ReadMorningCalls(
 		userId []uint8,
 		from time.Time,
@@ -26,6 +28,7 @@ type Database interface {
 	) ([]schema.MorningCall, error)
 
 	ReadEveningCall(id []uint8) (*schema.EveningCall, error)
+	ReadECallAlcPhoto(id []uint8) (string, error)
 	ReadEveningCalls(
 		userId []uint8,
 		from time.Time,
@@ -33,6 +36,7 @@ type Database interface {
 	) ([]schema.EveningCall, error)
 
 	ReadDailyReport(id []uint8) (*schema.DailyReport, error)
+	ReadDRepoDownload(id []uint8) (*schema.DailyReport, error)
 	ReadDRepoCarNum(id []uint8) (schema.CleanText, error)
 	ReadDailyReports(
 		userId []uint8,

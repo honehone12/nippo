@@ -19,7 +19,7 @@ type QCalls struct {
 	month  time.Month
 }
 
-func (q QCalls) Query(props *viewprops.Props, email schema.CleanText) ([]byte, error) {
+func (q QCalls) Query(props *viewprops.Props, viewer *viewprops.Viewer) ([]byte, error) {
 	db := props.Db()
 	userId := q.userId[:]
 
@@ -29,6 +29,10 @@ func (q QCalls) Query(props *viewprops.Props, email schema.CleanText) ([]byte, e
 	}
 	if !bytes.Equal(orgId, props.OrgId()) {
 		return nil, errors.New("viewing wrong org")
+	}
+
+	if !viewer.Privileged() && !bytes.Equal(userId, viewer.Id()) {
+		return nil, errors.New("no permission for viewing other user")
 	}
 
 	from, to := timeconv.UtcRangeFromJstMonth(q.year, q.month)

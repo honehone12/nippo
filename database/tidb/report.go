@@ -73,6 +73,25 @@ func (ti TiDb) ReadDRepoCarNum(id []uint8) (schema.CleanText, error) {
 	return repo.CarNumber, nil
 }
 
+func (ti TiDb) ReadDRepoDownload(id []uint8) (*schema.DailyReport, error) {
+	if len(id) != schema.ID_LEN {
+		return nil, errors.New("unexpected report id length")
+	}
+
+	repo := schema.DailyReport{Id: id}
+	if res := ti.orm.Select(
+		"user_id",
+		"morning_call_id",
+		"evening_call_id",
+		"morning_meter_photo",
+		"evening_meter_photo",
+	).Take(&repo); res.Error != nil {
+		return nil, res.Error
+	}
+
+	return &repo, nil
+}
+
 func (ti TiDb) ReadDailyReports(
 	userId []uint8,
 	from time.Time,

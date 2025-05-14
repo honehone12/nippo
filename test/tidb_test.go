@@ -88,6 +88,11 @@ func TestUserSetting(t *testing.T) {
 			return err
 		}
 
+		err = tx.UpdateUserSubAdmin(userId, true)
+		if err != nil {
+			return err
+		}
+
 		return tx.UpdateUserNextState(userId, 9)
 	})
 	if err != nil {
@@ -442,6 +447,9 @@ func TestReadFromOrg(t *testing.T) {
 	if readUser.Email != EMAIL {
 		t.Fatal("read wrong user")
 	}
+	if !readUser.SubAdmin {
+		t.Fatal("read wrong user")
+	}
 
 	{
 		readOrgId, err := db.ReadUserOrgId(userId)
@@ -473,6 +481,19 @@ func TestReadFromOrg(t *testing.T) {
 		}
 	}
 
+	{
+		readUser, err := db.ReadUserBasic_Email(EMAIL)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if !readUser.SubAdmin || readUser.Name != USER_NAME {
+			t.Fatal("read wrong user")
+		}
+		if !bytes.Equal(readUser.OrgId, orgId) || !bytes.Equal(readUser.Id, userId) {
+			t.Fatal("read wrong user")
+		}
+	}
+
 	users, err := db.ReadUsersBasic(orgId)
 	if err != nil {
 		t.Fatal(err)
@@ -492,8 +513,24 @@ func TestReadFromOrg(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	if !bytes.Equal(mCall.UserId, userId) {
+		t.Fatal("read wrong morning call")
+	}
+	if mCall.CarNumber != CAR_NUMBER {
+		t.Fatal("read wrong morning call")
+	}
 	if mCall.AlcPhoto != ALC_PHOTO {
 		t.Fatal("read wrong morning call")
+	}
+
+	{
+		alc, err := db.ReadMCallAlcPhoto(morningId)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if alc != ALC_PHOTO {
+			t.Fatal("read wrong morning call")
+		}
 	}
 
 	mCalls, err := db.ReadMorningCalls(userId, from, to)
@@ -512,8 +549,24 @@ func TestReadFromOrg(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	if !bytes.Equal(eCall.UserId, userId) {
+		t.Fatal("read wrong evening call")
+	}
+	if eCall.CarNumber != CAR_NUMBER {
+		t.Fatal("read wrong morning call")
+	}
 	if eCall.AlcPhoto != ALC_PHOTO {
 		t.Fatal("read wrong evening call")
+	}
+
+	{
+		alc, err := db.ReadECallAlcPhoto(morningId)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if alc != ALC_PHOTO {
+			t.Fatal("read wrong evening call")
+		}
 	}
 
 	eCalls, err := db.ReadEveningCalls(userId, from, to)
@@ -532,6 +585,9 @@ func TestReadFromOrg(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	if !bytes.Equal(report.UserId, userId) {
+		t.Fatal("read wrong daily report")
+	}
 	if report.MorningMeterPhoto != MTR_PHOTO {
 		t.Fatal("read wrong daily report")
 	}
@@ -546,6 +602,34 @@ func TestReadFromOrg(t *testing.T) {
 	}
 	if report.NonDutyDistance != 1 {
 		t.Fatal("read wrong daily report")
+	}
+	if !bytes.Equal(report.MorningCallId, morningId) {
+		t.Fatal("read wrong daily report")
+	}
+	if !bytes.Equal(report.EveningCallId, eveningId) {
+		t.Fatal("read wrong daily report")
+	}
+
+	{
+		report, err := db.ReadDRepoDownload(reportId)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if !bytes.Equal(report.UserId, userId) {
+			t.Fatal("read wrong daily report")
+		}
+		if report.MorningMeterPhoto != MTR_PHOTO {
+			t.Fatal("read wrong daily report")
+		}
+		if report.EveningMeterPhoto != MTR_PHOTO {
+			t.Fatal("read wrong daily report")
+		}
+		if !bytes.Equal(report.MorningCallId, morningId) {
+			t.Fatal("read wrong daily report")
+		}
+		if !bytes.Equal(report.EveningCallId, eveningId) {
+			t.Fatal("read wrong daily report")
+		}
 	}
 
 	reports, err := db.ReadDailyReports(userId, from, to)

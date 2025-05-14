@@ -11,6 +11,7 @@ type Transaction interface {
 
 	CreateUser(orgId []uint8, lineId schema.CleanText) ([]uint8, error)
 	UpdateUserName(userId []uint8, name schema.CleanText) error
+	UpdateUserSubAdmin(userId []uint8, subAdmin bool) error
 	UpdateUserEmail(userId []uint8, email schema.CleanText) error
 	UpdateUserCurrentOpe(userId []uint8, opeId []uint8) error
 	UpdateUserCurrentDuty(userId []uint8, repoId []uint8) error

@@ -92,6 +92,25 @@ func (ti TiDb) ReadUserOrgId_Email(email schema.CleanText) ([]uint8, error) {
 	return user.OrgId, nil
 }
 
+func (ti TiDb) ReadUserBasic_Email(email schema.CleanText) (*schema.User, error) {
+	if len := len(email); len == 0 || len > schema.MAX_SHORT_TEXT_LEN {
+		return nil, errors.New("unexpected line id length")
+	}
+
+	user := schema.User{}
+	if res := ti.orm.Select(
+		"id",
+		"created_at",
+		"name",
+		"sub_admin",
+		"org_id",
+	).Take(&user, "email = ?", email); res.Error != nil {
+		return nil, res.Error
+	}
+
+	return &user, nil
+}
+
 func (ti TiDb) ReadUserEmail(id []uint8) (schema.CleanText, error) {
 	if len(id) != schema.ID_LEN {
 		return "", errors.New("unexpected user id length")
@@ -135,6 +154,16 @@ func (ti TiDbTx) UpdateUserName(userId []uint8, name schema.CleanText) error {
 
 	user := schema.User{Id: userId}
 	res := ti.orm.Model(&user).Update("name", name)
+	return res.Error
+}
+
+func (ti TiDbTx) UpdateUserSubAdmin(userId []uint8, subAdmin bool) error {
+	if len(userId) != schema.ID_LEN {
+		return errors.New("unexpected id length")
+	}
+
+	user := schema.User{Id: userId}
+	res := ti.orm.Model(&user).Update("sub_admin", subAdmin)
 	return res.Error
 }
 

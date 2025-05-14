@@ -85,7 +85,7 @@ func validateHeaders(headers map[string]string) error {
 	return nil
 }
 
-func adminEmail(auth map[string]any) (schema.CleanText, error) {
+func claimedEmail(auth map[string]any) (schema.CleanText, error) {
 	claims, ok := auth["claims"].(map[string]any)
 	if !ok {
 		return "", errors.New("auth not found")
@@ -128,28 +128,29 @@ func handler(
 		return response.BadRequest(), nil
 	}
 
-	adminEmail, err := adminEmail(req.RequestContext.Authorizer)
+	claimedEmail, err := claimedEmail(req.RequestContext.Authorizer)
 	if err != nil {
 		log.Warn(err)
 		return response.BadRequest(), nil
 	}
 
-	adminOrg, err := db.ReadUserOrgId_Email(adminEmail)
+	orgId := env.orgId[:]
+	claimedOrg, err := db.ReadUserOrgId_Email(claimedEmail)
 	if err != nil {
 		log.Warn(err)
 		return response.Internal(), nil
 	}
-	if !bytes.Equal(adminOrg, env.orgId[:]) {
+	if !bytes.Equal(claimedOrg, orgId) {
 		log.Warn("viewing user has wrong org id")
 		return response.BadRequest(), nil
 	}
 
-	orgEmail, err := db.ReadOrgEmail(adminOrg)
+	orgEmail, err := db.ReadOrgEmail(orgId)
 	if err != nil {
 		log.Error(err)
 		return response.Internal(), nil
 	}
-	if orgEmail != adminEmail {
+	if orgEmail != claimedEmail {
 		log.Warn("not admin")
 		return response.BadRequest(), nil
 	}
@@ -175,6 +176,15 @@ func handler(
 			log.Error(err)
 			return response.Internal(), nil
 		}
+
+		return response.Json(b), nil
+	case "promote":
+		b, err := admin.Promote(props, form)
+		if err != nil {
+			log.Error(err)
+			return response.Internal(), nil
+		}
+
 		return response.Json(b), nil
 	default:
 		log.Warn("invalid operation")
