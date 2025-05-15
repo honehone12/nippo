@@ -92,7 +92,7 @@ func (ti TiDb) ReadDRepoDownload(id []uint8) (*schema.DailyReport, error) {
 	return &repo, nil
 }
 
-func (ti TiDb) ReadDailyReports(
+func (ti TiDb) ReadDailyReportsMini(
 	userId []uint8,
 	from time.Time,
 	to time.Time,
@@ -103,7 +103,11 @@ func (ti TiDb) ReadDailyReports(
 
 	user := schema.User{Id: userId}
 	var reports []schema.DailyReport
-	err := ti.orm.Model(&user).Where(
+	err := ti.orm.Model(&user).Select(
+		"id",
+		"created_at",
+		"updated_at",
+	).Where(
 		"created_at >= ? AND created_at < ?",
 		from,
 		to,

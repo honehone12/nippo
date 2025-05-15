@@ -32,6 +32,12 @@ type UserMini struct {
 	Name      CleanText `json:"name"`
 }
 
+type DailyReportMini struct {
+	Id        []uint8   `json:"id"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+}
+
 type Users struct {
 	Admin      bool       `json:"admin"`
 	Users      []UserMini `json:"users"`

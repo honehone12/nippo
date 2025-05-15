@@ -37,12 +37,21 @@ func (q QReports) Query(props *viewprops.Props, viewer *viewprops.Viewer) ([]byt
 
 	from, to := timeconv.UtcRangeFromJstMonth(q.year, q.month)
 
-	reports, err := db.ReadDailyReports(userId, from, to)
+	reports, err := db.ReadDailyReportsMini(userId, from, to)
+	lists := []schema.DailyReportMini{}
 	if errors.Is(err, gorm.ErrRecordNotFound) {
-		reports = []schema.DailyReport{}
+		return json.Marshal(lists)
 	} else if err != nil {
 		return nil, err
 	}
 
-	return json.Marshal(reports)
+	for _, r := range reports {
+		lists = append(lists, schema.DailyReportMini{
+			Id:        r.Id,
+			CreatedAt: r.CreatedAt,
+			UpdatedAt: r.UpdatedAt,
+		})
+	}
+
+	return json.Marshal(lists)
 }

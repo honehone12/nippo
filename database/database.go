@@ -16,7 +16,7 @@ type Database interface {
 	ReadUserOrgId_Email(email schema.CleanText) ([]uint8, error)
 	ReadUserBasic_Email(email schema.CleanText) (*schema.User, error)
 	ReadUserEmail(id []uint8) (schema.CleanText, error)
-	ReadUsersBasic(orgId []uint8) ([]schema.User, error)
+	ReadUsersMini(orgId []uint8) ([]schema.User, error)
 
 	ReadMorningCall(id []uint8) (*schema.MorningCall, error)
 	ReadMCallCarNum(id []uint8) (schema.CleanText, error)
@@ -38,7 +38,7 @@ type Database interface {
 	ReadDailyReport(id []uint8) (*schema.DailyReport, error)
 	ReadDRepoDownload(id []uint8) (*schema.DailyReport, error)
 	ReadDRepoCarNum(id []uint8) (schema.CleanText, error)
-	ReadDailyReports(
+	ReadDailyReportsMini(
 		userId []uint8,
 		from time.Time,
 		to time.Time,

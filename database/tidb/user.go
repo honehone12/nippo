@@ -124,7 +124,7 @@ func (ti TiDb) ReadUserEmail(id []uint8) (schema.CleanText, error) {
 	return user.Email, nil
 }
 
-func (ti TiDb) ReadUsersBasic(orgId []uint8) ([]schema.User, error) {
+func (ti TiDb) ReadUsersMini(orgId []uint8) ([]schema.User, error) {
 	if len(orgId) != schema.ID_LEN {
 		return nil, errors.New("unexpected org id length")
 	}
@@ -135,7 +135,6 @@ func (ti TiDb) ReadUsersBasic(orgId []uint8) ([]schema.User, error) {
 		"id",
 		"created_at",
 		"name",
-		"email",
 	).Association("Users").Find(&users)
 	if err != nil {
 		return nil, err

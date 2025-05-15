@@ -53,7 +53,7 @@ func (s StMCallLicenseExp) Run(
 			}
 
 			err = props.Db().Tx(func(tx database.Transaction) error {
-				err := tx.UpdateMCallLicenseExp(user.CurrentOperation, exp)
+				err := tx.UpdateMCallLicenseExp(user.CurrentOperation, exp.UTC())
 				if err != nil {
 					return err
 				}

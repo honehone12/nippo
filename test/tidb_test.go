@@ -494,7 +494,7 @@ func TestReadFromOrg(t *testing.T) {
 		}
 	}
 
-	users, err := db.ReadUsersBasic(orgId)
+	users, err := db.ReadUsersMini(orgId)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -632,7 +632,7 @@ func TestReadFromOrg(t *testing.T) {
 		}
 	}
 
-	reports, err := db.ReadDailyReports(userId, from, to)
+	reports, err := db.ReadDailyReportsMini(userId, from, to)
 	if err != nil {
 		t.Fatal(err)
 	}

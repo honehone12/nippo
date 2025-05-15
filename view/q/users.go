@@ -21,7 +21,7 @@ func (q QUsers) Query(props *viewprops.Props, viewer *viewprops.Viewer) ([]byte,
 	}
 
 	if viewer.Privileged() {
-		basics, err := props.Db().ReadUsersBasic(props.OrgId())
+		basics, err := props.Db().ReadUsersMini(props.OrgId())
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return json.Marshal(users)
 		} else if err != nil {
