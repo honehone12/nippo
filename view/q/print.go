@@ -45,6 +45,8 @@ func (q QPrint) Query(props *viewprops.Props, viewer *viewprops.Viewer) ([]byte,
 		return nil, errors.New("no permission for viewing other user")
 	}
 
+	reports.DailyReport = report
+
 	if len(report.MorningCallId) > 0 {
 		mCall, err := db.ReadMorningCall(report.MorningCallId)
 		if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
