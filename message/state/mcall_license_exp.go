@@ -48,7 +48,7 @@ func (s StMCallLicenseExp) Run(
 
 			now := timeconv.NowJst()
 
-			if now.Before(exp) {
+			if now.After(exp) {
 				return errors.New("the date is already expired")
 			}
 
