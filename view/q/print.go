@@ -26,7 +26,7 @@ func (q QPrint) Query(props *viewprops.Props, viewer *viewprops.Viewer) ([]byte,
 		Resings:   []schema.Resting{},
 	}
 
-	report, err := db.ReadDRepoDownload(repoId)
+	report, err := db.ReadDailyReport(repoId)
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return json.Marshal(reports)
 	} else if err != nil {
