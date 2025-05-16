@@ -63,6 +63,7 @@ func (ti TiDb) AutoMigrate() error {
 		&schema.MorningCall{},
 		&schema.EveningCall{},
 		&schema.DailyReport{},
+		&schema.Site{},
 		&schema.Location{},
 		&schema.Waiting{},
 		&schema.Loading{},

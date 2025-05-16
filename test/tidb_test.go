@@ -281,12 +281,12 @@ func TestSite(t *testing.T) {
 			return err
 		}
 
-		err = tx.UpdateUserCurrentOpe(userId, restId)
+		err = tx.UpdateUserCurrentOpe(userId, siteId)
 		if err != nil {
 			return err
 		}
 
-		return tx.UpdateSiteNote(restId, "無し")
+		return tx.UpdateSiteNote(siteId, "無し")
 	})
 	if err != nil {
 		t.Fatal(err)
@@ -296,7 +296,7 @@ func TestSite(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !bytes.Equal(readUser.CurrentOperation, restId) {
+	if !bytes.Equal(readUser.CurrentOperation, siteId) {
 		t.Fatal("read wrong user")
 	}
 }
@@ -560,7 +560,7 @@ func TestReadFromOrg(t *testing.T) {
 	}
 
 	{
-		alc, err := db.ReadECallAlcPhoto(morningId)
+		alc, err := db.ReadECallAlcPhoto(eveningId)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -597,7 +597,7 @@ func TestReadFromOrg(t *testing.T) {
 	if report.MorningMeter != 99 {
 		t.Fatal("read wrong daily report")
 	}
-	if report.EveninggMeter != 100 {
+	if report.EveningMeter != 100 {
 		t.Fatal("read wrong daily report")
 	}
 	if report.NonDutyDistance != 1 {

@@ -29,13 +29,14 @@ func (ti TiDbTx) CreateMorningCall(
 	}
 
 	call := schema.MorningCall{
-		Id:              id[:],
-		Caller:          name,
-		Name:            name,
-		Method:          schema.METHOD_PERSON,
-		UsingAlcChecker: true,
-		AlcCheck:        true,
-		AlcPhoto:        photo,
+		Id:                id[:],
+		Caller:            name,
+		Name:              name,
+		LicenseExpiration: time.Now().UTC(),
+		Method:            schema.METHOD_PERSON,
+		UsingAlcChecker:   true,
+		AlcCheck:          true,
+		AlcPhoto:          photo,
 	}
 	user := schema.User{Id: userId}
 	err = ti.orm.Model(&user).Association("MorningCalls").Append(&call)
