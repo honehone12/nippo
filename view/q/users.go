@@ -15,48 +15,46 @@ type QUsers struct{}
 func (q QUsers) Query(props *viewprops.Props, viewer *viewprops.Viewer) ([]byte, error) {
 	admin := viewer.Admin()
 	users := schema.Users{
-		Admin:      admin,
-		Users:      []schema.UserMini{},
-		Invitables: []schema.UserMini{},
+		Admin: admin,
+		Users: []schema.UserInfo{},
 	}
 
 	if viewer.Privileged() {
-		basics, err := props.Db().ReadUsersMini(props.OrgId())
+		userMinis, err := props.Db().ReadUsersMini(props.OrgId())
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return json.Marshal(users)
 		} else if err != nil {
 			return nil, err
 		}
 
-		for _, u := range basics {
-			user := schema.UserMini{
-				Id:        u.Id,
-				CreatedAt: u.CreatedAt,
-				Name:      u.Name,
-			}
-			users.Users = append(users.Users, user)
-
-			if !admin {
-				continue
+		for _, u := range userMinis {
+			info := schema.UserInfo{
+				User: schema.UserMini{
+					Id:        u.Id,
+					CreatedAt: u.CreatedAt,
+					Name:      u.Name,
+				},
 			}
 
-			if len(u.Email) == 0 {
-				continue
+			if admin && len(u.Email) > 0 {
+				exists, err := cognito.Exists(props, u.Email)
+				if err != nil {
+					return nil, err
+				}
+
+				info.Invitable = !exists
+				info.Promotable = exists && !u.SubAdmin
 			}
 
-			exists, err := cognito.Exists(props, u.Email)
-			if err != nil {
-				return nil, err
-			}
-			if !exists {
-				users.Invitables = append(users.Invitables, user)
-			}
+			users.Users = append(users.Users, info)
 		}
 	} else {
-		users.Users = append(users.Users, schema.UserMini{
-			Id:        viewer.Id(),
-			CreatedAt: viewer.CreatedAt(),
-			Name:      viewer.Name(),
+		users.Users = append(users.Users, schema.UserInfo{
+			User: schema.UserMini{
+				Id:        viewer.Id(),
+				CreatedAt: viewer.CreatedAt(),
+				Name:      viewer.Name(),
+			},
 		})
 	}
 

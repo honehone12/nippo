@@ -39,10 +39,15 @@ type DailyReportMini struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
+type UserInfo struct {
+	User       UserMini `json:"user"`
+	Invitable  bool     `json:"invitable"`
+	Promotable bool     `json:"promotable"`
+}
+
 type Users struct {
-	Admin      bool       `json:"admin"`
-	Users      []UserMini `json:"users"`
-	Invitables []UserMini `json:"invitables"`
+	Admin bool       `json:"admin"`
+	Users []UserInfo `json:"users"`
 }
 
 type AuthOrg struct {
