@@ -18,6 +18,7 @@ const (
 	ST_MCALL_HEALTH
 	ST_MCALL_CAR_CHECK
 	ST_MCALL_SET_CAR
+	ST_MCALL_INSPECTION_EXP
 	ST_MCALL_LICENSE_EXP
 	ST_MCALL_NOTE
 
@@ -77,6 +78,8 @@ func FromIdx(idx schema.StateIdx) (State, error) {
 		return StMCallCarCheck{}, nil
 	case ST_MCALL_SET_CAR:
 		return StMCallSetCar{}, nil
+	case ST_MCALL_INSPECTION_EXP:
+		return StMCallInspectionExp{}, nil
 	case ST_MCALL_LICENSE_EXP:
 		return StMCallLicenseExp{}, nil
 	case ST_MCALL_NOTE:

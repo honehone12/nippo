@@ -31,7 +31,7 @@ func (s StMCallLicenseExp) Run(
 		_, err := props.Api().ReplyMessage(&req)
 		return err
 	case webhook.PostbackEvent:
-		if e.Postback.Data == reply.LICENSE_EXP_ACT_DATA {
+		if e.Postback.Data == reply.EXP_DATE_ACT_DATA {
 			if len(user.CurrentOperation) == 0 {
 				return errors.New("user does not have current call")
 			}
@@ -45,11 +45,8 @@ func (s StMCallLicenseExp) Run(
 			if err != nil {
 				return err
 			}
-
-			now := timeconv.NowJst()
-
-			if now.After(exp) {
-				return errors.New("the date is already expired")
+			if timeconv.NowJst().After(exp) {
+				return NoLicense(props, user, e.ReplyToken)
 			}
 
 			err = props.Db().Tx(func(tx database.Transaction) error {

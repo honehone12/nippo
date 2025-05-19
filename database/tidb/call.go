@@ -152,6 +152,16 @@ func (ti TiDbTx) UpdateMCallLicenseExp(callId []uint8, exp time.Time) error {
 	return res.Error
 }
 
+func (ti TiDbTx) UpdateMCallInspectionExp(callId []uint8, exp time.Time) error {
+	if len(callId) != schema.ID_LEN {
+		return errors.New("unexpected id length")
+	}
+
+	call := schema.MorningCall{Id: callId}
+	res := ti.orm.Model(&call).Update("inspection_expiration", exp)
+	return res.Error
+}
+
 func (ti TiDbTx) UpdateMCallNote(callId []uint8, note schema.CleanText) error {
 	if len(callId) != schema.ID_LEN {
 		return errors.New("unexpected call id length")

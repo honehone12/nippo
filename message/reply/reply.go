@@ -36,6 +36,15 @@ func ReplyLicenseExp() []messaging_api.MessageInterface {
 	}
 }
 
+func ReplyInspectionExp() []messaging_api.MessageInterface {
+	return []messaging_api.MessageInterface{
+		messaging_api.TextMessage{
+			Text:       "車検証の有効期限を入力してください",
+			QuickReply: QuickRepLicenseExp(),
+		},
+	}
+}
+
 func ReplyAlcPhoto() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
@@ -233,7 +242,16 @@ func ReplyInDuty() []messaging_api.MessageInterface {
 func ReplyDecline() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
-			Text:       "辞退しました\n管理者に連絡してください",
+			Text:       "業務を辞退しました\n必ず管理者に連絡してください",
+			QuickReply: QuickRepStartMenu(),
+		},
+	}
+}
+
+func ReplyNoLicense() []messaging_api.MessageInterface {
+	return []messaging_api.MessageInterface{
+		messaging_api.TextMessage{
+			Text:       "業務に必要なライセンスがありません\n必ず管理者に連絡してください",
 			QuickReply: QuickRepStartMenu(),
 		},
 	}

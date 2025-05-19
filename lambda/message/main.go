@@ -175,6 +175,7 @@ func handler(
 		blobApi,
 		s3Client,
 	)
+
 	message.MessageMain(props, &msg)
 
 	return response.Text("ok"), nil

@@ -26,6 +26,7 @@ type Transaction interface {
 	UpdateMCallCarCheck(CallId []uint8) error
 	UpdateMCallCarNumber(callId []uint8, carNumber schema.CleanText) error
 	UpdateMCallLicenseExp(callId []uint8, exp time.Time) error
+	UpdateMCallInspectionExp(callId []uint8, exp time.Time) error
 	UpdateMCallNote(callId []uint8, note schema.CleanText) error
 
 	CreateEveningCall(
