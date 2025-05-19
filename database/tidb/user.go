@@ -135,6 +135,7 @@ func (ti TiDb) ReadUsersMini(orgId []uint8) ([]schema.User, error) {
 		"id",
 		"created_at",
 		"name",
+		"email",
 		"sub_admin",
 	).Association("Users").Find(&users)
 	if err != nil {
