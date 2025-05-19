@@ -50,12 +50,12 @@ func (ti TiDb) ReadMorningCall(id []uint8) (*schema.MorningCall, error) {
 		return nil, errors.New("unexpexted call id length")
 	}
 
-	call := schema.MorningCall{Id: id}
-	if res := ti.orm.Take(&call); res.Error != nil {
+	call := &schema.MorningCall{Id: id}
+	if res := ti.orm.Take(call); res.Error != nil {
 		return nil, res.Error
 	}
 
-	return &call, nil
+	return call, nil
 }
 
 func (ti TiDb) ReadMCallCarNum(id []uint8) (schema.CleanText, error) {
@@ -233,12 +233,12 @@ func (ti TiDb) ReadEveningCall(id []uint8) (*schema.EveningCall, error) {
 		return nil, errors.New("unexpexted call id length")
 	}
 
-	call := schema.EveningCall{Id: id}
-	if res := ti.orm.Take(&call); res.Error != nil {
+	call := &schema.EveningCall{Id: id}
+	if res := ti.orm.Take(call); res.Error != nil {
 		return nil, res.Error
 	}
 
-	return &call, nil
+	return call, nil
 }
 
 func (ti TiDb) ReadECallAlcPhoto(id []uint8) (string, error) {

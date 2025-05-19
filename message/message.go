@@ -51,28 +51,28 @@ func validateDst(props *msgprops.Props, msg *webhook.CallbackRequest) error {
 
 func checkBasicContent(event webhook.EventInterface) (*basicContent, error) {
 	var source webhook.SourceInterface
-	var content basicContent
+	bc := &basicContent{}
 	switch e := event.(type) {
 	case webhook.MessageEvent:
 		source = e.Source
-		content.replyToken = e.ReplyToken
+		bc.replyToken = e.ReplyToken
 	case webhook.PostbackEvent:
 		switch e.Postback.Data {
 		case reply.IGNORE_TXT_ACT_DATA:
-			return &content, nil
+			return bc, nil
 		case reply.DECLINE_ACT_DATA:
 			source = e.Source
-			content.replyToken = e.ReplyToken
-			content.reset = true
+			bc.replyToken = e.ReplyToken
+			bc.reset = true
 		default:
 			source = e.Source
-			content.replyToken = e.ReplyToken
+			bc.replyToken = e.ReplyToken
 		}
 	default:
 		return nil, fmt.Errorf("unsupported event: %s", event.GetType())
 	}
 
-	if len(content.replyToken) == 0 {
+	if len(bc.replyToken) == 0 {
 		return nil, errors.New("empty reply token")
 	}
 
@@ -84,8 +84,8 @@ func checkBasicContent(event webhook.EventInterface) (*basicContent, error) {
 		return nil, errors.New("source has empty user id")
 	}
 
-	content.source = s.UserId
-	return &content, nil
+	bc.source = s.UserId
+	return bc, nil
 }
 
 func sendErrMsg(props *msgprops.Props, repTkn string) {

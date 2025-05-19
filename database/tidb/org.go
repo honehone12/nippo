@@ -39,12 +39,12 @@ func (ti TiDb) ReadOrg(id []uint8) (*schema.Org, error) {
 		return nil, errors.New("unexpected org id length")
 	}
 
-	org := schema.Org{Id: id}
-	if res := ti.orm.Take(&org); res.Error != nil {
+	org := &schema.Org{Id: id}
+	if res := ti.orm.Take(org); res.Error != nil {
 		return nil, res.Error
 	}
 
-	return &org, nil
+	return org, nil
 }
 
 func (ti TiDb) ReadOrgLineId(id []uint8) (schema.CleanText, error) {

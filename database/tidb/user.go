@@ -42,12 +42,12 @@ func (ti TiDb) ReadUserEmailOrgId(id []uint8) (*schema.User, error) {
 		return nil, errors.New("unexpected user id length")
 	}
 
-	user := schema.User{Id: id}
-	if res := ti.orm.Select("email", "org_id").Take(&user); res.Error != nil {
+	user := &schema.User{Id: id}
+	if res := ti.orm.Select("email", "org_id").Take(user); res.Error != nil {
 		return nil, res.Error
 	}
 
-	return &user, nil
+	return user, nil
 }
 
 func (ti TiDb) ReadUser_Line(lineId schema.CleanText) (*schema.User, error) {
@@ -58,12 +58,12 @@ func (ti TiDb) ReadUser_Line(lineId schema.CleanText) (*schema.User, error) {
 		return nil, errors.New("unexpected line id")
 	}
 
-	user := schema.User{}
-	if res := ti.orm.Take(&user, "line_id = ?", lineId); res.Error != nil {
+	user := &schema.User{}
+	if res := ti.orm.Take(user, "line_id = ?", lineId); res.Error != nil {
 		return nil, res.Error
 	}
 
-	return &user, nil
+	return user, nil
 }
 
 func (ti TiDb) ReadUserOrgId(id []uint8) ([]uint8, error) {
@@ -97,18 +97,18 @@ func (ti TiDb) ReadUserBasic_Email(email schema.CleanText) (*schema.User, error)
 		return nil, errors.New("unexpected line id length")
 	}
 
-	user := schema.User{}
+	user := &schema.User{}
 	if res := ti.orm.Select(
 		"id",
 		"created_at",
 		"name",
 		"sub_admin",
 		"org_id",
-	).Take(&user, "email = ?", email); res.Error != nil {
+	).Take(user, "email = ?", email); res.Error != nil {
 		return nil, res.Error
 	}
 
-	return &user, nil
+	return user, nil
 }
 
 func (ti TiDb) ReadUserEmail(id []uint8) (schema.CleanText, error) {

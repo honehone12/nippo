@@ -12,10 +12,10 @@ import (
 	"github.com/google/uuid"
 )
 
-func JpgKey(userId []uint8) (*string, error) {
+func JpgKey(userId []uint8) (string, error) {
 	id, err := uuid.FromBytes(userId)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 
 	now := timeconv.NowJst()
@@ -30,7 +30,7 @@ func JpgKey(userId []uint8) (*string, error) {
 		now.Nanosecond(),
 		id,
 	)
-	return &key, nil
+	return key, nil
 }
 
 func PutJpg(
@@ -46,13 +46,17 @@ func PutJpg(
 
 	s3Put := s3.PutObjectInput{
 		Bucket:        props.Bucket(),
-		Key:           key,
+		Key:           &key,
 		Body:          body,
 		ContentLength: &length,
 	}
 
 	_, err = props.S3().PutObject(props.Ctx(), &s3Put)
-	return *key, err
+	if err != nil {
+		return "", err
+	}
+
+	return key, err
 }
 
 func GetPresigned(props *viewprops.Props, key string) (string, error) {
