@@ -234,7 +234,7 @@ func TestEveningCall(t *testing.T) {
 			return err
 		}
 
-		err = tx.UpdateECallCaller(reportId, USER_NAME)
+		err = tx.UpdateECallCaller(eveningId, USER_NAME)
 		if err != nil {
 			return err
 		}
