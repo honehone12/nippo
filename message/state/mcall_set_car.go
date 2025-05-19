@@ -51,7 +51,7 @@ func (s StMCallSetCar) Run(
 		} else {
 			req := messaging_api.ReplyMessageRequest{
 				ReplyToken: e.ReplyToken,
-				Messages:   reply.ReplyMCallSetCar(),
+				Messages:   reply.ReplyMCallCar(),
 			}
 
 			_, err := props.Api().ReplyMessage(&req)

@@ -9,23 +9,25 @@ import (
 )
 
 const (
-	ST_USER_NOT_CONFIGURED schema.StateIdx = iota
+	ST_USR_NOT_CONFIGURED schema.StateIdx = iota
 
-	ST_USER_SET_NAME
-	ST_USER_SET_EMAIL
+	ST_USRSET_NAME
+	ST_USRSET_EMAIL
 
 	ST_MCALL_ALC_PHOTO
 	ST_MCALL_HEALTH
 	ST_MCALL_CAR_CHECK
-	ST_MCALL_SET_CAR
+	ST_MCALL_CAR
 	ST_MCALL_INSPECTION_EXP
 	ST_MCALL_LICENSE_EXP
+	ST_MCALL_CALLER
 	ST_MCALL_NOTE
 
 	ST_DREPO_M_MTR
 	ST_DREPO_M_MTR_PHOTO
 
 	ST_ECALL_ALC_PHOTO
+	ST_ECALL_CALLER
 	ST_ECALL_NOTE
 
 	ST_DREPO_E_MTR
@@ -63,31 +65,35 @@ type State interface {
 
 func FromIdx(idx schema.StateIdx) (State, error) {
 	switch idx {
-	case ST_USER_NOT_CONFIGURED:
-		return StUserNotConfigured{}, nil
+	case ST_USR_NOT_CONFIGURED:
+		return StUsrNotConfigured{}, nil
 
-	case ST_USER_SET_NAME:
-		return StUserSetName{}, nil
-	case ST_USER_SET_EMAIL:
-		return StUserSetEmail{}, nil
+	case ST_USRSET_NAME:
+		return StUsrsetName{}, nil
+	case ST_USRSET_EMAIL:
+		return StUsrsetEmail{}, nil
 	case ST_MCALL_ALC_PHOTO:
 		return StMCallAlcPhoto{}, nil
 	case ST_MCALL_HEALTH:
 		return StMCallHealth{}, nil
 	case ST_MCALL_CAR_CHECK:
 		return StMCallCarCheck{}, nil
-	case ST_MCALL_SET_CAR:
+	case ST_MCALL_CAR:
 		return StMCallSetCar{}, nil
 	case ST_MCALL_INSPECTION_EXP:
 		return StMCallInspectionExp{}, nil
 	case ST_MCALL_LICENSE_EXP:
 		return StMCallLicenseExp{}, nil
+	case ST_MCALL_CALLER:
+		return StMCallCaller{}, nil
 	case ST_MCALL_NOTE:
 		return StMCallNote{}, nil
 	case ST_DREPO_M_MTR:
 		return StDRepoMMtr{}, nil
 	case ST_DREPO_M_MTR_PHOTO:
 		return StDRepoMMtrPhoto{}, nil
+	case ST_ECALL_CALLER:
+		return StECallCaller{}, nil
 	case ST_ECALL_ALC_PHOTO:
 		return StECallAlcPhoto{}, nil
 	case ST_ECALL_NOTE:

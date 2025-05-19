@@ -5,7 +5,7 @@ import "github.com/line/line-bot-sdk-go/v8/linebot/messaging_api"
 func QuickRepConfigMenu() *messaging_api.QuickReply {
 	return &messaging_api.QuickReply{
 		Items: []messaging_api.QuickReplyItem{
-			{Action: ActionUserSetting()},
+			{Action: ActionUsrset()},
 		},
 	}
 }
@@ -14,6 +14,14 @@ func QuickRepLicenseExp() *messaging_api.QuickReply {
 	return &messaging_api.QuickReply{
 		Items: []messaging_api.QuickReplyItem{
 			{Action: ActionLicenseExp()},
+		},
+	}
+}
+
+func QuickRepCaller() *messaging_api.QuickReply {
+	return &messaging_api.QuickReply{
+		Items: []messaging_api.QuickReplyItem{
+			{Action: ActionSelf()},
 		},
 	}
 }
@@ -175,7 +183,7 @@ func QuickRepStartMenu() *messaging_api.QuickReply {
 	return &messaging_api.QuickReply{
 		Items: []messaging_api.QuickReplyItem{
 			{Action: ActionStartDuty()},
-			{Action: ActionUserSetting()},
+			{Action: ActionUsrset()},
 		},
 	}
 }

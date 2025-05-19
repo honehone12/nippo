@@ -29,14 +29,12 @@ func (ti TiDbTx) CreateMorningCall(
 	}
 
 	call := schema.MorningCall{
-		Id:                id[:],
-		Caller:            name,
-		Name:              name,
-		LicenseExpiration: time.Now().UTC(),
-		Method:            schema.METHOD_PERSON,
-		UsingAlcChecker:   true,
-		AlcCheck:          true,
-		AlcPhoto:          photo,
+		Id:              id[:],
+		Name:            name,
+		Method:          schema.METHOD_PERSON,
+		UsingAlcChecker: true,
+		AlcCheck:        true,
+		AlcPhoto:        photo,
 	}
 	user := schema.User{Id: userId}
 	err = ti.orm.Model(&user).Association("MorningCalls").Append(&call)
@@ -107,6 +105,19 @@ func (ti TiDb) ReadMorningCalls(
 	}
 
 	return calls, nil
+}
+
+func (ti TiDbTx) UpdateMCallCaller(callId []uint8, caller schema.CleanText) error {
+	if len(callId) != schema.ID_LEN {
+		return errors.New("unexpected id length")
+	}
+	if len := len(caller); len == 0 || len > schema.MAX_SHORT_TEXT_LEN {
+		return errors.New("unexpected car number length")
+	}
+
+	call := schema.MorningCall{Id: callId}
+	res := ti.orm.Model(&call).Update("caller", caller)
+	return res.Error
 }
 
 func (ti TiDbTx) UpdateMCallHealth(callId []uint8) error {
@@ -201,7 +212,6 @@ func (ti TiDbTx) CreateEveningCall(
 
 	call := schema.EveningCall{
 		Id:              id[:],
-		Caller:          name,
 		Name:            name,
 		CarNumber:       carNum,
 		Method:          schema.METHOD_PERSON,
@@ -265,6 +275,19 @@ func (ti TiDb) ReadEveningCalls(
 	}
 
 	return calls, nil
+}
+
+func (ti TiDbTx) UpdateECallCaller(callId []uint8, caller schema.CleanText) error {
+	if len(callId) != schema.ID_LEN {
+		return errors.New("unexpected id length")
+	}
+	if len := len(caller); len == 0 || len > schema.MAX_SHORT_TEXT_LEN {
+		return errors.New("unexpected car number length")
+	}
+
+	call := schema.EveningCall{Id: callId}
+	res := ti.orm.Model(&call).Update("caller", caller)
+	return res.Error
 }
 
 func (ti TiDbTx) UpdateECallNote(callId []uint8, note schema.CleanText) error {

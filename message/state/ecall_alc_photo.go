@@ -77,7 +77,7 @@ func (s StECallAlcPhoto) Run(
 						return err
 					}
 
-					return tx.UpdateUserNextState(user.Id, ST_ECALL_NOTE)
+					return tx.UpdateUserNextState(user.Id, ST_ECALL_CALLER)
 				})
 				if err != nil {
 					return err
@@ -85,7 +85,7 @@ func (s StECallAlcPhoto) Run(
 
 				req := messaging_api.ReplyMessageRequest{
 					ReplyToken: e.ReplyToken,
-					Messages:   reply.ReplyECallNote(),
+					Messages:   reply.ReplyCaller(),
 				}
 
 				_, err = props.Api().ReplyMessage(&req)

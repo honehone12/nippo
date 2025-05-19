@@ -55,9 +55,9 @@ type MorningCall struct {
 
 	Caller               CleanText  `gorm:"size:100" json:"caller"`
 	Name                 CleanText  `gorm:"size:100" json:"name"`
-	LicenseExpiration    time.Time  `json:"license_expiration"`
+	LicenseExpiration    time.Time  `gorm:"default:null" json:"license_expiration"`
 	CarNumber            CleanText  `gorm:"size:100" json:"car_number"`
-	InspectionExpiration time.Time  `json:"inspection_expiration"`
+	InspectionExpiration time.Time  `gorm:"default:null" json:"inspection_expiration"`
 	Method               CallMethod `json:"method"`
 	UsingAlcChecker      bool       `json:"using_alc_checker"`
 	AlcCheck             bool       `json:"alc_check"`

@@ -1,8 +1,8 @@
 package state
 
 import (
-	"fmt"
 	"nippo/database"
+	"nippo/input"
 	"nippo/log"
 	"nippo/message/msgprops"
 	"nippo/message/reply"
@@ -12,31 +12,25 @@ import (
 	"github.com/line/line-bot-sdk-go/v8/linebot/webhook"
 )
 
-type StUserNotConfigured struct{}
+type StUsrsetName struct{}
 
-func (s StUserNotConfigured) Run(
+func (s StUsrsetName) Run(
 	props *msgprops.Props,
 	user *schema.User,
 	event webhook.EventInterface,
 ) error {
-	switch e := event.(type) {
-	case webhook.MessageEvent:
-		req := messaging_api.ReplyMessageRequest{
-			ReplyToken: e.ReplyToken,
-			Messages:   reply.ReplyDoUsrSet(),
-		}
-
-		_, err := props.Api().ReplyMessage(&req)
-		return err
-	case webhook.PostbackEvent:
-		if e.Postback.Data == reply.USER_SETTING_ACT_DATA {
+	e, ok := event.(webhook.MessageEvent)
+	if ok {
+		t, ok := e.Message.(webhook.TextMessageContent)
+		if ok {
+			text := input.Clean(t.Text)
 			err := props.Db().Tx(func(tx database.Transaction) error {
-				id, err := tx.CreateUser(props.OrgId(), user.LineId)
+				err := tx.UpdateUserName(user.Id, text)
 				if err != nil {
 					return err
 				}
 
-				return tx.UpdateUserNextState(id, ST_USER_SET_NAME)
+				return tx.UpdateUserNextState(user.Id, ST_USRSET_EMAIL)
 			})
 			if err != nil {
 				return err
@@ -44,15 +38,21 @@ func (s StUserNotConfigured) Run(
 
 			req := messaging_api.ReplyMessageRequest{
 				ReplyToken: e.ReplyToken,
-				Messages:   reply.ReplyUserSetName(),
+				Messages:   reply.ReplyUsrsetEmail(),
 			}
 
 			_, err = props.Api().ReplyMessage(&req)
 			return err
 		} else {
-			return fmt.Errorf("unexpected postback data: %s", e.Postback.Data)
+			req := messaging_api.ReplyMessageRequest{
+				ReplyToken: e.ReplyToken,
+				Messages:   reply.ReplyUsrsetName(),
+			}
+
+			_, err := props.Api().ReplyMessage(&req)
+			return err
 		}
-	default:
+	} else {
 		log.Warnf("unexpected event: %s", event.GetType())
 		return nil
 	}

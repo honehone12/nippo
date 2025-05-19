@@ -2,7 +2,7 @@ package reply
 
 import "github.com/line/line-bot-sdk-go/v8/linebot/messaging_api"
 
-func ReplyDoUsrSet() []messaging_api.MessageInterface {
+func ReplyDoUsrset() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
 			Text:       "ユーザー設定を行ってください",
@@ -11,7 +11,7 @@ func ReplyDoUsrSet() []messaging_api.MessageInterface {
 	}
 }
 
-func ReplyUserSetName() []messaging_api.MessageInterface {
+func ReplyUsrsetName() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
 			Text: "名前を入力してください",
@@ -19,7 +19,7 @@ func ReplyUserSetName() []messaging_api.MessageInterface {
 	}
 }
 
-func ReplyUserSetEmail() []messaging_api.MessageInterface {
+func ReplyUsrsetEmail() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
 			Text: "メールアドレスを『英数字』で入力してください",
@@ -54,6 +54,15 @@ func ReplyAlcPhoto() []messaging_api.MessageInterface {
 	}
 }
 
+func ReplyCaller() []messaging_api.MessageInterface {
+	return []messaging_api.MessageInterface{
+		messaging_api.TextMessage{
+			Text:       "点呼者を入力してください",
+			QuickReply: QuickRepCaller(),
+		},
+	}
+}
+
 func ReplyMCallHealth() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
@@ -72,7 +81,7 @@ func ReplyMCallCarCheck() []messaging_api.MessageInterface {
 	}
 }
 
-func ReplyMCallSetCar() []messaging_api.MessageInterface {
+func ReplyMCallCar() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
 			Text: "車両番号を入力してください",

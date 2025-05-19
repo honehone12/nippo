@@ -138,6 +138,11 @@ func TestMorningCall(t *testing.T) {
 			return err
 		}
 
+		err = tx.UpdateMCallCaller(morningId, USER_NAME)
+		if err != nil {
+			return err
+		}
+
 		return tx.UpdateMCallNote(morningId, "【ラベル】\n無し\n【ラベル】\n無し")
 	})
 	if err != nil {
@@ -225,6 +230,11 @@ func TestEveningCall(t *testing.T) {
 		}
 
 		err = tx.UpdateDReportECall(reportId, eveningId)
+		if err != nil {
+			return err
+		}
+
+		err = tx.UpdateECallCaller(reportId, USER_NAME)
 		if err != nil {
 			return err
 		}
@@ -521,10 +531,16 @@ func TestReadFromOrg(t *testing.T) {
 	if !bytes.Equal(mCall.UserId, userId) {
 		t.Fatal("read wrong morning call")
 	}
+	if mCall.Name != USER_NAME {
+		t.Fatal("read wrong morning call")
+	}
 	if mCall.CarNumber != CAR_NUMBER {
 		t.Fatal("read wrong morning call")
 	}
 	if mCall.AlcPhoto != ALC_PHOTO {
+		t.Fatal("read wrong morning call")
+	}
+	if mCall.Caller != USER_NAME {
 		t.Fatal("read wrong morning call")
 	}
 
@@ -557,10 +573,16 @@ func TestReadFromOrg(t *testing.T) {
 	if !bytes.Equal(eCall.UserId, userId) {
 		t.Fatal("read wrong evening call")
 	}
+	if eCall.Name != USER_NAME {
+		t.Fatal("read wrong evening call")
+	}
 	if eCall.CarNumber != CAR_NUMBER {
 		t.Fatal("read wrong morning call")
 	}
 	if eCall.AlcPhoto != ALC_PHOTO {
+		t.Fatal("read wrong evening call")
+	}
+	if eCall.Caller != USER_NAME {
 		t.Fatal("read wrong evening call")
 	}
 

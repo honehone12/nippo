@@ -12,9 +12,9 @@ import (
 	"github.com/line/line-bot-sdk-go/v8/linebot/webhook"
 )
 
-type StUserSetEmail struct{}
+type StUsrsetEmail struct{}
 
-func (s StUserSetEmail) Run(
+func (s StUsrsetEmail) Run(
 	props *msgprops.Props,
 	user *schema.User,
 	event webhook.EventInterface,
@@ -50,7 +50,7 @@ func (s StUserSetEmail) Run(
 		} else {
 			req := messaging_api.ReplyMessageRequest{
 				ReplyToken: e.ReplyToken,
-				Messages:   reply.ReplyUserSetEmail(),
+				Messages:   reply.ReplyUsrsetEmail(),
 			}
 
 			_, err := props.Api().ReplyMessage(&req)

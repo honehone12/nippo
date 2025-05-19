@@ -55,7 +55,7 @@ func (s StMCallLicenseExp) Run(
 					return err
 				}
 
-				return tx.UpdateUserNextState(user.Id, ST_MCALL_NOTE)
+				return tx.UpdateUserNextState(user.Id, ST_MCALL_CALLER)
 			})
 			if err != nil {
 				return err
@@ -63,7 +63,7 @@ func (s StMCallLicenseExp) Run(
 
 			req := messaging_api.ReplyMessageRequest{
 				ReplyToken: e.ReplyToken,
-				Messages:   reply.ReplyMCallNote(),
+				Messages:   reply.ReplyCaller(),
 			}
 
 			_, err = props.Api().ReplyMessage(&req)

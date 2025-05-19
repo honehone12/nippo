@@ -42,14 +42,14 @@ func (s StNone) Run(
 			_, err = props.Api().ReplyMessage(&req)
 			return err
 		} else if e.Postback.Data == reply.USER_SETTING_ACT_DATA {
-			err := props.Db().Once().UpdateUserNextState(user.Id, ST_USER_SET_NAME)
+			err := props.Db().Once().UpdateUserNextState(user.Id, ST_USRSET_NAME)
 			if err != nil {
 				return err
 			}
 
 			req := messaging_api.ReplyMessageRequest{
 				ReplyToken: e.ReplyToken,
-				Messages:   reply.ReplyUserSetName(),
+				Messages:   reply.ReplyUsrsetName(),
 			}
 
 			_, err = props.Api().ReplyMessage(&req)

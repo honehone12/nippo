@@ -27,6 +27,7 @@ type Transaction interface {
 	UpdateMCallCarNumber(callId []uint8, carNumber schema.CleanText) error
 	UpdateMCallLicenseExp(callId []uint8, exp time.Time) error
 	UpdateMCallInspectionExp(callId []uint8, exp time.Time) error
+	UpdateMCallCaller(callId []uint8, caller schema.CleanText) error
 	UpdateMCallNote(callId []uint8, note schema.CleanText) error
 
 	CreateEveningCall(
@@ -35,6 +36,7 @@ type Transaction interface {
 		carNum schema.CleanText,
 		photo string,
 	) ([]uint8, error)
+	UpdateECallCaller(callId []uint8, caller schema.CleanText) error
 	UpdateECallNote(callId []uint8, note schema.CleanText) error
 
 	CreateDailyReport(

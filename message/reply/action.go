@@ -4,6 +4,7 @@ import "github.com/line/line-bot-sdk-go/v8/linebot/messaging_api"
 
 const IGNORE_TXT_ACT_DATA = "IGNORE_TXT"
 const USER_SETTING_ACT_DATA = "USER_SETTING"
+const SELF_ACT_DATA = "SELF"
 const EXP_DATE_ACT_DATA = "LICENSE_EXPIRATION"
 const START_DUTY_ACT_DATA = "START_DUTY"
 const START_WAITING_ACT_DATA = "START_WAITING"
@@ -15,7 +16,7 @@ const FLAG_TRUE_ACT_DATA = "FLAG_TRUE"
 const FLAG_FALSE_ACT_DATA = "FLAG_FALSE"
 const DECLINE_ACT_DATA = "RESET"
 
-func ActionUserSetting() messaging_api.PostbackAction {
+func ActionUsrset() messaging_api.PostbackAction {
 	return messaging_api.PostbackAction{
 		Label:       "ユーザー設定を行う",
 		Data:        USER_SETTING_ACT_DATA,
@@ -29,6 +30,14 @@ func ActionLicenseExp() messaging_api.DatetimePickerAction {
 		Label: "期限を入力する",
 		Data:  EXP_DATE_ACT_DATA,
 		Mode:  "date",
+	}
+}
+
+func ActionSelf() messaging_api.PostbackAction {
+	return messaging_api.PostbackAction{
+		Label:       "自己点呼",
+		Data:        SELF_ACT_DATA,
+		DisplayText: "自己点呼",
 	}
 }
 
