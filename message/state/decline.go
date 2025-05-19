@@ -40,7 +40,7 @@ func Decline(props *msgprops.Props, user *schema.User, replyToken string) error 
 	return err
 }
 
-func NoLicense(props *msgprops.Props, user *schema.User, replyToken string) error {
+func Expired(props *msgprops.Props, user *schema.User, replyToken string) error {
 	err := reset(props.Db(), user.Id)
 	if err != nil {
 		return err
@@ -48,7 +48,7 @@ func NoLicense(props *msgprops.Props, user *schema.User, replyToken string) erro
 
 	req := messaging_api.ReplyMessageRequest{
 		ReplyToken: replyToken,
-		Messages:   reply.ReplyNoLicense(),
+		Messages:   reply.ReplyExpired(),
 	}
 
 	_, err = props.Api().ReplyMessage(&req)

@@ -46,7 +46,7 @@ func (s StMCallInspectionExp) Run(
 				return err
 			}
 			if timeconv.NowJst().After(exp) {
-				return NoLicense(props, user, e.ReplyToken)
+				return Expired(props, user, e.ReplyToken)
 			}
 
 			err = props.Db().Tx(func(tx database.Transaction) error {

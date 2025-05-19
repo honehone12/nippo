@@ -30,7 +30,7 @@ func ReplyUsrsetEmail() []messaging_api.MessageInterface {
 func ReplyLicenseExp() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
-			Text:       "免許証の有効期限を入力してください",
+			Text:       "『免許証』の有効期限を入力してください",
 			QuickReply: QuickRepLicenseExp(),
 		},
 	}
@@ -39,7 +39,7 @@ func ReplyLicenseExp() []messaging_api.MessageInterface {
 func ReplyInspectionExp() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
-			Text:       "車検証の有効期限を入力してください",
+			Text:       "『車検証』の有効期限を入力してください",
 			QuickReply: QuickRepLicenseExp(),
 		},
 	}
@@ -257,10 +257,10 @@ func ReplyDecline() []messaging_api.MessageInterface {
 	}
 }
 
-func ReplyNoLicense() []messaging_api.MessageInterface {
+func ReplyExpired() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
-			Text:       "業務に必要なライセンスがありません\n必ず管理者に連絡してください",
+			Text:       "有効期限が切れています\n必ず管理者に連絡してください",
 			QuickReply: QuickRepStartMenu(),
 		},
 	}
