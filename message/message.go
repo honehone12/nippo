@@ -9,6 +9,7 @@ import (
 	"nippo/message/msgprops"
 	"nippo/message/reply"
 	"nippo/message/state"
+	"nippo/message/state/exit"
 	"nippo/schema"
 
 	"github.com/line/line-bot-sdk-go/v8/linebot/messaging_api"
@@ -113,7 +114,7 @@ func processEvent(props *msgprops.Props, event webhook.EventInterface) (*basicCo
 	user, err := props.Db().ReadUser_Line(cleanSource)
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		log.Warnf("user not configured: %s", err)
-		st := state.StUsrNotConfigured{}
+		st := state.UsrNotConfigured{}
 		unknown := schema.User{LineId: cleanSource}
 		err := st.Run(props, &unknown, event)
 		if err != nil {
@@ -130,7 +131,7 @@ func processEvent(props *msgprops.Props, event webhook.EventInterface) (*basicCo
 	}
 
 	if bc.reset {
-		err := state.Decline(props, user, bc.replyToken)
+		err := exit.Decline(props, user, bc.replyToken)
 		if err != nil {
 			return bc, err
 		}

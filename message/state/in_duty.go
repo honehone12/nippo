@@ -8,6 +8,7 @@ import (
 	"nippo/log"
 	"nippo/message/msgprops"
 	"nippo/message/reply"
+	"nippo/message/state/index"
 	"nippo/schema"
 
 	"github.com/line/line-bot-sdk-go/v8/linebot/messaging_api"
@@ -48,7 +49,7 @@ func (s StInDuty) Run(
 					return err
 				}
 
-				return tx.UpdateUserNextState(user.Id, ST_LOC_NOTE)
+				return tx.UpdateUserNextState(user.Id, index.LOC_NOTE)
 			})
 			if err != nil {
 				return err
@@ -73,7 +74,7 @@ func (s StInDuty) Run(
 	case webhook.PostbackEvent:
 		switch e.Postback.Data {
 		case reply.REGISTER_SITE_ACT_DATA:
-			err := props.Db().Once().UpdateUserNextState(user.Id, ST_SITE_NAME)
+			err := props.Db().Once().UpdateUserNextState(user.Id, index.SITE_NAME)
 			if err != nil {
 				return err
 			}
@@ -86,7 +87,7 @@ func (s StInDuty) Run(
 			_, err = props.Api().ReplyMessage(&req)
 			return err
 		case reply.START_WAITING_ACT_DATA:
-			err := props.Db().Once().UpdateUserNextState(user.Id, ST_WAITING)
+			err := props.Db().Once().UpdateUserNextState(user.Id, index.WAITING)
 			if err != nil {
 				return err
 			}
@@ -99,7 +100,7 @@ func (s StInDuty) Run(
 			_, err = props.Api().ReplyMessage(&req)
 			return err
 		case reply.START_LOADING_ACT_DATA:
-			err := props.Db().Once().UpdateUserNextState(user.Id, ST_LOADING)
+			err := props.Db().Once().UpdateUserNextState(user.Id, index.LOADING)
 			if err != nil {
 				return err
 			}
@@ -112,7 +113,7 @@ func (s StInDuty) Run(
 			_, err = props.Api().ReplyMessage(&req)
 			return err
 		case reply.REGISTER_RESTING_ACT_DATA:
-			err := props.Db().Once().UpdateUserNextState(user.Id, ST_REST_LOC)
+			err := props.Db().Once().UpdateUserNextState(user.Id, index.REST_LOC)
 			if err != nil {
 				return err
 			}
@@ -125,7 +126,7 @@ func (s StInDuty) Run(
 			_, err = props.Api().ReplyMessage(&req)
 			return err
 		case reply.END_DUTY_ACT_DATA:
-			err := props.Db().Once().UpdateUserNextState(user.Id, ST_ECALL_ALC_PHOTO)
+			err := props.Db().Once().UpdateUserNextState(user.Id, index.ECALL_ALC_PHOTO)
 			if err != nil {
 				return err
 			}
