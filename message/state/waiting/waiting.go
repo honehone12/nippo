@@ -1,6 +1,7 @@
 package waiting
 
 import (
+	"errors"
 	"nippo/database"
 	"nippo/input"
 	"nippo/log"
@@ -24,6 +25,10 @@ func (s Waiting) Run(
 	if ok {
 		l, ok := e.Message.(webhook.LocationMessageContent)
 		if ok {
+			if len(user.CurrentDuty) == 0 {
+				return errors.New("user does not have current duty")
+			}
+
 			label := input.Clean(l.Title)
 			addr := input.Clean(l.Address)
 			err := props.Db().Tx(func(tx database.Transaction) error {

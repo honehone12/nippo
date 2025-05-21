@@ -26,7 +26,7 @@ func (s SiteName) Run(
 		t, ok := e.Message.(webhook.TextMessageContent)
 		if ok {
 			if len(user.CurrentDuty) == 0 {
-				return errors.New("user does not have current location")
+				return errors.New("user does not have current duty")
 			}
 
 			text := input.Clean(t.Text)
