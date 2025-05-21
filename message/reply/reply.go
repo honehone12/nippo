@@ -67,7 +67,7 @@ func ReplyMCallHealth() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
 			Text:       "疾病、疲労、睡眠不足等はありますか？",
-			QuickReply: QuickRepFlag(),
+			QuickReply: QuickRepMustFlag(),
 		},
 	}
 }
@@ -75,7 +75,7 @@ func ReplyMCallHealth() []messaging_api.MessageInterface {
 func ReplyMCallCarCheck() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
-			Text:       "車両の日常点検は良好でしたか？",
+			Text:       "車両の日常点検を実施しましたか？",
 			QuickReply: QuickRepFlag(),
 		},
 	}
@@ -92,7 +92,7 @@ func ReplyMCallCar() []messaging_api.MessageInterface {
 func ReplyMCallNote() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
-			Text:       "指示事項、その他必要な事項を入力してください",
+			Text:       "指示事項、必要な事項を入力してください",
 			QuickReply: QuickRepMCallNote(),
 		},
 	}
@@ -101,7 +101,7 @@ func ReplyMCallNote() []messaging_api.MessageInterface {
 func ReplyECallNote() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
-			Text:       "その他必要な事項を入力してください",
+			Text:       "必要な事項を入力してください",
 			QuickReply: QuickRepECallNote(),
 		},
 	}
@@ -135,7 +135,7 @@ func ReplyDReportNonDutyDst() []messaging_api.MessageInterface {
 func ReplyDReportTrouble() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
-			Text:       "事故、著しい運行の遅延、その他異常な状態が発生した場合は入力してください",
+			Text:       "事故、著しい運行の遅延、異常な状態が発生した場合は入力してください",
 			QuickReply: QuickRepDReportTrouble(),
 		},
 	}
@@ -144,7 +144,7 @@ func ReplyDReportTrouble() []messaging_api.MessageInterface {
 func ReplyDReportNote() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
-			Text:       "その他必要な事項を入力してください",
+			Text:       "必要な事項を入力してください",
 			QuickReply: QuickRepDReportNote(),
 		},
 	}
@@ -189,7 +189,7 @@ func ReplyLoadShipCheck() []messaging_api.MessageInterface {
 	return []messaging_api.MessageInterface{
 		messaging_api.TextMessage{
 			Text:       "作業に関して荷主の確認は得られましたか？",
-			QuickReply: QuickRepLoadShipCheck(),
+			QuickReply: QuickRepFlag(),
 		},
 	}
 }

@@ -118,7 +118,7 @@ func TestMorningCall(t *testing.T) {
 			return err
 		}
 
-		err = tx.UpdateMCallCarCheck(morningId)
+		err = tx.UpdateMCallCarCheck(morningId, true)
 		if err != nil {
 			return err
 		}

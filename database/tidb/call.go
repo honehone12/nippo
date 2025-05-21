@@ -130,13 +130,13 @@ func (ti TiDbTx) UpdateMCallHealth(callId []uint8) error {
 	return res.Error
 }
 
-func (ti TiDbTx) UpdateMCallCarCheck(callId []uint8) error {
+func (ti TiDbTx) UpdateMCallCarCheck(callId []uint8, checked bool) error {
 	if len(callId) != schema.ID_LEN {
 		return errors.New("unexpected call id length")
 	}
 
 	call := schema.MorningCall{Id: callId}
-	res := ti.orm.Model(&call).Update("car_check", true)
+	res := ti.orm.Model(&call).Update("car_check", checked)
 	return res.Error
 }
 

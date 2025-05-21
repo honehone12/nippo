@@ -30,7 +30,6 @@ func QuickRepMCallNote() *messaging_api.QuickReply {
 	return &messaging_api.QuickReply{
 		Items: []messaging_api.QuickReplyItem{
 			{Action: ActionMCallNote()},
-			{Action: ActionNone()},
 		},
 	}
 }
@@ -39,7 +38,6 @@ func QuickRepECallNote() *messaging_api.QuickReply {
 	return &messaging_api.QuickReply{
 		Items: []messaging_api.QuickReplyItem{
 			{Action: ActionECallNote()},
-			{Action: ActionNone()},
 		},
 	}
 }
@@ -74,7 +72,6 @@ func QuickRepDReportNote() *messaging_api.QuickReply {
 	return &messaging_api.QuickReply{
 		Items: []messaging_api.QuickReplyItem{
 			{Action: ActionDReportNote()},
-			{Action: ActionNone()},
 		},
 	}
 }
@@ -92,15 +89,6 @@ func QuickRepEndLoading() *messaging_api.QuickReply {
 	return &messaging_api.QuickReply{
 		Items: []messaging_api.QuickReplyItem{
 			{Action: ActionEndLoading()},
-		},
-	}
-}
-
-func QuickRepLoadShipCheck() *messaging_api.QuickReply {
-	return &messaging_api.QuickReply{
-		Items: []messaging_api.QuickReplyItem{
-			{Action: ActionFlagTrue()},
-			{Action: ActionFlagFalse()},
 		},
 	}
 }
@@ -174,6 +162,15 @@ func QuickRepFlag() *messaging_api.QuickReply {
 	return &messaging_api.QuickReply{
 		Items: []messaging_api.QuickReplyItem{
 			{Action: ActionFlagTrue()},
+			{Action: ActionFlagFalse()},
+		},
+	}
+}
+
+func QuickRepMustFlag() *messaging_api.QuickReply {
+	return &messaging_api.QuickReply{
+		Items: []messaging_api.QuickReplyItem{
+			{Action: ActionFlagMustTrue()},
 			{Action: ActionDecline()},
 		},
 	}

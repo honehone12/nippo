@@ -70,7 +70,7 @@ func (s StECallCaller) Run(
 
 	req := messaging_api.ReplyMessageRequest{
 		ReplyToken: repTkn,
-		Messages:   reply.ReplyMCallNote(),
+		Messages:   reply.ReplyECallNote(),
 	}
 
 	_, err = props.Api().ReplyMessage(&req)

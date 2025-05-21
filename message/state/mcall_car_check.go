@@ -30,33 +30,39 @@ func (s StMCallCarCheck) Run(
 		_, err := props.Api().ReplyMessage(&req)
 		return err
 	case webhook.PostbackEvent:
-		if e.Postback.Data == reply.FLAG_TRUE_ACT_DATA {
-			if len(user.CurrentOperation) == 0 {
-				return errors.New("user does not have current call")
-			}
+		var checked bool
+		switch e.Postback.Data {
+		case reply.FLAG_TRUE_ACT_DATA:
+			checked = true
+		case reply.FLAG_FALSE_ACT_DATA:
+			checked = false
+		default:
+			return fmt.Errorf("unexpected postback data: %s", e.Postback.Data)
+		}
 
-			err := props.Db().Tx(func(tx database.Transaction) error {
-				err := tx.UpdateMCallCarCheck(user.CurrentOperation)
-				if err != nil {
-					return err
-				}
+		if len(user.CurrentOperation) == 0 {
+			return errors.New("user does not have current call")
+		}
 
-				return tx.UpdateUserNextState(user.Id, ST_MCALL_CAR)
-			})
+		err := props.Db().Tx(func(tx database.Transaction) error {
+			err := tx.UpdateMCallCarCheck(user.CurrentOperation, checked)
 			if err != nil {
 				return err
 			}
 
-			req := messaging_api.ReplyMessageRequest{
-				ReplyToken: e.ReplyToken,
-				Messages:   reply.ReplyMCallCar(),
-			}
-
-			_, err = props.Api().ReplyMessage(&req)
+			return tx.UpdateUserNextState(user.Id, ST_MCALL_CAR)
+		})
+		if err != nil {
 			return err
-		} else {
-			return fmt.Errorf("unexpected postback data: %s", e.Postback.Data)
 		}
+
+		req := messaging_api.ReplyMessageRequest{
+			ReplyToken: e.ReplyToken,
+			Messages:   reply.ReplyMCallCar(),
+		}
+
+		_, err = props.Api().ReplyMessage(&req)
+		return err
 	default:
 		log.Warnf("unexpected event: %s", event.GetType())
 		return nil

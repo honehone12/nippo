@@ -23,7 +23,7 @@ type Transaction interface {
 		photo string,
 	) ([]uint8, error)
 	UpdateMCallHealth(callId []uint8) error
-	UpdateMCallCarCheck(CallId []uint8) error
+	UpdateMCallCarCheck(CallId []uint8, checked bool) error
 	UpdateMCallCarNumber(callId []uint8, carNumber schema.CleanText) error
 	UpdateMCallLicenseExp(callId []uint8, exp time.Time) error
 	UpdateMCallInspectionExp(callId []uint8, exp time.Time) error

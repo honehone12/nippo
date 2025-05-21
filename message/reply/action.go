@@ -190,19 +190,27 @@ func ActionWaitNote() messaging_api.PostbackAction {
 	}
 }
 
+func ActionFlagMustTrue() messaging_api.PostbackAction {
+	return messaging_api.PostbackAction{
+		Label:       "良",
+		Data:        FLAG_TRUE_ACT_DATA,
+		DisplayText: "良",
+	}
+}
+
 func ActionFlagTrue() messaging_api.PostbackAction {
 	return messaging_api.PostbackAction{
-		Label:       "良い",
+		Label:       "済",
 		Data:        FLAG_TRUE_ACT_DATA,
-		DisplayText: "良い",
+		DisplayText: "済",
 	}
 }
 
 func ActionFlagFalse() messaging_api.PostbackAction {
 	return messaging_api.PostbackAction{
-		Label:       "不明",
+		Label:       "不",
 		Data:        FLAG_FALSE_ACT_DATA,
-		DisplayText: "不明",
+		DisplayText: "不",
 	}
 }
 
