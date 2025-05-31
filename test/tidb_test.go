@@ -36,7 +36,7 @@ var locId []uint8
 var siteId []uint8
 
 func TestOpenDb(t *testing.T) {
-	godotenv.Load("../bin/.env")
+	godotenv.Load("../.env")
 
 	tiUri := os.Getenv("DB_URI")
 	if len(tiUri) == 0 {

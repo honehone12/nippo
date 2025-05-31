@@ -53,7 +53,7 @@ func main() {
 		return
 	}
 
-	godotenv.Load("../.env")
+	godotenv.Load("../../.env")
 	dbUri := os.Getenv("DB_URI")
 	if len(dbUri) == 0 {
 		fmt.Println("DB_URI is empty")

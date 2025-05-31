@@ -28,7 +28,7 @@ func migrate() error {
 }
 
 func main() {
-	godotenv.Load("../.env")
+	godotenv.Load("../../.env")
 
 	if err := migrate(); err != nil {
 		fmt.Println(err)
